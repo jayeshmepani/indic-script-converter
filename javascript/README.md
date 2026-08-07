@@ -60,11 +60,7 @@ console.log(toCanonicalIastFromGujarati('કૃષ્ણ')); // kṛṣṇa
 Visible script conversion is many-to-one: case, aliases, NFC/NFD choice and equivalent extended spellings can collapse into the same script output. Exact recovery therefore uses the same checksummed invisible Unicode Tag trailer as the Dart/Python implementations.
 
 ```js
-import {
-    IastToDevanagariOptions,
-    toDevanagariFromIast,
-    toExactIastFromDevanagari,
-} from 'lipimala';
+import { IastToDevanagariOptions, toDevanagariFromIast, toExactIastFromDevanagari } from 'lipimala';
 
 const source = 'Kṛṣṇa / Kr̥ṣṇa / ḫāna / ṣ́akti';
 
