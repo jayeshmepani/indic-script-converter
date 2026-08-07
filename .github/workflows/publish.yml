@@ -121,5 +121,16 @@ jobs:
           # Push the split branch to the PHP mirror repository
           git push -f git@github.com:jayeshmepani/indic-script-converter-php.git php-release:main
 
-          # Push the release tag to the PHP mirror (so Packagist picks it up)
+      - name: Push release tag to PHP mirror
+        if: github.event_name == 'release'
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.PHP_MIRROR_DEPLOY_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+
+          # Push the release tag so Packagist picks it up
           git push -f git@github.com:jayeshmepani/indic-script-converter-php.git php-release:refs/tags/${{ github.ref_name }}
+
