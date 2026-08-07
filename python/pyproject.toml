@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "indic-script-converter"
 version = "1.0.0"
-description = "Lossless IAST/extended Indic transliteration for Devanagari, Gujarati, plain English and canonical reverse conversion."
+description = "Exact Round-Trip IAST/extended Indic transliteration for Devanagari, Gujarati, plain English and canonical reverse conversion."
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
@@ -18,7 +18,7 @@ keywords = [
     "iast",
     "devanagari",
     "gujarati",
-    "lossless",
+    "exact round-trip",
     "sanskrit",
     "vedic"
 ]

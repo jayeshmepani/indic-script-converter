@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import {
     IastToDevanagariOptions,
     IastToGujaratiOptions,
-    LosslessTransliterationResult,
+    TransliterationResult,
     embedExactSourceMetadata,
     hasEmbeddedExactSource,
     recoverEmbeddedExactSource,
@@ -13,7 +13,7 @@ import {
     toExactIastFromDevanagari,
     toExactIastFromGujarati,
     toGujaratiFromIast,
-    toLosslessPlainEnglish,
+    toPlainEnglish,
 } from '../src/index.js';
 
 const sources = [
@@ -73,10 +73,8 @@ test('metadata tampering invalidates metadata', () => {
 });
 
 test('envelope JSON round-trip', () => {
-    const result = toLosslessPlainEnglish('Kṛṣṇa ā́tman ḷa');
-    const restored = LosslessTransliterationResult.fromJson(
-        JSON.parse(JSON.stringify(result.toJson())),
-    );
+    const result = toPlainEnglish('Kṛṣṇa ā́tman ḷa');
+    const restored = TransliterationResult.fromJson(JSON.parse(JSON.stringify(result.toJson())));
     assert.deepEqual(restored.toJson(), result.toJson());
     assert.equal(restored.restoreOriginal(), 'Kṛṣṇa ā́tman ḷa');
 });

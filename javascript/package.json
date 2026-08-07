@@ -1,7 +1,7 @@
 {
     "name": "indic-script-converter",
     "version": "1.0.0",
-    "description": "Lossless IAST/extended Indic transliteration for Devanagari, Gujarati, plain English and canonical reverse conversion.",
+    "description": "Exact Round-Trip IAST/extended Indic transliteration for Devanagari, Gujarati, plain English and canonical reverse conversion.",
     "type": "module",
     "engines": {
         "node": ">=20"
@@ -13,7 +13,7 @@
         "./latn-iast-to-gujr": "./src/latn-iast-to-gujr.js",
         "./latn-iast-transcription": "./src/latn-iast-transcription.js",
         "./brahmic-to-latn-iast": "./src/brahmic-to-latn-iast.js",
-        "./lossless-transliteration": "./src/lossless-transliteration.js"
+        "./transliteration-result": "./src/transliteration-result.js"
     },
     "scripts": {
         "test": "node --test tests/*.test.js",
@@ -33,7 +33,7 @@
         "iast",
         "devanagari",
         "gujarati",
-        "lossless",
+        "exact round-trip",
         "sanskrit",
         "vedic"
     ],

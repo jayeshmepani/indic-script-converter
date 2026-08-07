@@ -176,7 +176,7 @@ void main() {
       expect('maṅgala'.toDevanagariFromIast(), 'मङ्गल');
     });
 
-    test('unsupported underline marks are preserved (lossless)', () {
+    test('unsupported underline marks are preserved (exact round-trip)', () {
       expect('a\u0331tman'.toDevanagariFromIast(), 'अ\u0331त्मन्');
       expect('a\u0332nanta'.toDevanagariFromIast(), 'अ\u0332नन्त');
       expect('a\u0331tman'.toGujaratiFromIast(), 'અ\u0331ત્મન્');

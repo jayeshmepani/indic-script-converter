@@ -1,13 +1,13 @@
-# Lossless Indic Transliteration (Dart)
+# Exact Round-Trip Indic Transliteration (Dart)
 
 A high-fidelity Dart library that separates two concepts that cannot honestly be merged into a single Brahmic string:
 
-1. **Exact source losslessness** — Code-point-equivalent recovery of original Latin input, including capitalization, NFC/NFD form, alias choices, punctuation, and combining-mark order.
+1. **Exact source exact round-tripness** — Code-point-equivalent recovery of original Latin input, including capitalization, NFC/NFD form, alias choices, punctuation, and combining-mark order.
 2. **Rendered transliteration view** — Visual output in Devanagari, Gujarati, Plain English, or Hunterian.
 
 Because rendered Indic scripts cannot natively represent Latin capitalization or lossy alias selections (e.g., distinguishing `Kṛṣṇa` vs `kṛṣṇa` or `x` vs `ḫ`), this package provides **two robust strategies** for exact source recovery:
 
-1. **`LosslessTransliterationResult` (Envelope Pattern):** Keeps metadata alongside the rendered view (ideal for JSON APIs and databases).
+1. **`TransliterationResult` (Envelope Pattern):** Keeps metadata alongside the rendered view (ideal for JSON APIs and databases).
 2. **Unicode Tag Trailer (Embedded Metadata Pattern):** Appends an invisible, checksummed Unicode tag sequence directly into the string output.
 
 ---
@@ -18,8 +18,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  indic_script_converter:
-    path: ./lossless_transliteration_package
+  indic_script_converter: ^1.1.0
 ```
 
 _This package uses `unorm_dart` for Unicode 17 NFC/NFD normalization and `unicode` for complete Unicode 17 Mn/Mc/Me mark classification._
@@ -28,26 +27,26 @@ _This package uses `unorm_dart` for Unicode 17 NFC/NFD normalization and `unicod
 
 ## Usage & Exact Recovery Modes
 
-### Strategy 1: Envelope Pattern (`LosslessTransliterationResult`)
+### Strategy 1: Envelope Pattern (`TransliterationResult`)
 
 Recommended for database storage, network transport, and clean UI separation.
 
 ```dart
 import 'dart:convert';
-import 'package:indic_script_converter/lossless_transliteration.dart';
+import 'package:indic_script_converter/transliteration_result.dart';
 
 void main() {
   const source = 'Kṛṣṇa ā́tman ḷa';
 
   // 1. Transliterate to an envelope object
-  final result = source.toLosslessDevanagari();
+  final result = source.toDevanagari();
 
   print(result.rendered);        // Output: कृष्ण आ॑त्मन् ऌअ
   print(result.restoreOriginal()); // Output: Kṛṣṇa ā́tman ḷa (Exact match)
 
   // 2. JSON Serialization
   final jsonString = jsonEncode(result.toJson());
-  final restoredResult = LosslessTransliterationResult.fromJson(
+  final restoredResult = TransliterationResult.fromJson(
     Map<String, Object?>.from(jsonDecode(jsonString) as Map),
   );
 
@@ -103,7 +102,7 @@ When using embedded metadata, the reverse functions handle recovery gracefully:
 | `toCanonicalIastFromDevanagari()`             | Always ignores hidden metadata and performs canonical reverse transliteration.         |
 | `visibleDevanagariWithoutExactSourceMetadata` | Extension getter that strips hidden metadata trailers, returning clean Brahmic text.   |
 
-> ⚠️ **Transport Warning:** Embedded Unicode Tag characters are `default-ignorable`. Some sanitizers, search indexes, clipboard filters, or legacy databases may strip them. For unconditional persistence, retain the `LosslessTransliterationResult` envelope or store original keys in dedicated columns.
+> ⚠️ **Transport Warning:** Embedded Unicode Tag characters are `default-ignorable`. Some sanitizers, search indexes, clipboard filters, or legacy databases may strip them. For unconditional persistence, retain the `TransliterationResult` envelope or store original keys in dedicated columns.
 
 ---
 
@@ -147,7 +146,7 @@ Encoded Vedic accent ranges are preserved and mapped appropriately:
 - `U+A8E0–U+A8FF`
 - `U+1CD0–U+1CFF`
 
-Established Latin accent aliases (e.g., Yajurveda fixtures) map directly to Brahmic Vedic marks. Unmapped marks remain encoded and reversible.
+Established Latin accent aliases (e.g., Yajurveda fixtures) map directly to Brahmic Vedic marks. Unmapped marks remain encoded and exact round-trip.
 
 Canonical reverse transliteration renders script-order Vedic marks back into
 Latin syllable order: `वः॑` → `váḥ`, `जुष्टं॑` → `juṣṭáṃ`, and `अहᳪ` →
@@ -183,7 +182,7 @@ void main() {
 }
 ```
 
-### Exact lossless round trip
+### Exact exact round-trip round trip
 The visible Gujarati and Devanagari repertoires are not one-to-one. Therefore, exact round-trip recovery uses a checksummed Unicode-tag trailer.
 
 ```dart

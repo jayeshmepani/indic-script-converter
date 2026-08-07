@@ -13,10 +13,6 @@ from dataclasses import dataclass
 from enum import Enum
 
 from .transliteration_core import (
-    LosslessTransliterationResult,
-    TransliterationIssue,
-    TransliterationIssueSeverity,
-    TransliterationProfile,
     UnicodeNormalizationForm,
     embed_exact_source_metadata,
     normalize_unicode,
@@ -410,72 +406,6 @@ def visible_without_exact_source_metadata(text: str) -> str:
 visibleWithoutExactSourceMetadata = visible_without_exact_source_metadata
 
 
-def to_lossless_devanagari_from_gujarati(
-    text: str,
-    options: IndicScriptConversionOptions | None = None,
-) -> LosslessTransliterationResult:
-    resolved = _resolve_options(options)
-    original = str(text)
-    visible_input = strip_exact_source_metadata(original)
-    normalized_input = normalize_unicode(visible_input, resolved.input_normalization)
-    rendered = to_canonical_devanagari_from_gujarati(visible_input, resolved)
-    return LosslessTransliterationResult(
-        original=original,
-        normalized_input=normalized_input,
-        rendered=rendered,
-        profile=TransliterationProfile.EXTENDED_INDIC,
-        input_normalization=resolved.input_normalization,
-        output_normalization=resolved.output_normalization,
-        rendering_is_injective=False,
-        issues=(
-            TransliterationIssue(
-                code='SOURCE_METADATA_REQUIRED_FOR_EXACT_SCRIPT_REVERSE',
-                message=(
-                    'Gujarati and Devanagari have unequal repertoires. Keep this '
-                    'envelope or enable exact-source metadata for exact recovery.'
-                ),
-                severity=TransliterationIssueSeverity.INFO,
-            ),
-        ),
-    )
-
-
-toLosslessDevanagariFromGujarati = to_lossless_devanagari_from_gujarati
-
-
-def to_lossless_gujarati_from_devanagari(
-    text: str,
-    options: IndicScriptConversionOptions | None = None,
-) -> LosslessTransliterationResult:
-    resolved = _resolve_options(options)
-    original = str(text)
-    visible_input = strip_exact_source_metadata(original)
-    normalized_input = normalize_unicode(visible_input, resolved.input_normalization)
-    rendered = to_canonical_gujarati_from_devanagari(visible_input, resolved)
-    return LosslessTransliterationResult(
-        original=original,
-        normalized_input=normalized_input,
-        rendered=rendered,
-        profile=TransliterationProfile.EXTENDED_INDIC,
-        input_normalization=resolved.input_normalization,
-        output_normalization=resolved.output_normalization,
-        rendering_is_injective=False,
-        issues=(
-            TransliterationIssue(
-                code='SOURCE_METADATA_REQUIRED_FOR_EXACT_SCRIPT_REVERSE',
-                message=(
-                    'Devanagari and Gujarati have unequal repertoires. Keep this '
-                    'envelope or enable exact-source metadata for exact recovery.'
-                ),
-                severity=TransliterationIssueSeverity.INFO,
-            ),
-        ),
-    )
-
-
-toLosslessGujaratiFromDevanagari = to_lossless_gujarati_from_devanagari
-
-
 __all__ = [
     'IndicScriptConversionOptions',
     'IndicScriptDigitPolicy',
@@ -490,16 +420,12 @@ __all__ = [
     'toExactDevanagariFromGujarati',
     'toExactGujaratiFromDevanagari',
     'toGujaratiFromDevanagari',
-    'toLosslessDevanagariFromGujarati',
-    'toLosslessGujaratiFromDevanagari',
     'to_canonical_devanagari_from_gujarati',
     'to_canonical_gujarati_from_devanagari',
     'to_devanagari_from_gujarati',
     'to_exact_devanagari_from_gujarati',
     'to_exact_gujarati_from_devanagari',
     'to_gujarati_from_devanagari',
-    'to_lossless_devanagari_from_gujarati',
-    'to_lossless_gujarati_from_devanagari',
     'visibleWithoutExactSourceMetadata',
     'visible_without_exact_source_metadata',
 ]

@@ -4,20 +4,20 @@ import json
 
 from indic_script_converter import (
     IastPlainEnglishOptions,
-    LosslessTransliterationResult,
     PlainEnglishRomanizationProfile,
-    to_lossless_devanagari,
-    to_lossless_gujarati,
-    to_lossless_plain_english,
+    TransliterationResult,
+    to_devanagari,
+    to_gujarati,
+    to_plain_english,
 )
 
 
 def main() -> None:
     source = 'Kṛṣṇa ā́tman ḷa'
 
-    devanagari = to_lossless_devanagari(source)
-    gujarati = to_lossless_gujarati(source)
-    hunterian = to_lossless_plain_english(
+    devanagari = to_devanagari(source)
+    gujarati = to_gujarati(source)
+    hunterian = to_plain_english(
         source,
         IastPlainEnglishOptions(
             profile=PlainEnglishRomanizationProfile.HUNTERIAN,
@@ -31,7 +31,7 @@ def main() -> None:
     assert hunterian.restore_original() == source
 
     serialized = json.dumps(hunterian.to_json(), ensure_ascii=False)
-    restored = LosslessTransliterationResult.from_json(json.loads(serialized))
+    restored = TransliterationResult.from_json(json.loads(serialized))
     assert restored.restore_original() == source
 
 

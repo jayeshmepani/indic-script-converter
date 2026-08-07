@@ -10,7 +10,7 @@ import 'package:unorm_dart/unorm_dart.dart' as unorm;
 /// `package:unorm_dart` (Unicode 17 data in unorm_dart 0.3.2).
 enum UnicodeNormalizationForm { preserve, nfc, nfd }
 
-/// High-level standards/profile label carried in the reversible envelope.
+/// High-level standards/profile label carried in the exact round-trip envelope.
 enum TransliterationProfile {
   strictIast,
   iso15919Core,
@@ -53,14 +53,14 @@ class TransliterationIssue {
       };
 }
 
-/// Reversible envelope around any transliterated view.
+/// Exact Round-Trip envelope around any transliterated view.
 ///
 /// The rendered string may be non-injective (Hunterian/plain English always
-/// are), but the operation remains exactly reversible because [original] and
+/// are), but the operation remains exactly exact round-trip because [original] and
 /// its code points are retained. Do not discard the envelope if exact source
 /// recovery is required.
-class LosslessTransliterationResult {
-  const LosslessTransliterationResult({
+class TransliterationResult {
+  const TransliterationResult({
     required this.original,
     required this.normalizedInput,
     required this.rendered,
@@ -71,7 +71,7 @@ class LosslessTransliterationResult {
     this.issues = const <TransliterationIssue>[],
   });
 
-  factory LosslessTransliterationResult.fromJson(
+  factory TransliterationResult.fromJson(
     Map<String, Object?> json,
   ) {
     if (json['schema'] != 'indic-script-converter/1') {
@@ -87,7 +87,7 @@ class LosslessTransliterationResult {
       );
     }
 
-    return LosslessTransliterationResult(
+    return TransliterationResult(
       original: original,
       normalizedInput: json['normalizedInput']! as String,
       rendered: json['rendered']! as String,

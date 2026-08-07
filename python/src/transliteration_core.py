@@ -80,7 +80,7 @@ class TransliterationIssue:
 
 
 @dataclass(frozen=True, slots=True)
-class LosslessTransliterationResult:
+class TransliterationResult:
     original: str
     normalized_input: str
     rendered: str
@@ -154,7 +154,7 @@ class LosslessTransliterationResult:
         return self.to_json()
 
     @classmethod
-    def from_json(cls, value: Mapping[str, Any]) -> LosslessTransliterationResult:
+    def from_json(cls, value: Mapping[str, Any]) -> TransliterationResult:
         if value.get('schema') != 'indic-script-converter/1':
             raise ValueError('Unsupported transliteration envelope.')
 
@@ -186,7 +186,7 @@ class LosslessTransliterationResult:
         return json.dumps(self.to_json(), **kwargs)
 
     @classmethod
-    def from_json_text(cls, text: str) -> LosslessTransliterationResult:
+    def from_json_text(cls, text: str) -> TransliterationResult:
         value = json.loads(text)
         if not isinstance(value, dict):
             raise ValueError('Transliteration envelope must be a JSON object.')
@@ -366,10 +366,10 @@ hasEmbeddedExactSource = has_embedded_exact_source
 
 __all__ = [
     'EmbeddedExactSource',
-    'LosslessTransliterationResult',
     'TransliterationIssue',
     'TransliterationIssueSeverity',
     'TransliterationProfile',
+    'TransliterationResult',
     'UnicodeNormalizationForm',
     'embedExactSourceMetadata',
     'embed_exact_source_metadata',

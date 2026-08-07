@@ -1,8 +1,4 @@
 import {
-    LosslessTransliterationResult,
-    TransliterationIssue,
-    TransliterationIssueSeverity,
-    TransliterationProfile,
     UnicodeNormalizationForm,
     hasEmbeddedExactSource,
     isEncodedVedicMark,
@@ -516,54 +512,6 @@ export function visibleGujaratiWithoutExactSourceMetadata(text) {
 }
 export const visible_gujarati_without_exact_source_metadata =
     visibleGujaratiWithoutExactSourceMetadata;
-
-export function toLosslessCanonicalIastFromDevanagari(text, options = new ScriptToIastOptions()) {
-    const resolved = opts(options);
-    const visible = stripExactSourceMetadata(text);
-    const normalized = normalizeUnicode(visible, resolved.inputNormalization);
-    return new LosslessTransliterationResult({
-        original: String(text),
-        normalizedInput: normalized,
-        rendered: BrahmicToIast.convert(visible, devanagari, resolved),
-        profile: TransliterationProfile.STRICT_IAST,
-        inputNormalization: resolved.inputNormalization,
-        outputNormalization: resolved.outputNormalization,
-        renderingIsInjective: false,
-        issues: [
-            new TransliterationIssue({
-                code: 'CANONICAL_REVERSE_DOES_NOT_RECREATE_LATIN_ALIASES',
-                message:
-                    'Canonical IAST is generated. Use toExactIastFromDevanagari() for a metadata-backed exact source key.',
-                severity: TransliterationIssueSeverity.INFO,
-            }),
-        ],
-    });
-}
-export const to_lossless_canonical_iast_from_devanagari = toLosslessCanonicalIastFromDevanagari;
-
-export function toLosslessCanonicalIastFromGujarati(text, options = new ScriptToIastOptions()) {
-    const resolved = opts(options);
-    const visible = stripExactSourceMetadata(text);
-    const normalized = normalizeUnicode(visible, resolved.inputNormalization);
-    return new LosslessTransliterationResult({
-        original: String(text),
-        normalizedInput: normalized,
-        rendered: BrahmicToIast.convert(visible, gujarati, resolved),
-        profile: TransliterationProfile.STRICT_IAST,
-        inputNormalization: resolved.inputNormalization,
-        outputNormalization: resolved.outputNormalization,
-        renderingIsInjective: false,
-        issues: [
-            new TransliterationIssue({
-                code: 'CANONICAL_REVERSE_DOES_NOT_RECREATE_LATIN_ALIASES',
-                message:
-                    'Canonical IAST is generated. Use toExactIastFromGujarati() for a metadata-backed exact source key.',
-                severity: TransliterationIssueSeverity.INFO,
-            }),
-        ],
-    });
-}
-export const to_lossless_canonical_iast_from_gujarati = toLosslessCanonicalIastFromGujarati;
 
 export class DevanagariToIast extends String {
     toIastFromDevanagari(options = new ScriptToIastOptions()) {

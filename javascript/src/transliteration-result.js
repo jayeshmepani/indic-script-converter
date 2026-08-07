@@ -1,5 +1,5 @@
 import {
-    LosslessTransliterationResult,
+    TransliterationResult,
     TransliterationIssue,
     TransliterationIssueSeverity,
     TransliterationProfile,
@@ -44,7 +44,7 @@ function gujaratiProfile(profile) {
     return TransliterationProfile.EXTENDED_INDIC;
 }
 
-export function toLosslessDevanagari(
+export function toDevanagari(
     text,
     {
         options = new IastToDevanagariOptions(),
@@ -67,7 +67,7 @@ export function toLosslessDevanagari(
         ? embedExactSourceMetadata(normalizedVisible, source)
         : normalizedVisible;
 
-    return new LosslessTransliterationResult({
+    return new TransliterationResult({
         original: source,
         normalizedInput,
         rendered,
@@ -85,9 +85,9 @@ export function toLosslessDevanagari(
         ],
     });
 }
-export const to_lossless_devanagari = toLosslessDevanagari;
+export const to_devanagari = toDevanagari;
 
-export function toLosslessGujarati(
+export function toGujarati(
     text,
     {
         options = new IastToGujaratiOptions(),
@@ -110,7 +110,7 @@ export function toLosslessGujarati(
         ? embedExactSourceMetadata(normalizedVisible, source)
         : normalizedVisible;
 
-    return new LosslessTransliterationResult({
+    return new TransliterationResult({
         original: source,
         normalizedInput,
         rendered,
@@ -128,9 +128,9 @@ export function toLosslessGujarati(
         ],
     });
 }
-export const to_lossless_gujarati = toLosslessGujarati;
+export const to_gujarati = toGujarati;
 
-export function toLosslessPlainEnglish(
+export function toPlainEnglish(
     text,
     {
         options = new IastPlainEnglishOptions(),
@@ -149,7 +149,7 @@ export function toLosslessPlainEnglish(
         output_normalization,
     );
     const isHunterian = resolvedOptions.profile === PlainEnglishRomanizationProfile.HUNTERIAN;
-    return new LosslessTransliterationResult({
+    return new TransliterationResult({
         original: source,
         normalizedInput,
         rendered,
@@ -172,4 +172,4 @@ export function toLosslessPlainEnglish(
         ],
     });
 }
-export const to_lossless_plain_english = toLosslessPlainEnglish;
+export const to_plain_english = toPlainEnglish;

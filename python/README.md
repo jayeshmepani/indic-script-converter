@@ -1,4 +1,4 @@
-# Lossless Indic Transliteration — Python 3.12+ port
+# Exact Round-Trip Indic Transliteration — Python 3.12+ port
 
 This directory is a Python port of the supplied Dart implementation. It keeps the Dart package's default **`extendedIndic`** behavior and ports all public conversion directions:
 
@@ -8,7 +8,7 @@ This directory is a Python port of the supplied Dart implementation. It keeps th
 - Devanagari → canonical Latin/IAST
 - Gujarati → canonical Latin/IAST
 - metadata-backed exact source recovery
-- lossless result envelopes and JSON serialization
+- exact round-trip result envelopes and JSON serialization
 
 The runtime has no third-party dependency. Python's standard `unicodedata` module supplies NFC/NFD normalization and Unicode mark categories.
 
@@ -87,21 +87,21 @@ The metadata stores the exact UTF-16LE code-unit sequence and preserves:
 
 The trailer is rejected if either the visible rendering or encoded source payload is modified.
 
-## Lossless envelope
+## Exact Round-Trip envelope
 
 ```python
 import json
 
 from indic_script_converter import (
-    LosslessTransliterationResult,
-    to_lossless_plain_english,
+    TransliterationResult,
+    to_plain_english,
 )
 
-result = to_lossless_plain_english('Kṛṣṇa ā́tman ḷa')
+result = to_plain_english('Kṛṣṇa ā́tman ḷa')
 assert result.restore_original() == 'Kṛṣṇa ā́tman ḷa'
 
 encoded = json.dumps(result.to_json(), ensure_ascii=False)
-restored = LosslessTransliterationResult.from_json(json.loads(encoded))
+restored = TransliterationResult.from_json(json.loads(encoded))
 assert restored.restore_original() == result.original
 ```
 
@@ -120,7 +120,7 @@ print(to_canonical_gujarati_from_devanagari('कृष्ण'))  # કૃષ્�
 print(to_canonical_devanagari_from_gujarati('કૃષ્ણ'))  # कृष्ण
 ```
 
-### Exact lossless round trip
+### Exact exact round-trip round trip
 The visible Gujarati and Devanagari repertoires are not one-to-one. Therefore, exact round-trip recovery uses a checksummed Unicode-tag trailer.
 
 ```python

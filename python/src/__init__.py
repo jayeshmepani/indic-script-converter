@@ -1,1 +1,1 @@
-from .lossless_transliteration import *
+from .transliteration_result import *

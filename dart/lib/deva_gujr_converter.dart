@@ -130,64 +130,6 @@ extension GujaratiDevanagariConversion on String {
 
   String get visibleWithoutExactScriptSourceMetadata =>
       stripExactSourceMetadata(this);
-
-  LosslessTransliterationResult toLosslessDevanagariFromGujarati({
-    IndicScriptConversionOptions options = const IndicScriptConversionOptions(),
-  }) {
-    final visibleInput = stripExactSourceMetadata(this);
-    final normalizedInput = normalizeUnicode(
-      visibleInput,
-      options.inputNormalization,
-    );
-    return LosslessTransliterationResult(
-      original: this,
-      normalizedInput: normalizedInput,
-      rendered: visibleInput.toCanonicalDevanagariFromGujarati(
-        options: options,
-      ),
-      profile: TransliterationProfile.extendedIndic,
-      inputNormalization: options.inputNormalization,
-      outputNormalization: options.outputNormalization,
-      renderingIsInjective: false,
-      issues: const <TransliterationIssue>[
-        TransliterationIssue(
-          code: 'SOURCE_METADATA_REQUIRED_FOR_EXACT_SCRIPT_REVERSE',
-          message:
-              'Gujarati and Devanagari have unequal repertoires. Keep this envelope or enable exact-source metadata for exact recovery.',
-          severity: TransliterationIssueSeverity.info,
-        ),
-      ],
-    );
-  }
-
-  LosslessTransliterationResult toLosslessGujaratiFromDevanagari({
-    IndicScriptConversionOptions options = const IndicScriptConversionOptions(),
-  }) {
-    final visibleInput = stripExactSourceMetadata(this);
-    final normalizedInput = normalizeUnicode(
-      visibleInput,
-      options.inputNormalization,
-    );
-    return LosslessTransliterationResult(
-      original: this,
-      normalizedInput: normalizedInput,
-      rendered: visibleInput.toCanonicalGujaratiFromDevanagari(
-        options: options,
-      ),
-      profile: TransliterationProfile.extendedIndic,
-      inputNormalization: options.inputNormalization,
-      outputNormalization: options.outputNormalization,
-      renderingIsInjective: false,
-      issues: const <TransliterationIssue>[
-        TransliterationIssue(
-          code: 'SOURCE_METADATA_REQUIRED_FOR_EXACT_SCRIPT_REVERSE',
-          message:
-              'Devanagari and Gujarati have unequal repertoires. Keep this envelope or enable exact-source metadata for exact recovery.',
-          severity: TransliterationIssueSeverity.info,
-        ),
-      ],
-    );
-  }
 }
 
 String toCanonicalDevanagariFromGujarati(

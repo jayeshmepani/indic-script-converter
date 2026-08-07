@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:indic_script_converter/lossless_transliteration.dart';
+import 'package:indic_script_converter/transliteration_result.dart';
 
 void main() {
   const source = 'Kṛṣṇa ā́tman ḷa';
 
-  final devanagari = source.toLosslessDevanagari();
-  final gujarati = source.toLosslessGujarati();
-  final hunterian = source.toLosslessPlainEnglish(
+  final devanagari = source.toDevanagari();
+  final gujarati = source.toGujarati();
+  final hunterian = source.toPlainEnglish(
     options: const IastPlainEnglishOptions(
       profile: PlainEnglishRomanizationProfile.hunterian,
     ),
@@ -21,7 +21,7 @@ void main() {
   assert(hunterian.restoreOriginal() == source);
 
   final serialized = jsonEncode(hunterian.toJson());
-  final restoredEnvelope = LosslessTransliterationResult.fromJson(
+  final restoredEnvelope = TransliterationResult.fromJson(
     Map<String, Object?>.from(jsonDecode(serialized) as Map),
   );
   assert(restoredEnvelope.restoreOriginal() == source);

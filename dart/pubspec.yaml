@@ -1,6 +1,6 @@
 name: indic_script_converter
 version: 1.1.0
-description: Reversible IAST/ISO-style Indic transliteration envelopes with Devanagari, Gujarati, Hunterian views, Unicode normalization, and Vedic-mark preservation.
+description: Exact Round-Trip IAST/ISO-style Indic transliteration envelopes with Devanagari, Gujarati, Hunterian views, Unicode normalization, and Vedic-mark preservation.
 homepage: https://github.com/jayeshmepani/indic-script-converter
 repository: https://github.com/jayeshmepani/indic-script-converter
 issue_tracker: https://github.com/jayeshmepani/indic-script-converter/issues

@@ -14,7 +14,7 @@ import 'transliteration_core.dart';
 // Unicode input is normalized to NFD for parsing through
 // `transliteration_core.dart`. Unknown combining marks are preserved or
 // rejected according to policy; they are never silently discarded. Exact
-// source code-point recovery is provided by `LosslessTransliterationResult`
+// source code-point recovery is provided by `TransliterationResult`
 // in the package-level API.
 
 /// Romanization profile.
@@ -624,7 +624,7 @@ class _IastToDevanagariConverter {
         }
 
         // Residual combining marks (e.g. underline on a letter that is not an
-        // ISO letter-builder) are preserved for losslessness. Known identity
+        // ISO letter-builder) are preserved for exact round-tripness. Known identity
         // diacritics are consumed in fold and never reach here.
         final pendingCp = ch.runes.first;
         if (isUnicodeCombiningMark(pendingCp)) {

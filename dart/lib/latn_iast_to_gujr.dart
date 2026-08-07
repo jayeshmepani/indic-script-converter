@@ -14,7 +14,7 @@ import 'transliteration_core.dart';
 // Unicode input is normalized to NFD for parsing through
 // `transliteration_core.dart`. Unknown combining marks are preserved or
 // rejected according to policy; they are never silently discarded. Exact
-// source code-point recovery is provided by `LosslessTransliterationResult`
+// source code-point recovery is provided by `TransliterationResult`
 // in the package-level API.
 
 /// Romanization profile.

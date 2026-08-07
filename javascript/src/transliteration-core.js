@@ -1,5 +1,5 @@
 /**
- * Core lossless transliteration primitives.
+ * Core exact round-trip transliteration primitives.
  *
  * This module intentionally mirrors the Dart/Python envelope schema and the
  * invisible Unicode Tag metadata format byte-for-byte.
@@ -79,7 +79,7 @@ export class TransliterationIssue {
     }
 }
 
-export class LosslessTransliterationResult {
+export class TransliterationResult {
     constructor({
         original,
         normalizedInput,
@@ -143,7 +143,7 @@ export class LosslessTransliterationResult {
 
     toJson() {
         return {
-            schema: 'lossless-indic-transliteration/1',
+            schema: 'exact round-trip-indic-transliteration/1',
             original: this.original,
             originalCodePoints: this.originalCodePoints,
             normalizedInput: this.normalizedInput,
@@ -171,7 +171,7 @@ export class LosslessTransliterationResult {
     }
 
     static fromJson(value) {
-        if (value?.schema !== 'lossless-indic-transliteration/1') {
+        if (value?.schema !== 'exact round-trip-indic-transliteration/1') {
             throw new TypeError('Unsupported transliteration envelope.');
         }
 
@@ -182,7 +182,7 @@ export class LosslessTransliterationResult {
             throw new TypeError('Envelope source code-point integrity check failed.');
         }
 
-        return new LosslessTransliterationResult({
+        return new TransliterationResult({
             original,
             normalizedInput: String(value.normalizedInput),
             rendered: String(value.rendered),
@@ -195,7 +195,7 @@ export class LosslessTransliterationResult {
     }
 
     static from_json(value) {
-        return LosslessTransliterationResult.fromJson(value);
+        return TransliterationResult.fromJson(value);
     }
 
     static fromJsonText(text) {
@@ -203,11 +203,11 @@ export class LosslessTransliterationResult {
         if (value === null || typeof value !== 'object' || Array.isArray(value)) {
             throw new TypeError('Transliteration envelope must be a JSON object.');
         }
-        return LosslessTransliterationResult.fromJson(value);
+        return TransliterationResult.fromJson(value);
     }
 
     static from_json_text(text) {
-        return LosslessTransliterationResult.fromJsonText(text);
+        return TransliterationResult.fromJsonText(text);
     }
 }
 

@@ -52,32 +52,6 @@ extension DevanagariToIast on String {
 
   String get visibleDevanagariWithoutExactSourceMetadata =>
       stripExactSourceMetadata(this);
-
-  LosslessTransliterationResult toLosslessCanonicalIastFromDevanagari({
-    ScriptToIastOptions options = const ScriptToIastOptions(),
-  }) {
-    final visibleInput = stripExactSourceMetadata(this);
-    final normalizedInput =
-        normalizeUnicode(visibleInput, options.inputNormalization);
-    return LosslessTransliterationResult(
-      original: this,
-      normalizedInput: normalizedInput,
-      rendered: _BrahmicToIast.convert(visibleInput, _devanagari, options),
-      profile: TransliterationProfile.strictIast,
-      inputNormalization: options.inputNormalization,
-      outputNormalization: options.outputNormalization,
-      renderingIsInjective: false,
-      issues: const <TransliterationIssue>[
-        TransliterationIssue(
-          code: 'CANONICAL_REVERSE_DOES_NOT_RECREATE_LATIN_ALIASES',
-          message:
-              'Canonical IAST is generated. Use toExactIastFromDevanagari() '
-              'for a metadata-backed exact source key.',
-          severity: TransliterationIssueSeverity.info,
-        ),
-      ],
-    );
-  }
 }
 
 extension GujaratiToIast on String {
@@ -112,31 +86,6 @@ extension GujaratiToIast on String {
 
   String get visibleGujaratiWithoutExactSourceMetadata =>
       stripExactSourceMetadata(this);
-
-  LosslessTransliterationResult toLosslessCanonicalIastFromGujarati({
-    ScriptToIastOptions options = const ScriptToIastOptions(),
-  }) {
-    final visibleInput = stripExactSourceMetadata(this);
-    final normalizedInput =
-        normalizeUnicode(visibleInput, options.inputNormalization);
-    return LosslessTransliterationResult(
-      original: this,
-      normalizedInput: normalizedInput,
-      rendered: _BrahmicToIast.convert(visibleInput, _gujarati, options),
-      profile: TransliterationProfile.strictIast,
-      inputNormalization: options.inputNormalization,
-      outputNormalization: options.outputNormalization,
-      renderingIsInjective: false,
-      issues: const <TransliterationIssue>[
-        TransliterationIssue(
-          code: 'CANONICAL_REVERSE_DOES_NOT_RECREATE_LATIN_ALIASES',
-          message: 'Canonical IAST is generated. Use toExactIastFromGujarati() '
-              'for a metadata-backed exact source key.',
-          severity: TransliterationIssueSeverity.info,
-        ),
-      ],
-    );
-  }
 }
 
 class _ScriptConfig {

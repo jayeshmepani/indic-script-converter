@@ -4,10 +4,6 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 
 from .transliteration_core import (
-    LosslessTransliterationResult,
-    TransliterationIssue,
-    TransliterationIssueSeverity,
-    TransliterationProfile,
     UnicodeNormalizationForm,
     has_embedded_exact_source,
     is_encoded_vedic_mark,
@@ -494,54 +490,6 @@ def visible_gujarati_without_exact_source_metadata(text: str) -> str:
     return strip_exact_source_metadata(text)
 
 
-def to_lossless_canonical_iast_from_devanagari(
-    text: str, options: ScriptToIastOptions | None = None
-) -> LosslessTransliterationResult:
-    opts = options or ScriptToIastOptions()
-    visible = strip_exact_source_metadata(text)
-    normalized = normalize_unicode(visible, opts.input_normalization)
-    return LosslessTransliterationResult(
-        original=text,
-        normalized_input=normalized,
-        rendered=_BrahmicToIast.convert(visible, _DEVANAGARI, opts),
-        profile=TransliterationProfile.STRICT_IAST,
-        input_normalization=opts.input_normalization,
-        output_normalization=opts.output_normalization,
-        rendering_is_injective=False,
-        issues=(
-            TransliterationIssue(
-                code='CANONICAL_REVERSE_DOES_NOT_RECREATE_LATIN_ALIASES',
-                message='Canonical IAST is generated. Use to_exact_iast_from_devanagari() for a metadata-backed exact source key.',
-                severity=TransliterationIssueSeverity.INFO,
-            ),
-        ),
-    )
-
-
-def to_lossless_canonical_iast_from_gujarati(
-    text: str, options: ScriptToIastOptions | None = None
-) -> LosslessTransliterationResult:
-    opts = options or ScriptToIastOptions()
-    visible = strip_exact_source_metadata(text)
-    normalized = normalize_unicode(visible, opts.input_normalization)
-    return LosslessTransliterationResult(
-        original=text,
-        normalized_input=normalized,
-        rendered=_BrahmicToIast.convert(visible, _GUJARATI, opts),
-        profile=TransliterationProfile.STRICT_IAST,
-        input_normalization=opts.input_normalization,
-        output_normalization=opts.output_normalization,
-        rendering_is_injective=False,
-        issues=(
-            TransliterationIssue(
-                code='CANONICAL_REVERSE_DOES_NOT_RECREATE_LATIN_ALIASES',
-                message='Canonical IAST is generated. Use to_exact_iast_from_gujarati() for a metadata-backed exact source key.',
-                severity=TransliterationIssueSeverity.INFO,
-            ),
-        ),
-    )
-
-
 # Dart-style aliases
 toIastFromDevanagari = to_iast_from_devanagari
 toExactIastFromDevanagari = to_exact_iast_from_devanagari
@@ -567,8 +515,6 @@ __all__ = [
     'to_exact_iast_from_gujarati',
     'to_iast_from_devanagari',
     'to_iast_from_gujarati',
-    'to_lossless_canonical_iast_from_devanagari',
-    'to_lossless_canonical_iast_from_gujarati',
     'visible_devanagari_without_exact_source_metadata',
     'visible_gujarati_without_exact_source_metadata',
 ]

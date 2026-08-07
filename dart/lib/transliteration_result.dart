@@ -9,8 +9,8 @@ import 'latn_iast_to_gujr.dart' as guj;
 import 'latn_iast_transcription.dart' as eng;
 import 'transliteration_core.dart';
 
-extension LosslessIndicTransliteration on String {
-  LosslessTransliterationResult toLosslessDevanagari({
+extension IndicTransliteration on String {
+  TransliterationResult toDevanagari({
     dev.IastToDevanagariOptions options = const dev.IastToDevanagariOptions(),
     UnicodeNormalizationForm inputNormalization = UnicodeNormalizationForm.nfd,
     UnicodeNormalizationForm outputNormalization = UnicodeNormalizationForm.nfc,
@@ -26,7 +26,7 @@ extension LosslessIndicTransliteration on String {
         ? embedExactSourceMetadata(normalizedVisible, this)
         : normalizedVisible;
 
-    return LosslessTransliterationResult(
+    return TransliterationResult(
       original: this,
       normalizedInput: normalizedInput,
       rendered: rendered,
@@ -54,7 +54,7 @@ extension LosslessIndicTransliteration on String {
     );
   }
 
-  LosslessTransliterationResult toLosslessGujarati({
+  TransliterationResult toGujarati({
     guj.IastToGujaratiOptions options = const guj.IastToGujaratiOptions(),
     UnicodeNormalizationForm inputNormalization = UnicodeNormalizationForm.nfd,
     UnicodeNormalizationForm outputNormalization = UnicodeNormalizationForm.nfc,
@@ -70,7 +70,7 @@ extension LosslessIndicTransliteration on String {
         ? embedExactSourceMetadata(normalizedVisible, this)
         : normalizedVisible;
 
-    return LosslessTransliterationResult(
+    return TransliterationResult(
       original: this,
       normalizedInput: normalizedInput,
       rendered: rendered,
@@ -96,7 +96,7 @@ extension LosslessIndicTransliteration on String {
     );
   }
 
-  LosslessTransliterationResult toLosslessPlainEnglish({
+  TransliterationResult toPlainEnglish({
     eng.IastPlainEnglishOptions options = const eng.IastPlainEnglishOptions(),
     UnicodeNormalizationForm inputNormalization = UnicodeNormalizationForm.nfd,
     UnicodeNormalizationForm outputNormalization = UnicodeNormalizationForm.nfc,
@@ -110,7 +110,7 @@ extension LosslessIndicTransliteration on String {
     final isHunterian =
         options.profile == eng.PlainEnglishRomanizationProfile.hunterian;
 
-    return LosslessTransliterationResult(
+    return TransliterationResult(
       original: this,
       normalizedInput: normalizedInput,
       rendered: rendered,

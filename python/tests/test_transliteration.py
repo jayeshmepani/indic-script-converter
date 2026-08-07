@@ -5,7 +5,7 @@ import json
 from indic_script_converter import (
     IastToDevanagariOptions,
     IastToGujaratiOptions,
-    LosslessTransliterationResult,
+    TransliterationResult,
     has_embedded_exact_source,
     recover_embedded_exact_source,
     strip_exact_source_metadata,
@@ -13,7 +13,7 @@ from indic_script_converter import (
     to_exact_iast_from_devanagari,
     to_exact_iast_from_gujarati,
     to_gujarati_from_iast,
-    to_lossless_plain_english,
+    to_plain_english,
 )
 import pytest
 
@@ -73,8 +73,8 @@ def test_metadata_tampering_invalidates_metadata() -> None:
 
 
 def test_envelope_json_roundtrip() -> None:
-    result = to_lossless_plain_english('Kṛṣṇa ā́tman ḷa')
+    result = to_plain_english('Kṛṣṇa ā́tman ḷa')
     encoded = json.dumps(result.to_json(), ensure_ascii=False)
-    restored = LosslessTransliterationResult.from_json(json.loads(encoded))
+    restored = TransliterationResult.from_json(json.loads(encoded))
     assert restored == result
     assert restored.restore_original() == 'Kṛṣṇa ā́tman ḷa'

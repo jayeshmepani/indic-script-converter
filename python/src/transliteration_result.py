@@ -7,12 +7,12 @@ from .latn_iast_transcription import *
 from .transliteration_core import *
 
 
-def to_lossless_devanagari(
+def to_devanagari(
     text: str,
     options: IastToDevanagariOptions | None = None,
     input_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFD,
     output_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFC,
-) -> LosslessTransliterationResult:
+) -> TransliterationResult:
     opts = options or IastToDevanagariOptions()
     normalized_input = normalize_unicode(text, input_normalization)
     directly_rendered = to_devanagari_from_iast(normalized_input, opts)
@@ -29,7 +29,7 @@ def to_lossless_devanagari(
         DevanagariRomanizationProfile.ISO_15919_CORE: TransliterationProfile.ISO_15919_CORE,
         DevanagariRomanizationProfile.EXTENDED_INDIC: TransliterationProfile.EXTENDED_INDIC,
     }[opts.profile]
-    return LosslessTransliterationResult(
+    return TransliterationResult(
         original=text,
         normalized_input=normalized_input,
         rendered=rendered,
@@ -47,12 +47,12 @@ def to_lossless_devanagari(
     )
 
 
-def to_lossless_gujarati(
+def to_gujarati(
     text: str,
     options: IastToGujaratiOptions | None = None,
     input_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFD,
     output_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFC,
-) -> LosslessTransliterationResult:
+) -> TransliterationResult:
     opts = options or IastToGujaratiOptions()
     normalized_input = normalize_unicode(text, input_normalization)
     directly_rendered = to_gujarati_from_iast(normalized_input, opts)
@@ -69,7 +69,7 @@ def to_lossless_gujarati(
         GujaratiRomanizationProfile.ISO_15919_CORE: TransliterationProfile.ISO_15919_CORE,
         GujaratiRomanizationProfile.EXTENDED_INDIC: TransliterationProfile.EXTENDED_INDIC,
     }[opts.profile]
-    return LosslessTransliterationResult(
+    return TransliterationResult(
         original=text,
         normalized_input=normalized_input,
         rendered=rendered,
@@ -87,19 +87,19 @@ def to_lossless_gujarati(
     )
 
 
-def to_lossless_plain_english(
+def to_plain_english(
     text: str,
     options: IastPlainEnglishOptions | None = None,
     input_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFD,
     output_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFC,
-) -> LosslessTransliterationResult:
+) -> TransliterationResult:
     opts = options or IastPlainEnglishOptions()
     normalized_input = normalize_unicode(text, input_normalization)
     rendered = normalize_unicode(
         to_plain_english_from_iast(normalized_input, opts), output_normalization
     )
     hunterian = opts.profile is PlainEnglishRomanizationProfile.HUNTERIAN
-    return LosslessTransliterationResult(
+    return TransliterationResult(
         original=text,
         normalized_input=normalized_input,
         rendered=rendered,
@@ -128,9 +128,9 @@ def to_lossless_plain_english(
 
 
 # Dart-style aliases
-toLosslessDevanagari = to_lossless_devanagari
-toLosslessGujarati = to_lossless_gujarati
-toLosslessPlainEnglish = to_lossless_plain_english
+toDevanagari = to_devanagari
+toGujarati = to_gujarati
+toPlainEnglish = to_plain_english
 
 
 __all__ = [name for name in globals() if not name.startswith('_')]

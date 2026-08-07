@@ -2,7 +2,7 @@
 
 A complete Node.js/ES2023 port of the supplied Dart and Python Indic-script conversion libraries.
 
-The implementation preserves the same conversion inventory, defaults, profile boundaries, normalization behavior, Vedic handling, canonical reverse conversion, lossless result envelope and invisible exact-source metadata format.
+The implementation preserves the same conversion inventory, defaults, profile boundaries, normalization behavior, Vedic handling, canonical reverse conversion, exact round-trip result envelope and invisible exact-source metadata format.
 
 ## Runtime
 
@@ -20,7 +20,7 @@ The implementation preserves the same conversion inventory, defaults, profile bo
 - Devanagari → canonical IAST
 - Gujarati → canonical IAST
 - Metadata-backed exact original-key recovery
-- Lossless JSON envelope serialization
+- Exact Round-Trip JSON envelope serialization
 
 The default forward profile is `extendedIndic`, matching the source libraries.
 
@@ -99,14 +99,14 @@ The trailer preserves the exact JavaScript UTF-16 code-unit sequence, including:
 
 The source and visible rendering each have an independent FNV-1a checksum. Editing either part invalidates exact recovery.
 
-## Lossless envelope
+## Exact Round-Trip envelope
 
 ```js
-import { LosslessTransliterationResult, toLosslessPlainEnglish } from 'indic-script-converter';
+import { TransliterationResult, toPlainEnglish } from 'indic-script-converter';
 
-const result = toLosslessPlainEnglish('Kṛṣṇa ā́tman ḷa');
+const result = toPlainEnglish('Kṛṣṇa ā́tman ḷa');
 const json = JSON.stringify(result.toJson());
-const restored = LosslessTransliterationResult.fromJson(JSON.parse(json));
+const restored = TransliterationResult.fromJson(JSON.parse(json));
 
 console.assert(restored.restoreOriginal() === 'Kṛṣṇa ā́tman ḷa');
 ```
@@ -114,7 +114,7 @@ console.assert(restored.restoreOriginal() === 'Kṛṣṇa ā́tman ḷa');
 The JSON schema remains:
 
 ```text
-lossless-indic-transliteration/1
+exact round-trip-indic-transliteration/1
 ```
 
 ## Profiles
@@ -192,7 +192,7 @@ console.log(toCanonicalGujaratiFromDevanagari('कृष्ण')); // કૃષ�
 console.log(toCanonicalDevanagariFromGujarati('કૃષ્ણ')); // krishna
 ```
 
-### Exact lossless round trip
+### Exact exact round-trip round trip
 
 The visible Gujarati and Devanagari repertoires are not one-to-one. Therefore, exact round-trip recovery uses a checksummed Unicode-tag trailer.
 
@@ -304,6 +304,6 @@ See [PORT_VERIFICATION.md](./PORT_VERIFICATION.md) for the executed verification
 | `latn_iast_to_gujr`                             | `src/latn-iast-to-gujr.js`                      |
 | `latn_iast_transcription`                       | `src/latn-iast-transcription.js`                |
 | `brahmic_to_latn_iast`                          | `src/brahmic-to-latn-iast.js`                   |
-| `lossless_transliteration`                      | `src/lossless-transliteration.js`               |
+| `transliteration_result`                        | `src/transliteration-result.js`                 |
 | example corpora                                 | `src/example-*.js`                              |
 | verification runners                            | `tools/latn_iast_transliteration_verification/` |

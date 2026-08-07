@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:indic_script_converter/lossless_transliteration.dart';
+import 'package:indic_script_converter/transliteration_result.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -126,19 +126,19 @@ void main() {
       const reorderedNfd = 'Kr̥ṣṇa';
 
       expect(
-        nfc.toLosslessDevanagari().rendered,
-        reorderedNfd.toLosslessDevanagari().rendered,
+        nfc.toDevanagari().rendered,
+        reorderedNfd.toDevanagari().rendered,
       );
       expect(
-        nfc.toLosslessGujarati().rendered,
-        reorderedNfd.toLosslessGujarati().rendered,
+        nfc.toGujarati().rendered,
+        reorderedNfd.toGujarati().rendered,
       );
     });
 
     test('unrecognized combining marks are preserved, never silently dropped',
         () {
       const source = 'a\u1AB0';
-      final result = source.toLosslessDevanagari();
+      final result = source.toDevanagari();
 
       expect(result.rendered.runes, contains(0x1AB0));
       expect(result.restoreOriginal(), source);
@@ -146,7 +146,7 @@ void main() {
 
     test('envelope restores exact case, normalization, and mark order', () {
       const source = 'Kr̥ṣṇa A\u0301\u0323';
-      final result = source.toLosslessGujarati();
+      final result = source.toGujarati();
 
       expect(result.restoreOriginal(), source);
       expect(result.originalCodePoints, source.runes.toList());
@@ -156,7 +156,7 @@ void main() {
   group('Vedic Unicode preservation', () {
     test('Devanagari, Devanagari Extended, and Vedic Extensions survive', () {
       const source = 'a\u0951\uA8E0\u1CD0\u1CFA';
-      final result = source.toLosslessDevanagari();
+      final result = source.toDevanagari();
 
       for (final rune in <int>[0x0951, 0xA8E0, 0x1CD0, 0x1CFA]) {
         expect(result.rendered.runes, contains(rune));
@@ -208,10 +208,11 @@ void main() {
     });
   });
 
-  group('lossless envelope', () {
-    test('Hunterian view is lossy but the operation remains reversible', () {
+  group('exact round-trip envelope', () {
+    test('Hunterian view is lossy but the operation remains exact round-trip',
+        () {
       const source = 'Gorakhapura Śiva ṭa ḍa';
-      final result = source.toLosslessPlainEnglish(
+      final result = source.toPlainEnglish(
         options: const IastPlainEnglishOptions(
           profile: PlainEnglishRomanizationProfile.hunterian,
         ),
@@ -227,11 +228,11 @@ void main() {
 
     test('JSON envelope round-trips with code-point integrity checking', () {
       const source = 'KṚṢṆA a\u0304\u0301';
-      final original = source.toLosslessDevanagari();
+      final original = source.toDevanagari();
       final decoded = Map<String, Object?>.from(
         jsonDecode(jsonEncode(original.toJson())) as Map,
       );
-      final restored = LosslessTransliterationResult.fromJson(decoded);
+      final restored = TransliterationResult.fromJson(decoded);
 
       expect(restored.restoreOriginal(), source);
       expect(restored.rendered, original.rendered);
@@ -241,13 +242,13 @@ void main() {
   group('canonical script reverse', () {
     test('Devanagari returns canonical IAST', () {
       const source = 'kṛṣṇa ā́tman';
-      final script = source.toLosslessDevanagari().rendered;
+      final script = source.toDevanagari().rendered;
       expect(script.toCanonicalIastFromDevanagari(), source);
     });
 
     test('Gujarati returns canonical IAST', () {
       const source = 'kṛṣṇa ā́tman';
-      final script = source.toLosslessGujarati().rendered;
+      final script = source.toGujarati().rendered;
       expect(script.toCanonicalIastFromGujarati(), source);
     });
   });

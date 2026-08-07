@@ -9,10 +9,6 @@
  */
 
 import {
-    LosslessTransliterationResult,
-    TransliterationIssue,
-    TransliterationIssueSeverity,
-    TransliterationProfile,
     UnicodeNormalizationForm,
     embedExactSourceMetadata,
     normalizeUnicode,
@@ -452,59 +448,3 @@ export function visibleWithoutExactSourceMetadata(input) {
 }
 
 export const visible_without_exact_source_metadata = visibleWithoutExactSourceMetadata;
-
-export function toLosslessDevanagariFromGujarati(input, options = {}) {
-    const resolved = normalizeOptions(options);
-    const original = String(input);
-    const visibleInput = stripExactSourceMetadata(original);
-    const normalizedInput = normalizeUnicode(visibleInput, resolved.inputNormalization);
-    const rendered = toCanonicalDevanagariFromGujarati(visibleInput, resolved);
-
-    return new LosslessTransliterationResult({
-        original,
-        normalizedInput,
-        rendered,
-        profile: TransliterationProfile.EXTENDED_INDIC,
-        inputNormalization: resolved.inputNormalization,
-        outputNormalization: resolved.outputNormalization,
-        renderingIsInjective: false,
-        issues: [
-            new TransliterationIssue({
-                code: 'SOURCE_METADATA_REQUIRED_FOR_EXACT_SCRIPT_REVERSE',
-                message:
-                    'Gujarati and Devanagari have unequal repertoires. Keep this envelope or enable exact-source metadata for exact recovery.',
-                severity: TransliterationIssueSeverity.INFO,
-            }),
-        ],
-    });
-}
-
-export const to_lossless_devanagari_from_gujarati = toLosslessDevanagariFromGujarati;
-
-export function toLosslessGujaratiFromDevanagari(input, options = {}) {
-    const resolved = normalizeOptions(options);
-    const original = String(input);
-    const visibleInput = stripExactSourceMetadata(original);
-    const normalizedInput = normalizeUnicode(visibleInput, resolved.inputNormalization);
-    const rendered = toCanonicalGujaratiFromDevanagari(visibleInput, resolved);
-
-    return new LosslessTransliterationResult({
-        original,
-        normalizedInput,
-        rendered,
-        profile: TransliterationProfile.EXTENDED_INDIC,
-        inputNormalization: resolved.inputNormalization,
-        outputNormalization: resolved.outputNormalization,
-        renderingIsInjective: false,
-        issues: [
-            new TransliterationIssue({
-                code: 'SOURCE_METADATA_REQUIRED_FOR_EXACT_SCRIPT_REVERSE',
-                message:
-                    'Devanagari and Gujarati have unequal repertoires. Keep this envelope or enable exact-source metadata for exact recovery.',
-                severity: TransliterationIssueSeverity.INFO,
-            }),
-        ],
-    });
-}
-
-export const to_lossless_gujarati_from_devanagari = toLosslessGujaratiFromDevanagari;
