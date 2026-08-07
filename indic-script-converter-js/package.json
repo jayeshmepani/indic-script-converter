@@ -1,0 +1,48 @@
+{
+    "name": "indic-script-converter",
+    "version": "1.0.0",
+    "description": "Lossless IAST/extended Indic transliteration for Devanagari, Gujarati, plain English and canonical reverse conversion.",
+    "type": "module",
+    "engines": {
+        "node": ">=20"
+    },
+    "exports": {
+        ".": "./src/index.js",
+        "./transliteration-core": "./src/transliteration-core.js",
+        "./latn-iast-to-deva": "./src/latn-iast-to-deva.js",
+        "./latn-iast-to-gujr": "./src/latn-iast-to-gujr.js",
+        "./latn-iast-transcription": "./src/latn-iast-transcription.js",
+        "./brahmic-to-latn-iast": "./src/brahmic-to-latn-iast.js",
+        "./lossless-transliteration": "./src/lossless-transliteration.js"
+    },
+    "scripts": {
+        "test": "node --test tests/*.test.js",
+        "verify": "node tools/latn_iast_transliteration_verification/run-all.js",
+        "demo": "node examples/demo.js",
+        "outputs": "node tools/latn_iast_transliteration_verification/generate-outputs.js",
+        "lint": "eslint . --fix",
+        "lint:check": "eslint .",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "modernize": "eslint . --fix",
+        "quality": "npm run format:check && npm run lint:check && npm test"
+    },
+    "keywords": [
+        "IAST",
+        "Devanagari",
+        "Gujarati",
+        "transliteration",
+        "Vedic",
+        "lossless"
+    ],
+    "license": "UNLICENSED",
+    "author": "Shreesoftech",
+    "bin": {
+        "latn-iast-lossless-demo": "./bin/latn-iast-lossless-demo.js"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "eslint": "^10.8.0",
+        "prettier": "^3.9.6"
+    }
+}

@@ -1,0 +1,41 @@
+# Dart / Pub
+.dart_tool/
+.packages
+.pub/
+.pub-cache/
+build/
+
+# Generated package metadata
+doc/api/
+coverage/
+
+# IDEs / Editors
+.idea/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs / temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Generated verification outputs
+*_output.txt
+
+# Local scratch / grabbed content
+grabbed_stuffs/
+
+# Misc local tooling
+coverage/

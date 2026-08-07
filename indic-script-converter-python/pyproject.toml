@@ -1,0 +1,98 @@
+[project]
+name = "indic-script-converter"
+version = "1.0.0"
+requires-python = ">=3.12"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+indent-width = 4
+
+exclude = [
+    ".git",
+    ".idea",
+    ".vscode",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".pytest_cache",
+    ".ruff_cache",
+    "build",
+    "dist",
+    "coverage",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "W",
+
+    # pyupgrade
+    "UP",
+
+    # flake8-bugbear
+    "B",
+
+    # comprehensions
+    "C4",
+
+    # simplify
+    "SIM",
+
+    # unused arguments
+    "ARG",
+
+    # return
+    "RET",
+
+    # raise
+    "RSE",
+
+    # pie
+    "PIE",
+
+    # pathlib
+    "PTH",
+
+    # performance
+    "PERF",
+
+    # imports
+    "I",
+
+    # Ruff-specific
+    "RUF",
+]
+
+ignore = [
+    # formatter owns line wrapping
+    "E501",
+    # Star imports
+    "F403",
+    "F405",
+    # Ambiguous unicode characters in translation dictionaries
+    "RUF001",
+    # Mutable class defaults
+    "RUF012",
+    # Unused arguments in ported parity methods
+    "ARG002",
+    # Nested if statement simplification
+    "SIM102",
+    # StrEnum preference
+    "UP042",
+]
+
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+force-sort-within-sections = true
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+docstring-code-format = true
