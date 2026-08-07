@@ -3,7 +3,7 @@ import 'package:indic_script_converter/latn_iast_to_gujr.dart';
 import 'package:indic_script_converter/latn_iast_transcription.dart';
 import 'package:test/test.dart';
 
-import '../tools/latn_iast_transliteration_verification/example_latn_iast.dart'
+import '../tool/latn_iast_transliteration_verification/example_latn_iast.dart'
     as ex;
 
 void main() {

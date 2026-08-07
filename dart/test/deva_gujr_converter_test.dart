@@ -2,9 +2,9 @@ import 'package:indic_script_converter/deva_gujr_converter.dart';
 import 'package:indic_script_converter/latn_iast_to_gujr.dart';
 import 'package:test/test.dart';
 
-import '../tools/latn_iast_transliteration_verification/example_deva.dart'
+import '../tool/latn_iast_transliteration_verification/example_deva.dart'
     as devaExamples;
-import '../tools/latn_iast_transliteration_verification/example_gujr.dart'
+import '../tool/latn_iast_transliteration_verification/example_gujr.dart'
     as gujrExamples;
 
 void main() {

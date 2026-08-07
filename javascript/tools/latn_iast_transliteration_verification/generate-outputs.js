@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../..');
+const destDir = path.resolve(root, '../shared/verification-output');
 const jobs = [
     ['latn-iast-to-deva-test.js', 'latn_iast_to_deva_output.txt'],
     ['latn-iast-to-gujr-test.js', 'latn_iast_to_gujr_output.txt'],
@@ -24,6 +25,7 @@ for (const [script, output] of jobs) {
         process.stderr.write(result.stderr);
         process.exit(result.status ?? 1);
     }
-    fs.writeFileSync(path.join(root, output), result.stdout, 'utf8');
-    console.log(`generated ${output}`);
+    fs.mkdirSync(destDir, { recursive: true });
+    fs.writeFileSync(path.join(destDir, output), result.stdout, 'utf8');
+    console.log(`generated ${output} in shared/verification-output/`);
 }

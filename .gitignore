@@ -1,0 +1,22 @@
+# Dependencies & Caches
+node_modules/
+vendor/
+__pycache__/
+*.py[cod]
+.dart_tool/
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Build & Release Artifacts
+build/
+dist/
+.phpunit.cache/
+.rector_cache/
+.xml/
+
+# IDE & OS Files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
