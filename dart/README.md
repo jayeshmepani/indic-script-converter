@@ -18,7 +18,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  lipimala: ^1.1.0
+  lipimala: ^1.0.0
 ```
 
 _This package uses `unorm_dart` for Unicode 17 NFC/NFD normalization and `unicode` for complete Unicode 17 Mn/Mc/Me mark classification._
@@ -173,6 +173,7 @@ Sanskrit IAST boundaries.
 This package includes a direct converter between Devanagari and Gujarati.
 
 ### Canonical visible conversion
+
 ```dart
 import 'package:lipimala/deva_gujr_converter.dart';
 
@@ -183,6 +184,7 @@ void main() {
 ```
 
 ### Exact exact round-trip round trip
+
 The visible Gujarati and Devanagari repertoires are not one-to-one. Therefore, exact round-trip recovery uses a checksummed Unicode-tag trailer.
 
 ```dart
@@ -203,11 +205,14 @@ void main() {
 ```
 
 ### Smart exact-or-canonical APIs
+
 These recover a correctly typed exact source trailer if present, and otherwise fall back to canonical visible conversion:
+
 - `toDevanagariFromGujarati()`
 - `toGujaratiFromDevanagari()`
 
 Strict exact APIs throw when typed metadata is absent or damaged:
+
 - `toExactDevanagariFromGujarati()`
 - `toExactGujaratiFromDevanagari()`
 
