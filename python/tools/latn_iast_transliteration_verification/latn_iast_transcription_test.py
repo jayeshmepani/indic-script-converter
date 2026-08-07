@@ -7,7 +7,7 @@ from indic_script_converter.latn_iast_transcription import (
     PlainEnglishRomanizationProfile,
     to_plain_english_from_iast,
 )
-from indic_script_converter.tools.example_latn_iast import transliteration_smoke_samples
+from tools.fixtures.example_latn_iast import transliteration_smoke_samples
 
 
 def main() -> None:

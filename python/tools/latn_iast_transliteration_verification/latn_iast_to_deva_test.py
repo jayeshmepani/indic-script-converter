@@ -8,7 +8,7 @@ from indic_script_converter.latn_iast_to_deva import (
     IastToDevanagariPunctuationPolicy,
     to_devanagari_from_iast,
 )
-from indic_script_converter.tools.example_latn_iast import (
+from tools.fixtures.example_latn_iast import (
     transliteration_smoke_samples,
     vedic_round_trip_cases,
 )

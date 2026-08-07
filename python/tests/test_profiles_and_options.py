@@ -19,7 +19,7 @@ from indic_script_converter import (
     to_gujarati_from_iast,
     to_plain_english_from_iast,
 )
-from indic_script_converter.tools.example_latn_iast import vedic_round_trip_cases
+from tools.fixtures.example_latn_iast import vedic_round_trip_cases
 
 
 def test_default_profiles_are_extended_indic() -> None:

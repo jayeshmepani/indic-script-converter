@@ -52,9 +52,6 @@
         "README.md",
         "CHANGELOG.md"
     ],
-    "bin": {
-        "latn-iast-lossless-demo": "./bin/latn-iast-lossless-demo.js"
-    },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
         "eslint": "^10.8.0",

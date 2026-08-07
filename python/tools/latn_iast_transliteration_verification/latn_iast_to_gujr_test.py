@@ -8,7 +8,7 @@ from indic_script_converter.latn_iast_to_gujr import (
     IastToGujaratiPunctuationPolicy,
     to_gujarati_from_iast,
 )
-from indic_script_converter.tools.example_latn_iast import transliteration_smoke_samples
+from tools.fixtures.example_latn_iast import transliteration_smoke_samples
 
 
 def main() -> None:

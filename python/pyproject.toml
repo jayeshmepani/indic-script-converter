@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [
-    { name = "Jayesh Patel", email = "jayeshmepani777@gmail.com" }
+    { name = "Jayesh Mepani", email = "jayeshmepani777@gmail.com" }
 ]
 keywords = [
     "transliteration",
@@ -42,16 +42,15 @@ dev = [
 
 [project.urls]
 Homepage = "https://github.com/jayeshmepani/indic-script-converter"
-Repository = "https://github.com/jayeshmepani/indic-script-converter"
 Source = "https://github.com/jayeshmepani/indic-script-converter"
 Issues = "https://github.com/jayeshmepani/indic-script-converter/issues"
 
-[tool.hatch.build.targets.wheel]
-packages = ["indic_script_converter"]
+[tool.hatch.build.targets.wheel.sources]
+"src" = "indic_script_converter"
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "indic_script_converter",
+    "src",
     "tests",
     "tools",
     "README.md",
@@ -61,22 +60,7 @@ include = [
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-indent-width = 4
-src = ["indic_script_converter", "tests", "tools"]
-
-exclude = [
-    ".git",
-    ".idea",
-    ".vscode",
-    ".venv",
-    "venv",
-    "__pycache__",
-    ".pytest_cache",
-    ".ruff_cache",
-    "build",
-    "dist",
-    "coverage",
-]
+src = ["src", "tests", "tools"]
 
 [tool.ruff.lint]
 select = [
@@ -118,7 +102,7 @@ combine-as-imports = true
 force-sort-within-sections = true
 
 [tool.ruff.lint.per-file-ignores]
-"indic_script_converter/__init__.py" = ["F401", "F403"]
+"src/__init__.py" = ["F401", "F403"]
 "tests/*" = ["S101"]
 
 [tool.ruff.format]

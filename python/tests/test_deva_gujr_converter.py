@@ -13,9 +13,9 @@ from indic_script_converter.latn_iast_to_gujr import (
     IastToGujaratiOptions,
     to_gujarati_from_iast,
 )
-from indic_script_converter.tools.example_deva import devanagari_smoke_samples
-from indic_script_converter.tools.example_gujr import gujarati_smoke_samples
 import pytest
+from tools.fixtures.example_deva import devanagari_smoke_samples
+from tools.fixtures.example_gujr import gujarati_smoke_samples
 
 
 def test_core_canonical_script_conversion() -> None:

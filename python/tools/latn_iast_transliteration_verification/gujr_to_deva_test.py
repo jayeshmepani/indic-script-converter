@@ -3,7 +3,7 @@ from __future__ import annotations
 from indic_script_converter.deva_gujr_converter import (
     to_canonical_devanagari_from_gujarati,
 )
-from indic_script_converter.tools.example_gujr import gujarati_smoke_samples
+from tools.fixtures.example_gujr import gujarati_smoke_samples
 
 
 def main() -> None:
