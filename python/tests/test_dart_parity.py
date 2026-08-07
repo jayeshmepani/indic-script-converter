@@ -1,22 +1,22 @@
 from __future__ import annotations
 
-from indic_script_converter.brahmic_to_latn_iast import (
+from lipimala.brahmic_to_latn_iast import (
     to_canonical_iast_from_devanagari,
     to_canonical_iast_from_gujarati,
 )
-from indic_script_converter.latn_iast_to_deva import (
+from lipimala.latn_iast_to_deva import (
     IastToDevanagariDigitPolicy,
     IastToDevanagariOptions,
     IastToDevanagariPunctuationPolicy,
     to_devanagari_from_iast,
 )
-from indic_script_converter.latn_iast_to_gujr import (
+from lipimala.latn_iast_to_gujr import (
     IastToGujaratiDigitPolicy,
     IastToGujaratiOptions,
     IastToGujaratiPunctuationPolicy,
     to_gujarati_from_iast,
 )
-from indic_script_converter.latn_iast_transcription import to_plain_english_from_iast
+from lipimala.latn_iast_transcription import to_plain_english_from_iast
 
 from .oracle_data import (
     DEVA_SOURCE,

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from indic_script_converter.brahmic_to_latn_iast import to_canonical_iast_from_gujarati
+from lipimala.brahmic_to_latn_iast import to_canonical_iast_from_gujarati
 from tools.fixtures.example_gujr import gujarati_smoke_samples
 
 

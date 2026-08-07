@@ -1,6 +1,6 @@
-import 'package:indic_script_converter/latn_iast_to_deva.dart';
-import 'package:indic_script_converter/latn_iast_to_gujr.dart';
-import 'package:indic_script_converter/latn_iast_transcription.dart';
+import 'package:lipimala/latn_iast_to_deva.dart';
+import 'package:lipimala/latn_iast_to_gujr.dart';
+import 'package:lipimala/latn_iast_transcription.dart';
 import 'package:test/test.dart';
 
 import '../tool/latn_iast_transliteration_verification/example_latn_iast.dart'

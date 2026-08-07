@@ -31,7 +31,7 @@ python -m pytest
 ## Basic conversions
 
 ```python
-from indic_script_converter import (
+from lipimala import (
     to_devanagari_from_iast,
     to_gujarati_from_iast,
     to_plain_english_from_iast,
@@ -51,7 +51,7 @@ assert to_canonical_iast_from_gujarati('કૃષ્ણ') == 'kṛṣṇa'
 Visible Brahmic output is many-to-one. For example, aliases, case, and NFC/NFD forms can render identically. Exact recovery therefore uses the same checksummed invisible Unicode-tag trailer as the Dart implementation.
 
 ```python
-from indic_script_converter import (
+from lipimala import (
     IastToDevanagariOptions,
     IastToGujaratiOptions,
     to_devanagari_from_iast,
@@ -92,7 +92,7 @@ The trailer is rejected if either the visible rendering or encoded source payloa
 ```python
 import json
 
-from indic_script_converter import (
+from lipimala import (
     TransliterationResult,
     to_plain_english,
 )
@@ -111,7 +111,7 @@ This package includes a direct converter between Devanagari and Gujarati.
 
 ### Canonical visible conversion
 ```python
-from indic_script_converter.deva_gujr_converter import (
+from lipimala.deva_gujr_converter import (
     to_canonical_gujarati_from_devanagari,
     to_canonical_devanagari_from_gujarati,
 )
@@ -124,7 +124,7 @@ print(to_canonical_devanagari_from_gujarati('કૃષ્ણ'))  # कृष्�
 The visible Gujarati and Devanagari repertoires are not one-to-one. Therefore, exact round-trip recovery uses a checksummed Unicode-tag trailer.
 
 ```python
-from indic_script_converter.deva_gujr_converter import (
+from lipimala.deva_gujr_converter import (
     IndicScriptConversionOptions,
     to_canonical_gujarati_from_devanagari,
     to_exact_devanagari_from_gujarati,

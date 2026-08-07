@@ -1,5 +1,5 @@
 {
-    "name": "indic-script-converter",
+    "name": "lipimala",
     "version": "1.0.0",
     "description": "Exact Round-Trip IAST/extended Indic transliteration for Devanagari, Gujarati, plain English and canonical reverse conversion.",
     "type": "module",

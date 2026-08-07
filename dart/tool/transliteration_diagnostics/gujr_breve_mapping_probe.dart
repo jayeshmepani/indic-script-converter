@@ -1,4 +1,4 @@
-import 'package:indic_script_converter/latn_iast_to_gujr.dart';
+import 'package:lipimala/latn_iast_to_gujr.dart';
 
 void main() {
   const s = 'ĕkānta';

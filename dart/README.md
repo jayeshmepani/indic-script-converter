@@ -18,7 +18,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  indic_script_converter: ^1.1.0
+  lipimala: ^1.1.0
 ```
 
 _This package uses `unorm_dart` for Unicode 17 NFC/NFD normalization and `unicode` for complete Unicode 17 Mn/Mc/Me mark classification._
@@ -33,7 +33,7 @@ Recommended for database storage, network transport, and clean UI separation.
 
 ```dart
 import 'dart:convert';
-import 'package:indic_script_converter/transliteration_result.dart';
+import 'package:lipimala/transliteration_result.dart';
 
 void main() {
   const source = 'Kṛṣṇa ā́tman ḷa';
@@ -61,9 +61,9 @@ void main() {
 Appends a hidden, checksummed Unicode-tag sequence containing original UTF-16 code units directly to the Brahmic string. The visible Brahmic text remains visually unchanged.
 
 ```dart
-import 'package:indic_script_converter/brahmic_to_latn_iast.dart';
-import 'package:indic_script_converter/latn_iast_to_deva.dart';
-import 'package:indic_script_converter/latn_iast_to_gujr.dart';
+import 'package:lipimala/brahmic_to_latn_iast.dart';
+import 'package:lipimala/latn_iast_to_deva.dart';
+import 'package:lipimala/latn_iast_to_gujr.dart';
 
 void main() {
   const source = 'Kṛṣṇa / Kr̥ṣṇa / ḫāna';
@@ -174,7 +174,7 @@ This package includes a direct converter between Devanagari and Gujarati.
 
 ### Canonical visible conversion
 ```dart
-import 'package:indic_script_converter/deva_gujr_converter.dart';
+import 'package:lipimala/deva_gujr_converter.dart';
 
 void main() {
   print('कृष्ण'.toCanonicalGujaratiFromDevanagari()); // કૃષ્ણ
@@ -186,7 +186,7 @@ void main() {
 The visible Gujarati and Devanagari repertoires are not one-to-one. Therefore, exact round-trip recovery uses a checksummed Unicode-tag trailer.
 
 ```dart
-import 'package:indic_script_converter/deva_gujr_converter.dart';
+import 'package:lipimala/deva_gujr_converter.dart';
 
 void main() {
   const source = 'ऄ ऎ ऍ ॲ ऒ ऑ ॵ ळ ऴ ग़ ॻ ड़ ॸ ॾ';

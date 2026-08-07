@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from indic_script_converter import (
+from lipimala import (
     DevanagariRomanizationProfile,
     FinalAPolicy,
     GujaratiRomanizationProfile,

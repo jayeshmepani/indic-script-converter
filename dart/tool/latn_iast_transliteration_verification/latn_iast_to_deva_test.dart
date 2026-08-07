@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 
-import 'package:indic_script_converter/latn_iast_to_deva.dart';
+import 'package:lipimala/latn_iast_to_deva.dart';
 import 'example_latn_iast.dart' as ex;
 
 export '../../lib/latn_iast_to_deva.dart';

@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 
-import 'package:indic_script_converter/deva_gujr_converter.dart';
+import 'package:lipimala/deva_gujr_converter.dart';
 import 'example_deva.dart' as examples;
 
 void main() {

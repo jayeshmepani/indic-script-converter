@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from indic_script_converter import (
+from lipimala import (
     IastPlainEnglishOptions,
     PlainEnglishRomanizationProfile,
     TransliterationResult,

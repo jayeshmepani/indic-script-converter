@@ -1,4 +1,4 @@
-import 'package:indic_script_converter/latn_iast_to_deva.dart';
+import 'package:lipimala/latn_iast_to_deva.dart';
 
 void main() {
   for (final s in ['raṃ̀', 'ràm̐', 'aṃ̀', 'aṃ́', 'ṃ̀', 'ṃ̄', 'aṃ̄']) {

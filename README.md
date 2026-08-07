@@ -10,9 +10,9 @@ This repository is structured as a **monorepo** containing independent, feature-
 
 | Package Directory | Target Registry | Primary Import |
 | ----------------- | --------------- | -------------- |
-| [`dart/`](./dart) | [pub.dev](https://pub.dev) | `import 'package:indic_script_converter/indic_script_converter.dart';` |
-| [`javascript/`](./javascript) | [npm](https://npmjs.com) | `import { ... } from 'indic-script-converter';` |
-| [`python/`](./python) | [PyPI](https://pypi.org) | `from indic_script_converter import ...` |
+| [`dart/`](./dart) | [pub.dev](https://pub.dev) | `import 'package:lipimala/lipimala.dart';` |
+| [`javascript/`](./javascript) | [npm](https://npmjs.com) | `import { ... } from 'lipimala';` |
+| [`python/`](./python) | [PyPI](https://pypi.org) | `from lipimala import ...` |
 | [`php/`](./php) | [Packagist](https://packagist.org) | `use Shreesoftech\IndicScriptConverter\...;` |
 
 ---
@@ -49,7 +49,7 @@ Across all four runtimes, the core transliteration methods support options to fi
 
 ### Dart
 ```dart
-import 'package:indic_script_converter/transliteration_result.dart';
+import 'package:lipimala/transliteration_result.dart';
 
 void main() {
   const iast = 'Kṛṣṇa ā́tman';
@@ -61,7 +61,7 @@ void main() {
 
 ### JavaScript
 ```javascript
-import { IndicTransliteration } from 'indic-script-converter';
+import { IndicTransliteration } from 'lipimala';
 
 const iast = 'Kṛṣṇa ā́tman';
 const result = IndicTransliteration.toDevanagari(iast);
@@ -71,7 +71,7 @@ console.log(result.restoreOriginal()); // Output: Kṛṣṇa ā́tman
 
 ### Python
 ```python
-from indic_script_converter import to_devanagari
+from lipimala import to_devanagari
 
 iast = 'Kṛṣṇa ā́tman'
 result = to_devanagari(iast)

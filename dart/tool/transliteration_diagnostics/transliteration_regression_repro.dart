@@ -1,5 +1,5 @@
-import 'package:indic_script_converter/latn_iast_to_deva.dart';
-import 'package:indic_script_converter/latn_iast_to_gujr.dart';
+import 'package:lipimala/latn_iast_to_deva.dart';
+import 'package:lipimala/latn_iast_to_gujr.dart';
 
 void dump(String label, String s) {
   print('$label: $s');

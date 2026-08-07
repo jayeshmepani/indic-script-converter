@@ -1,4 +1,4 @@
-import 'package:indic_script_converter/latn_iast_to_deva.dart';
+import 'package:lipimala/latn_iast_to_deva.dart';
 import '../latn_iast_transliteration_verification/example_latn_iast.dart' as ex;
 
 void main() {

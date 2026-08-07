@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:indic_script_converter/transliteration_result.dart';
+import 'package:lipimala/transliteration_result.dart';
 
 void main() {
   const source = 'Kṛṣṇa ā́tman ḷa';

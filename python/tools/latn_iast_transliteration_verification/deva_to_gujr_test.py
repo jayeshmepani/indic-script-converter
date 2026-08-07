@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from indic_script_converter.deva_gujr_converter import (
+from lipimala.deva_gujr_converter import (
     to_canonical_gujarati_from_devanagari,
 )
 from tools.fixtures.example_deva import devanagari_smoke_samples

@@ -1,4 +1,4 @@
-# indic-script-converter — JavaScript port
+# lipimala — JavaScript
 
 A complete Node.js/ES2023 port of the supplied Dart and Python Indic-script conversion libraries.
 
@@ -33,7 +33,7 @@ npm install
 For a local package checkout:
 
 ```bash
-npm install /path/to/indic-script-converter-js
+npm install /path/to/lipimala-js
 ```
 
 ## Basic usage
@@ -45,7 +45,7 @@ import {
     toPlainEnglishFromIast,
     toCanonicalIastFromDevanagari,
     toCanonicalIastFromGujarati,
-} from 'indic-script-converter';
+} from 'lipimala';
 
 console.log(toDevanagariFromIast('Kṛṣṇa')); // कृष्ण
 console.log(toGujaratiFromIast('Kṛṣṇa')); // કૃષ્ણ
@@ -64,7 +64,7 @@ import {
     IastToDevanagariOptions,
     toDevanagariFromIast,
     toExactIastFromDevanagari,
-} from 'indic-script-converter';
+} from 'lipimala';
 
 const source = 'Kṛṣṇa / Kr̥ṣṇa / ḫāna / ṣ́akti';
 
@@ -102,7 +102,7 @@ The source and visible rendering each have an independent FNV-1a checksum. Editi
 ## Exact Round-Trip envelope
 
 ```js
-import { TransliterationResult, toPlainEnglish } from 'indic-script-converter';
+import { TransliterationResult, toPlainEnglish } from 'lipimala';
 
 const result = toPlainEnglish('Kṛṣṇa ā́tman ḷa');
 const json = JSON.stringify(result.toJson());
@@ -124,7 +124,7 @@ import {
     DevanagariRomanizationProfile,
     IastToDevanagariOptions,
     toDevanagariFromIast,
-} from 'indic-script-converter';
+} from 'lipimala';
 
 const extended = new IastToDevanagariOptions({
     profile: DevanagariRomanizationProfile.EXTENDED_INDIC,

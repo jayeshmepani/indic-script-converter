@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from indic_script_converter.latn_iast_to_deva import (
+from lipimala.latn_iast_to_deva import (
     DevanagariRomanizationProfile,
     IastToDevanagariDigitPolicy,
     IastToDevanagariOmPolicy,

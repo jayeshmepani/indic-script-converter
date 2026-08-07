@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 
-import 'package:indic_script_converter/brahmic_to_latn_iast.dart';
+import 'package:lipimala/brahmic_to_latn_iast.dart';
 import 'example_deva.dart' as examples;
 
 void main() {

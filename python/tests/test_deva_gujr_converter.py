@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from indic_script_converter.deva_gujr_converter import (
+from lipimala.deva_gujr_converter import (
     IndicScriptConversionOptions,
     to_canonical_devanagari_from_gujarati,
     to_canonical_gujarati_from_devanagari,
@@ -9,7 +9,7 @@ from indic_script_converter.deva_gujr_converter import (
     to_exact_gujarati_from_devanagari,
     to_gujarati_from_devanagari,
 )
-from indic_script_converter.latn_iast_to_gujr import (
+from lipimala.latn_iast_to_gujr import (
     IastToGujaratiOptions,
     to_gujarati_from_iast,
 )
