@@ -85,8 +85,7 @@ final readonly class IastPlainEnglishOptions
         public bool $useWForVAfterConsonants = false,
         public bool $preserveVedicAccentMarks = false,
         public array $keepFinalAForWords = [],
-    ) {
-    }
+    ) {}
 
     /** @return array<string,true> */
     public function keepFinalASet(): array
@@ -112,9 +111,7 @@ final class PlainEnglishConverter
     /** @var array<string,true> */
     private const array VOWELS = ['a' => true,'e' => true,'i' => true,'o' => true,'u' => true];
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function convert(string $inputText, IastPlainEnglishOptions $options): string
     {
@@ -125,7 +122,7 @@ final class PlainEnglishConverter
             $text = (string) preg_replace('/[ऽ’‘ʼʹ]/u', '', $text);
             $text = (string) preg_replace_callback(
                 "/([A-Za-z\\x{00C0}-\\x{00FF}\\x{0100}-\\x{024F}\\x{0250}-\\x{02FF}\\x{1E00}-\\x{1EFF}])'(?=[A-Za-z\\x{00C0}-\\x{00FF}\\x{0100}-\\x{024F}\\x{0250}-\\x{02FF}\\x{1E00}-\\x{1EFF}])/u",
-                static fn (array $m): string => $m[1],
+                static fn(array $m): string => $m[1],
                 $text,
             );
         }
@@ -203,7 +200,7 @@ final class PlainEnglishConverter
         if ($options->useWForVAfterConsonants || $options->profile === PlainEnglishRomanizationProfile::HUNTERIAN) {
             $w = (string) preg_replace_callback(
                 '/([^aeiou\s])v([aāiīuūeēoō])/iu',
-                static fn (array $m): string => $m[1] . 'w' . $m[2],
+                static fn(array $m): string => $m[1] . 'w' . $m[2],
                 $w,
             );
         }
@@ -256,7 +253,7 @@ final class PlainEnglishConverter
             $cls = '[kKgGcCjJtTdDpPbBsSśŚṣṢhH]';
             foreach (['ḥ','Ḥ',"h\u{0323}","H\u{0323}"] as $prefix) {
                 $pattern = '/' . preg_quote($prefix, '/') . '(' . $cls . ')/u';
-                $word = (string) preg_replace_callback($pattern, static fn (array $m): string => $m[1], $word);
+                $word = (string) preg_replace_callback($pattern, static fn(array $m): string => $m[1], $word);
             }
         }
 
@@ -309,7 +306,7 @@ final class PlainEnglishConverter
             $next->text = '';
         }
 
-        return implode('', array_map(static fn (PlainEnglishSegment $s): string => $s->text, $segments));
+        return implode('', array_map(static fn(PlainEnglishSegment $s): string => $s->text, $segments));
     }
 
     private static function isIastVowelChar(string $ch): bool
@@ -382,7 +379,7 @@ final class PlainEnglishConverter
     private static function expandC(string $word): string
     {
         $w = str_replace(['ch','Ch','CH'], [self::PH_CHH,self::PH_CHH_CAP,self::PH_CHH_ALL], $word);
-        $w = (string) preg_replace_callback('/[cC]/', static fn (array $m): string => $m[0] === 'C' ? 'Ch' : 'ch', $w);
+        $w = (string) preg_replace_callback('/[cC]/', static fn(array $m): string => $m[0] === 'C' ? 'Ch' : 'ch', $w);
         return str_replace([self::PH_CHH,self::PH_CHH_CAP,self::PH_CHH_ALL], ['chh','Chh','CHH'], $w);
     }
 
@@ -620,9 +617,7 @@ final class PlainEnglishConverter
 
 final class PlainEnglishSegment
 {
-    public function __construct(public string $text, public readonly bool $isVowel)
-    {
-    }
+    public function __construct(public string $text, public readonly bool $isVowel) {}
 }
 
 function toPlainEnglishFromIast(string $text, ?IastPlainEnglishOptions $options = null): string

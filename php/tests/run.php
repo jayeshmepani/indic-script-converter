@@ -144,7 +144,7 @@ test('Latin/IAST → Devanagari matches the 497-case Dart oracle', static functi
         digitPolicy: IastToDevanagariDigitPolicy::CONVERT_TO_SCRIPT,
         punctuationPolicy: IastToDevanagariPunctuationPolicy::INDIC_DANDA,
     );
-    assertCorpus('deva', $oracle['latin'], $oracle['expectedDeva'], static fn (string $s): string => toDevanagariFromIast($s, $options));
+    assertCorpus('deva', $oracle['latin'], $oracle['expectedDeva'], static fn(string $s): string => toDevanagariFromIast($s, $options));
 });
 
 test('Latin/IAST → Gujarati matches the 497-case Dart oracle', static function () use ($oracle): void {
@@ -152,19 +152,19 @@ test('Latin/IAST → Gujarati matches the 497-case Dart oracle', static function
         digitPolicy: IastToGujaratiDigitPolicy::CONVERT_TO_SCRIPT,
         punctuationPolicy: IastToGujaratiPunctuationPolicy::INDIC_DANDA,
     );
-    assertCorpus('gujr', $oracle['latin'], $oracle['expectedGujr'], static fn (string $s): string => toGujaratiFromIast($s, $options));
+    assertCorpus('gujr', $oracle['latin'], $oracle['expectedGujr'], static fn(string $s): string => toGujaratiFromIast($s, $options));
 });
 
 test('Latin/IAST → plain English matches the 497-case Dart oracle', static function () use ($oracle): void {
-    assertCorpus('plain', $oracle['latin'], $oracle['expectedPlain'], static fn (string $s): string => toPlainEnglishFromIast($s));
+    assertCorpus('plain', $oracle['latin'], $oracle['expectedPlain'], static fn(string $s): string => toPlainEnglishFromIast($s));
 });
 
 test('Devanagari → canonical IAST matches the 497-case Dart oracle', static function () use ($oracle): void {
-    assertCorpus('deva reverse', $oracle['devaSource'], $oracle['expectedDevaReverse'], static fn (string $s): string => toCanonicalIastFromDevanagari($s));
+    assertCorpus('deva reverse', $oracle['devaSource'], $oracle['expectedDevaReverse'], static fn(string $s): string => toCanonicalIastFromDevanagari($s));
 });
 
 test('Gujarati → canonical IAST matches the 497-case Dart oracle', static function () use ($oracle): void {
-    assertCorpus('gujr reverse', $oracle['gujrSource'], $oracle['expectedGujrReverse'], static fn (string $s): string => toCanonicalIastFromGujarati($s));
+    assertCorpus('gujr reverse', $oracle['gujrSource'], $oracle['expectedGujrReverse'], static fn(string $s): string => toCanonicalIastFromGujarati($s));
 });
 
 test('all 22 Vedic Devanagari fixtures match exactly', static function (): void {
@@ -186,7 +186,7 @@ test('Devanagari profiles match Dart', static function (): void {
     ];
     foreach (DevanagariRomanizationProfile::cases() as $profile) {
         $options = new IastToDevanagariOptions(profile: $profile);
-        same(array_map(static fn (string $s): string => toDevanagariFromIast($s, $options), $samples), $expected[$profile->value], $profile->value);
+        same(array_map(static fn(string $s): string => toDevanagariFromIast($s, $options), $samples), $expected[$profile->value], $profile->value);
     }
 });
 
@@ -199,7 +199,7 @@ test('Gujarati profiles match Dart', static function (): void {
     ];
     foreach (GujaratiRomanizationProfile::cases() as $profile) {
         $options = new IastToGujaratiOptions(profile: $profile);
-        same(array_map(static fn (string $s): string => toGujaratiFromIast($s, $options), $samples), $expected[$profile->value], $profile->value);
+        same(array_map(static fn(string $s): string => toGujaratiFromIast($s, $options), $samples), $expected[$profile->value], $profile->value);
     }
 });
 
@@ -217,23 +217,23 @@ test('plain-English policies and Hunterian samples match Dart', static function 
     $keep = new IastPlainEnglishOptions(finalA: FinalAPolicy::KEEP);
     $drop = new IastPlainEnglishOptions(finalA: FinalAPolicy::DROP);
     $jna = new IastPlainEnglishOptions(jna: JnaPolicy::JNA);
-    same(array_map(static fn (string $s): string => toPlainEnglishFromIast($s, $keep), $base), ['Rama','vrata','Krishna','Lakshmana','yatra']);
-    same(array_map(static fn (string $s): string => toPlainEnglishFromIast($s, $drop), $base), ['Ram','vrat','Krishn','Lakshman','yatra']);
-    same(array_map(static fn (string $s): string => toPlainEnglishFromIast($s, $jna), ['jñāna','yajña']), ['jnan','yajn']);
+    same(array_map(static fn(string $s): string => toPlainEnglishFromIast($s, $keep), $base), ['Rama','vrata','Krishna','Lakshmana','yatra']);
+    same(array_map(static fn(string $s): string => toPlainEnglishFromIast($s, $drop), $base), ['Ram','vrat','Krishn','Lakshman','yatra']);
+    same(array_map(static fn(string $s): string => toPlainEnglishFromIast($s, $jna), ['jñāna','yajña']), ['jnan','yajn']);
 
     $hunterian = new IastPlainEnglishOptions(profile: PlainEnglishRomanizationProfile::HUNTERIAN);
     $samples = ['Rāma','Kṛṣṇa','Lakṣmaṇa','laṛkā','Rāmacandra','Gorakhapura','Sarasvatī','Īśvara','pañcāṅga','duḥkha','Devadatta','Jaideva','Kalyāṇapura','Nārāyaṇapura','Hariprasāda','Kṛṣṇadāsa'];
     $expected = ['Ram','Krishna','Lakshman','larka','Ramachandra','Gorakhapur','Saraswati','Ishwar','panchang','dukh','Devadatt','Jaidev','Kalyanapur','Narayanapur','Hariprasad','Krishnadas'];
-    same(array_map(static fn (string $s): string => toPlainEnglishFromIast($s, $hunterian), $samples), $expected);
+    same(array_map(static fn(string $s): string => toPlainEnglishFromIast($s, $hunterian), $samples), $expected);
 });
 
 test('all forward option switches preserve source semantics', static function (): void {
     same(toDevanagariFromIast("a\u{036F}", new IastToDevanagariOptions(unknownLatinPolicy: IastToDevanagariUnknownLatinPolicy::PASS_THROUGH)), "अ\u{036F}");
     same(toDevanagariFromIast("a\u{036F}", new IastToDevanagariOptions(unknownLatinPolicy: IastToDevanagariUnknownLatinPolicy::BRACKET)), "अ[\u{036F}]");
-    throws(static fn (): string => toDevanagariFromIast("a\u{036F}", new IastToDevanagariOptions(unknownLatinPolicy: IastToDevanagariUnknownLatinPolicy::THROW_ERROR)));
+    throws(static fn(): string => toDevanagariFromIast("a\u{036F}", new IastToDevanagariOptions(unknownLatinPolicy: IastToDevanagariUnknownLatinPolicy::THROW_ERROR)));
     same(toGujaratiFromIast("a\u{036F}", new IastToGujaratiOptions(unknownLatinPolicy: IastToGujaratiUnknownLatinPolicy::PASS_THROUGH)), "અ\u{036F}");
     same(toGujaratiFromIast("a\u{036F}", new IastToGujaratiOptions(unknownLatinPolicy: IastToGujaratiUnknownLatinPolicy::BRACKET)), "અ[\u{036F}]");
-    throws(static fn (): string => toGujaratiFromIast("a\u{036F}", new IastToGujaratiOptions(unknownLatinPolicy: IastToGujaratiUnknownLatinPolicy::THROW_ERROR)));
+    throws(static fn(): string => toGujaratiFromIast("a\u{036F}", new IastToGujaratiOptions(unknownLatinPolicy: IastToGujaratiUnknownLatinPolicy::THROW_ERROR)));
 
     same(toDevanagariFromIast('ḷa ḷkāra', new IastToDevanagariOptions(ambiguousLPolicy: IastToDevanagariAmbiguousLPolicy::CONTEXT)), 'ळ ऌकार');
     same(toDevanagariFromIast('ḷa ḷkāra', new IastToDevanagariOptions(ambiguousLPolicy: IastToDevanagariAmbiguousLPolicy::PREFER_VOCALIC)), 'ळ ऌकार');
@@ -295,11 +295,11 @@ test('reverse options for unmapped characters, Vedic marks and normalization', s
 test('direct converter policies for digits, unknown characters and whitespace', static function (): void {
     same(toCanonicalGujaratiFromDevanagari('कृष्ण १२३ €'), 'કૃષ્ણ ૧૨૩ €');
     same(toCanonicalGujaratiFromDevanagari('कृष्ण १२३ €', new IndicScriptConversionOptions(digitPolicy: IndicScriptDigitPolicy::PRESERVE_SOURCE)), 'કૃષ્ણ १२३ €');
-    throws(static fn (): string => toCanonicalGujaratiFromDevanagari('कृष्ण €', new IndicScriptConversionOptions(unknownPolicy: IndicScriptUnknownPolicy::THROW_ERROR)));
+    throws(static fn(): string => toCanonicalGujaratiFromDevanagari('कृष्ण €', new IndicScriptConversionOptions(unknownPolicy: IndicScriptUnknownPolicy::THROW_ERROR)));
     same(toCanonicalGujaratiFromDevanagari("  कृष्ण   राम\n शिव  ", new IndicScriptConversionOptions(collapseWhitespace: true)), 'કૃષ્ણ રામ શિવ');
     same(toCanonicalDevanagariFromGujarati('કૃષ્ણ ૧૨૩ €'), 'कृष्ण १२३ €');
     same(toCanonicalDevanagariFromGujarati('કૃષ્ણ ૧૨૩ €', new IndicScriptConversionOptions(digitPolicy: IndicScriptDigitPolicy::PRESERVE_SOURCE)), 'कृष्ण ૧૨૩ €');
-    throws(static fn (): string => toCanonicalDevanagariFromGujarati('કૃષ્ણ €', new IndicScriptConversionOptions(unknownPolicy: IndicScriptUnknownPolicy::THROW_ERROR)));
+    throws(static fn(): string => toCanonicalDevanagariFromGujarati('કૃષ્ણ €', new IndicScriptConversionOptions(unknownPolicy: IndicScriptUnknownPolicy::THROW_ERROR)));
     same(toCanonicalDevanagariFromGujarati("  કૃષ્ણ   રામ\n શિવ  ", new IndicScriptConversionOptions(collapseWhitespace: true)), 'कृष्ण राम शिव');
 });
 
@@ -360,11 +360,11 @@ test('lossless envelope JSON round-trip', static function (): void {
 });
 
 test('Devanagari → Gujarati matches the 497-case direct JavaScript/Python oracle', static function () use ($oracle, $directOracle): void {
-    assertCorpus('deva->gujr', $oracle['devaSource'], $directOracle['devaToGujr'], static fn (string $s): string => toCanonicalGujaratiFromDevanagari($s));
+    assertCorpus('deva->gujr', $oracle['devaSource'], $directOracle['devaToGujr'], static fn(string $s): string => toCanonicalGujaratiFromDevanagari($s));
 });
 
 test('Gujarati → Devanagari matches the 497-case direct JavaScript/Python oracle', static function () use ($oracle, $directOracle): void {
-    assertCorpus('gujr->deva', $oracle['gujrSource'], $directOracle['gujrToDeva'], static fn (string $s): string => toCanonicalDevanagariFromGujarati($s));
+    assertCorpus('gujr->deva', $oracle['gujrSource'], $directOracle['gujrToDeva'], static fn(string $s): string => toCanonicalDevanagariFromGujarati($s));
 });
 
 test('direct converter core, digits, Vedic and nukta mappings', static function (): void {
@@ -402,13 +402,13 @@ test('direct Gujarati → Devanagari exact metadata round-trips all 497 corpus i
 
 test('direct typed metadata rejects unrelated Latin-source metadata', static function (): void {
     $taggedLatin = toGujaratiFromIast('Kṛṣṇa', new IastToGujaratiOptions(embedExactSourceMetadata: true));
-    throws(static fn (): string => toExactDevanagariFromGujarati($taggedLatin));
+    throws(static fn(): string => toExactDevanagariFromGujarati($taggedLatin));
 });
 
 test('direct visible tampering invalidates exact recovery', static function (): void {
     $tagged = toCanonicalGujaratiFromDevanagari('कृष्ण', new IndicScriptConversionOptions(embedExactSourceMetadata: true));
     $tampered = str_replace('કૃષ્ણ', 'રામ', $tagged);
-    throws(static fn (): string => toExactDevanagariFromGujarati($tampered));
+    throws(static fn(): string => toExactDevanagariFromGujarati($tampered));
 });
 
 echo PHP_EOL, "Result: $tests tests passed; $assertions assertions passed.", PHP_EOL;

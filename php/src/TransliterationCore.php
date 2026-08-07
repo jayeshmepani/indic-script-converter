@@ -41,8 +41,7 @@ final readonly class TransliterationIssue implements JsonSerializable
         public string $message,
         public TransliterationIssueSeverity $severity = TransliterationIssueSeverity::WARNING,
         public ?int $sourceRuneOffset = null,
-    ) {
-    }
+    ) {}
 
     /** @return array{code:string,message:string,severity:string,sourceRuneOffset:?int} */
     public function toJson(): array
@@ -84,8 +83,7 @@ final readonly class LosslessTransliterationResult implements JsonSerializable
         public UnicodeNormalizationForm $outputNormalization,
         public bool $renderingIsInjective,
         public array $issues = [],
-    ) {
-    }
+    ) {}
 
     /** @return list<int> */
     public function originalCodePoints(): array
@@ -127,7 +125,7 @@ final readonly class LosslessTransliterationResult implements JsonSerializable
             'inputNormalization' => $this->inputNormalization->value,
             'outputNormalization' => $this->outputNormalization->value,
             'renderingIsInjective' => $this->renderingIsInjective,
-            'issues' => array_map(static fn (TransliterationIssue $issue): array => $issue->toJson(), $this->issues),
+            'issues' => array_map(static fn(TransliterationIssue $issue): array => $issue->toJson(), $this->issues),
         ];
     }
 
@@ -193,8 +191,7 @@ final readonly class EmbeddedExactSource
     public function __construct(
         public string $visibleText,
         public string $originalSource,
-    ) {
-    }
+    ) {}
 }
 
 const EXACT_SOURCE_START_TAG = 0xE0001;

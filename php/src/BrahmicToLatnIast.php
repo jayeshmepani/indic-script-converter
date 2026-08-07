@@ -15,8 +15,7 @@ final readonly class ScriptToIastOptions
         public UnicodeNormalizationForm $outputNormalization = UnicodeNormalizationForm::NFC,
         public bool $preserveUnmapped = true,
         public bool $preserveEncodedVedicMarks = true,
-    ) {
-    }
+    ) {}
 }
 
 final readonly class ScriptConfig
@@ -36,15 +35,12 @@ final readonly class ScriptConfig
         public array $consonants,
         public array $signs,
         public array $digits,
-    ) {
-    }
+    ) {}
 }
 
 final class BrahmicToIastConverter
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function convert(string $inputText, ScriptConfig $config, ScriptToIastOptions $options): string
     {

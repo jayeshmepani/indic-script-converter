@@ -37,8 +37,7 @@ final readonly class IndicScriptConversionOptions
         public IndicScriptDigitPolicy $digitPolicy = IndicScriptDigitPolicy::CONVERT_TO_TARGET,
         public bool $collapseWhitespace = false,
         public bool $embedExactSourceMetadata = false,
-    ) {
-    }
+    ) {}
 }
 
 const DEVA_DIGIT_START = 0x0966;
@@ -234,7 +233,7 @@ function buildScriptSequenceRules(array $mappings): array
 
     usort(
         $rules,
-        static fn (array $a, array $b): int => count($b['source']) <=> count($a['source']),
+        static fn(array $a, array $b): int => count($b['source']) <=> count($a['source']),
     );
     return $rules;
 }

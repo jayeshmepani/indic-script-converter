@@ -1,8 +1,23 @@
 {
-  "name": "shreesoftech/indic-script-converter",
+  "name": "jayeshmepani/indic-script-converter",
   "description": "Lossless IAST/extended Indic transliteration for Devanagari, Gujarati, plain English, canonical reverse conversion, and direct Gujarati/Devanagari conversion.",
+  "keywords": [
+    "transliteration",
+    "indic",
+    "iast",
+    "devanagari",
+    "gujarati",
+    "lossless",
+    "sanskrit",
+    "vedic"
+  ],
+  "homepage": "https://github.com/jayeshmepani/indic-script-converter",
+  "support": {
+    "issues": "https://github.com/jayeshmepani/indic-script-converter/issues",
+    "source": "https://github.com/jayeshmepani/indic-script-converter"
+  },
   "type": "library",
-  "license": "proprietary",
+  "license": "MIT",
   "authors": [
     {
       "name": "Jayesh Patel",
@@ -17,8 +32,8 @@
     "rector/rector": "^2.4"
   },
   "autoload": {
-    "files": [
-      "autoload.php"
+    "classmap": [
+      "src/"
     ]
   },
   "scripts": {

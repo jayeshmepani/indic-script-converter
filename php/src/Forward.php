@@ -34,8 +34,7 @@ final readonly class ForwardScriptConfig
         public array $digits,
         public array $strictIastVowels,
         public array $strictIastConsonants,
-    ) {
-    }
+    ) {}
 }
 
 final class ForwardConverter
@@ -176,7 +175,7 @@ final class ForwardConverter
     /** @param list<string> $keys @return list<string> */
     private function sortKeys(array $keys): array
     {
-        usort($keys, static fn (string $a, string $b): int => Unicode::length($b) <=> Unicode::length($a));
+        usort($keys, static fn(string $a, string $b): int => Unicode::length($b) <=> Unicode::length($a));
         return $keys;
     }
 
@@ -789,7 +788,7 @@ final class ForwardConverter
                 $consumed[$code] = true;
             }
         };
-        $lineBelow = array_values(array_filter([0x0331, 0x035F], static fn (int $cp): bool => in_array($cp, $marks, true)));
+        $lineBelow = array_values(array_filter([0x0331, 0x035F], static fn(int $cp): bool => in_array($cp, $marks, true)));
 
         if ($lower === 'r' && ($hasDotBelow || $hasRingBelow)) {
             $codes = [];

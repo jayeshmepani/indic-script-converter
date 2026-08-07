@@ -91,8 +91,7 @@ final readonly class IastToDevanagariOptions
         public bool $preserveVedicAccentMarks = true,
         public bool $collapseWhitespace = false,
         public bool $embedExactSourceMetadata = false,
-    ) {
-    }
+    ) {}
 }
 
 /**
@@ -148,7 +147,7 @@ function devanagariForwardConverter(): ForwardConverter
         consonants: $consonants, signs: $signs, digits: $digits,
         strictIastVowels: $strictVowels, strictIastConsonants: $strictConsonants,
     );
-    $converter = new ForwardConverter($config, static fn (): object => new IastToDevanagariOptions);
+    $converter = new ForwardConverter($config, static fn(): object => new IastToDevanagariOptions);
     return $converter;
 }
 

@@ -38,9 +38,7 @@ final class Unicode
 
     private const S_COUNT = self::L_COUNT * self::N_COUNT;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /** @return list<int> */
     public static function codePoints(string $text): array

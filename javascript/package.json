@@ -28,15 +28,30 @@
         "quality": "npm run format:check && npm run lint:check && npm test"
     },
     "keywords": [
-        "IAST",
-        "Devanagari",
-        "Gujarati",
         "transliteration",
-        "Vedic",
-        "lossless"
+        "indic",
+        "iast",
+        "devanagari",
+        "gujarati",
+        "lossless",
+        "sanskrit",
+        "vedic"
     ],
-    "license": "UNLICENSED",
-    "author": "Shreesoftech",
+    "license": "MIT",
+    "author": "Jayesh Patel <jayeshmepani777@gmail.com>",
+    "homepage": "https://github.com/jayeshmepani/indic-script-converter",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jayeshmepani/indic-script-converter.git"
+    },
+    "bugs": {
+        "url": "https://github.com/jayeshmepani/indic-script-converter/issues"
+    },
+    "files": [
+        "src",
+        "README.md",
+        "CHANGELOG.md"
+    ],
     "bin": {
         "latn-iast-lossless-demo": "./bin/latn-iast-lossless-demo.js"
     },

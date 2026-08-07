@@ -1,7 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "indic-script-converter"
 version = "1.0.0"
+description = "Lossless IAST/extended Indic transliteration for Devanagari, Gujarati, plain English and canonical reverse conversion."
+readme = "README.md"
 requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [
+    { name = "Jayesh Patel", email = "jayeshmepani777@gmail.com" }
+]
+keywords = [
+    "transliteration",
+    "indic",
+    "iast",
+    "devanagari",
+    "gujarati",
+    "lossless",
+    "sanskrit",
+    "vedic"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/jayeshmepani/indic-script-converter"
+Repository = "https://github.com/jayeshmepani/indic-script-converter"
 
 [tool.ruff]
 target-version = "py312"
