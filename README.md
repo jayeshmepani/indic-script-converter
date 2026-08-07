@@ -13,7 +13,7 @@ This repository is structured as a **monorepo** containing independent, feature-
 | [`dart/`](./dart) | [pub.dev](https://pub.dev) | `import 'package:lipimala/lipimala.dart';` |
 | [`javascript/`](./javascript) | [npm](https://npmjs.com) | `import { ... } from 'lipimala';` |
 | [`python/`](./python) | [PyPI](https://pypi.org) | `from lipimala import ...` |
-| [`php/`](./php) | [Packagist](https://packagist.org) | `use Shreesoftech\IndicScriptConverter\...;` |
+| [`php/`](./php) | [Packagist](https://packagist.org) | `use Lipimala\...;` |
 
 ---
 
@@ -81,10 +81,10 @@ print(result.restore_original()) # Output: Kṛṣṇa ā́tman
 
 ### PHP
 ```php
-use Shreesoftech\IndicScriptConverter\Transliteration;
+use function Lipimala\toDevanagari;
 
 $iast = 'Kṛṣṇa ā́tman';
-$result = Transliteration::toDevanagari($iast);
+$result = toDevanagari($iast);
 echo $result->rendered; // Output: कृष्ण आ॑त्मन्
 echo $result->restoreOriginal(); // Output: Kṛṣṇa ā́tman
 ```
