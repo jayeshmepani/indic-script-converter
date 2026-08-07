@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import json
 
-import pytest
-
 from indic_script_converter import (
     IastToDevanagariOptions,
     IastToGujaratiOptions,
@@ -17,6 +15,7 @@ from indic_script_converter import (
     to_gujarati_from_iast,
     to_lossless_plain_english,
 )
+import pytest
 
 SOURCES = [
     'Kṛṣṇa',

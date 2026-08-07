@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.24"]
 build-backend = "hatchling.build"
 
 [project]
@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "Lossless IAST/extended Indic transliteration for Devanagari, Gujarati, plain English and canonical reverse conversion."
 readme = "README.md"
 requires-python = ">=3.12"
-license = { text = "MIT" }
+license = "MIT"
 authors = [
     { name = "Jayesh Patel", email = "jayeshmepani777@gmail.com" }
 ]
@@ -24,19 +24,45 @@ keywords = [
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = []
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "ruff>=0.9.0",
+    "build>=1.0.0",
+    "twine>=4.0.0",
+]
+
 [project.urls]
 Homepage = "https://github.com/jayeshmepani/indic-script-converter"
 Repository = "https://github.com/jayeshmepani/indic-script-converter"
+Source = "https://github.com/jayeshmepani/indic-script-converter"
+Issues = "https://github.com/jayeshmepani/indic-script-converter/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["indic_script_converter"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "indic_script_converter",
+    "tests",
+    "tools",
+    "README.md",
+    "LICENSE",
+]
 
 [tool.ruff]
-target-version = "py312"
 line-length = 100
+target-version = "py312"
 indent-width = 4
+src = ["indic_script_converter", "tests", "tools"]
 
 exclude = [
     ".git",
@@ -57,62 +83,33 @@ select = [
     "E",
     "F",
     "W",
-
-    # pyupgrade
-    "UP",
-
-    # flake8-bugbear
-    "B",
-
-    # comprehensions
-    "C4",
-
-    # simplify
-    "SIM",
-
-    # unused arguments
-    "ARG",
-
-    # return
-    "RET",
-
-    # raise
-    "RSE",
-
-    # pie
-    "PIE",
-
-    # pathlib
-    "PTH",
-
-    # performance
-    "PERF",
-
-    # imports
     "I",
-
-    # Ruff-specific
+    "N",
+    "UP",
+    "B",
+    "C4",
+    "SIM",
+    "RET",
+    "RSE",
+    "PIE",
+    "PTH",
+    "PERF",
+    "ARG",
     "RUF",
 ]
-
 ignore = [
-    # formatter owns line wrapping
-    "E501",
-    # Star imports
-    "F403",
-    "F405",
-    # Ambiguous unicode characters in translation dictionaries
-    "RUF001",
-    # Mutable class defaults
-    "RUF012",
-    # Unused arguments in ported parity methods
-    "ARG002",
-    # Nested if statement simplification
-    "SIM102",
-    # StrEnum preference
-    "UP042",
+    "E501",   # line length - formatter owns this
+    "F403",   # star imports
+    "F405",   # star imports
+    "RUF001", # ambiguous unicode characters in translation dictionaries
+    "RUF012", # mutable class defaults
+    "SIM102", # nested if statement simplification
+    "UP042",  # StrEnum preference
+    "N802",   # camelCase function name for Dart parity
+    "N815",   # camelCase class variables for Dart parity
+    "N816",   # camelCase global variables for Dart parity
+    "ARG002", # unused arguments in ported parity methods
 ]
-
 fixable = ["ALL"]
 unfixable = []
 
@@ -120,9 +117,20 @@ unfixable = []
 combine-as-imports = true
 force-sort-within-sections = true
 
+[tool.ruff.lint.per-file-ignores]
+"indic_script_converter/__init__.py" = ["F401", "F403"]
+"tests/*" = ["S101"]
+
 [tool.ruff.format]
 quote-style = "single"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "lf"
 docstring-code-format = true
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"

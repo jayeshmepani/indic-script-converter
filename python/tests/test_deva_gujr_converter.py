@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import pytest
-
 from indic_script_converter.deva_gujr_converter import (
     IndicScriptConversionOptions,
     to_canonical_devanagari_from_gujarati,
@@ -17,6 +15,7 @@ from indic_script_converter.latn_iast_to_gujr import (
 )
 from indic_script_converter.tools.example_deva import devanagari_smoke_samples
 from indic_script_converter.tools.example_gujr import gujarati_smoke_samples
+import pytest
 
 
 def test_core_canonical_script_conversion() -> None:
