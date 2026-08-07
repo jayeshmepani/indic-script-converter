@@ -1,0 +1,8 @@
+name: lipimala_consumer_smoke
+description: Temporary consumer smoke test for lipimala.
+publish_to: none
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+dependencies:
+  lipimala:
+    path: /home/shreesoftech/projects/test1/astro_packages/indic-script-converter/dart

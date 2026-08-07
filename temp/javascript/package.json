@@ -1,0 +1,14 @@
+{
+  "name": "lipimala-consumer-smoke",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node smoke_test.js"
+  },
+  "dependencies": {
+    "lipimala": "file:../../javascript"
+  }
+}

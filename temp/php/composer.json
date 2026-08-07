@@ -1,0 +1,19 @@
+{
+  "name": "lipimala/consumer-smoke",
+  "description": "Temporary consumer smoke test for jayeshmepani/lipimala",
+  "type": "project",
+  "require": {
+    "php": ">=8.3",
+    "jayeshmepani/lipimala": "@dev"
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {}
+  },
+  "repositories": {
+    "lipimala": {
+      "type": "path",
+      "url": "/home/shreesoftech/projects/test1/astro_packages/indic-script-converter/php"
+    }
+  }
+}

@@ -11,6 +11,16 @@ pubspec.lock
 composer.lock
 package-lock.json
 
+# Temporary consumer smoke installs
+temp/**/.venv/
+temp/**/node_modules/
+temp/**/vendor/
+temp/**/.dart_tool/
+temp/**/pubspec.lock
+temp/**/composer.lock
+temp/**/package-lock.json
+temp/**/composer.json.bak
+
 # Build & Release Artifacts
 build/
 dist/
