@@ -7,6 +7,9 @@ __pycache__/
 .venv/
 .pytest_cache/
 .ruff_cache/
+pubspec.lock
+composer.lock
+package-lock.json
 
 # Build & Release Artifacts
 build/
