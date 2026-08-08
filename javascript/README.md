@@ -179,10 +179,7 @@ This package includes a direct converter between Devanagari and Gujarati.
 ### Canonical visible conversion
 
 ```js
-import {
-    toCanonicalGujaratiFromDevanagari,
-    toCanonicalDevanagariFromGujarati,
-} from './src/deva-gujr-converter.js';
+import { toCanonicalGujaratiFromDevanagari, toCanonicalDevanagariFromGujarati } from 'lipimala';
 
 console.log(toCanonicalGujaratiFromDevanagari('कृष्ण')); // કૃષ્ણ
 console.log(toCanonicalDevanagariFromGujarati('કૃષ્ણ')); // krishna
@@ -197,7 +194,7 @@ import {
     IndicScriptConversionOptions,
     toCanonicalGujaratiFromDevanagari,
     toExactDevanagariFromGujarati,
-} from './src/deva-gujr-converter.js';
+} from 'lipimala';
 
 const source = 'ऄ ऎ ऍ ॲ ऒ ऑ ॵ ळ ऴ ग़ ॻ ड़ ॸ ॾ';
 

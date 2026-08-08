@@ -111,7 +111,7 @@ This package includes a direct converter between Devanagari and Gujarati.
 
 ### Canonical visible conversion
 ```python
-from lipimala.deva_gujr_converter import (
+from lipimala import (
     to_canonical_gujarati_from_devanagari,
     to_canonical_devanagari_from_gujarati,
 )
