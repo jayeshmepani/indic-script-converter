@@ -52,3 +52,26 @@ def test_bulk_list_converters_all_directions():
     env_plain = to_plain_english_list(iast_items)
     assert len(env_plain) == 3
     assert env_plain[0].rendered == 'Krishna'
+
+
+def test_bulk_list_converters_custom_options():
+    from lipimala import (
+        IastPlainEnglishOptions,
+        IastToDevanagariDigitPolicy,
+        IastToDevanagariOptions,
+        PlainEnglishFinalAPolicy,
+    )
+
+    items = ['Rāma 123', 'jñāna']
+
+    deva_digits = to_devanagari_from_iast_list(
+        items,
+        options=IastToDevanagariOptions(digit_policy=IastToDevanagariDigitPolicy.CONVERT_TO_SCRIPT),
+    )
+    assert deva_digits == ['राम १२३', 'ज्ञान']
+
+    plain_keep_final_a = to_plain_english_from_iast_list(
+        items,
+        options=IastPlainEnglishOptions(final_a_policy=PlainEnglishFinalAPolicy.KEEP),
+    )
+    assert plain_keep_final_a == ['Rama 123', 'gyana']

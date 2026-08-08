@@ -58,5 +58,23 @@ void main() {
       expect(envList[1].rendered, equals('राम'));
       expect(envList[2].rendered, equals('ज्ञान'));
     });
+
+    test('Options / arguments / parameters in bulk conversion', () {
+      const items = ['Rāma 123', 'jñāna'];
+
+      final devaWithScriptDigits = items.toDevanagariFromIast(
+        options: const IastToDevanagariOptions(
+          digitPolicy: IastToDevanagariDigitPolicy.convertToScript,
+        ),
+      );
+      expect(devaWithScriptDigits, equals(['राम १२३', 'ज्ञान']));
+
+      final plainWithKeepFinalA = items.toPlainEnglishFromIast(
+        options: const IastPlainEnglishOptions(
+          finalA: FinalAPolicy.keep,
+        ),
+      );
+      expect(plainWithKeepFinalA, equals(['Rama 123', 'gyana']));
+    });
   });
 }

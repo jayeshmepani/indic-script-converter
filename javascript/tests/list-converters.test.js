@@ -55,3 +55,13 @@ test('bulk list converters operate on array of strings across all directions', (
     assert.equal(envPlain.length, 3);
     assert.equal(envPlain[0].rendered, 'Krishna');
 });
+
+test('bulk list converters support custom options and parameters', () => {
+    const items = ['Rāma 123', 'jñāna'];
+
+    const devaDigits = toDevanagariFromIastList(items, { digitPolicy: 'convertToScript' });
+    assert.deepEqual(devaDigits, ['राम १२३', 'ज्ञान']);
+
+    const plainKeepFinalA = toPlainEnglishFromIastList(items, { finalA: 'keep' });
+    assert.deepEqual(plainKeepFinalA, ['Rama 123', 'gyana']);
+});

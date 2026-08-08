@@ -104,22 +104,16 @@ def to_exact_iast_from_gujarati_list(items: Iterable[str]) -> list[str]:
     return [to_exact_iast_from_gujarati(item) for item in items]
 
 
-def to_devanagari_list(items: Iterable[str], profile=None) -> list[TransliterationResult]:
+def to_devanagari_list(items: Iterable[str], options=None) -> list[TransliterationResult]:
     """Bulk converts a sequence of IAST strings returning a list of Devanagari TransliterationResult envelopes."""
-    if profile is not None:
-        return [to_devanagari(item, profile=profile) for item in items]
-    return [to_devanagari(item) for item in items]
+    return [to_devanagari(item, options=options) for item in items]
 
 
-def to_gujarati_list(items: Iterable[str], profile=None) -> list[TransliterationResult]:
+def to_gujarati_list(items: Iterable[str], options=None) -> list[TransliterationResult]:
     """Bulk converts a sequence of IAST strings returning a list of Gujarati TransliterationResult envelopes."""
-    if profile is not None:
-        return [to_gujarati(item, profile=profile) for item in items]
-    return [to_gujarati(item) for item in items]
+    return [to_gujarati(item, options=options) for item in items]
 
 
-def to_plain_english_list(items: Iterable[str], profile=None) -> list[TransliterationResult]:
+def to_plain_english_list(items: Iterable[str], options=None) -> list[TransliterationResult]:
     """Bulk converts a sequence of IAST strings returning a list of Plain English TransliterationResult envelopes."""
-    if profile is not None:
-        return [to_plain_english(item, profile=profile) for item in items]
-    return [to_plain_english(item) for item in items]
+    return [to_plain_english(item, options=options) for item in items]
