@@ -41,8 +41,11 @@ import {
     isUnicodeCombiningMark,
     isEncodedVedicMark,
     toCanonicalDevanagariFromGujarati,
+    toCanonicalDevanagariFromGujaratiList,
     toCanonicalGujaratiFromDevanagari,
     toCanonicalGujaratiFromDevanagariList,
+    toCanonicalIastFromDevanagariList,
+    toCanonicalIastFromGujaratiList,
     toCanonicalIastFromDevanagari,
     toCanonicalIastFromGujarati,
     toDevanagari,
@@ -442,17 +445,22 @@ function examplesBulkList() {
     banner('8. Bulk String Array Transliteration (List API)');
 
     const items = ['Kṛṣṇa', 'Rāma', 'jñāna'];
-    show('bulk IAST array', items);
-    show('toDevanagariFromIastList', toDevanagariFromIastList(items));
-    show('toGujaratiFromIastList', toGujaratiFromIastList(items));
-    show('toPlainEnglishFromIastList', toPlainEnglishFromIastList(items));
+    show('1. Latin (IAST) → Devanagari', toDevanagariFromIastList(items));
+    show('1. Latin (IAST) → Gujarati', toGujaratiFromIastList(items));
+    show('1. Latin (IAST) → Plain English', toPlainEnglishFromIastList(items));
 
     const devaList = toDevanagariFromIastList(items);
-    show('toCanonicalGujaratiFromDevanagariList', toCanonicalGujaratiFromDevanagariList(devaList));
+    show('2. Devanagari → Latin IAST', toCanonicalIastFromDevanagariList(devaList));
+
+    const gujrList = toGujaratiFromIastList(items);
+    show('2. Gujarati → Latin IAST', toCanonicalIastFromGujaratiList(gujrList));
+
+    show('3. Direct Devanagari → Gujarati', toCanonicalGujaratiFromDevanagariList(devaList));
+    show('3. Direct Gujarati → Devanagari', toCanonicalDevanagariFromGujaratiList(gujrList));
 
     const envList = toDevanagariList(items);
     show(
-        'toDevanagariList (rendered)',
+        '4. Result Envelopes (rendered)',
         envList.map((res) => res.rendered),
     );
 }

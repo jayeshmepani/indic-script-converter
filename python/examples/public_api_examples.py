@@ -40,9 +40,12 @@ from lipimala import (
     normalize_unicode,
     recover_embedded_exact_source,
     strip_exact_source_metadata,
+    to_canonical_devanagari_from_gujarati_list,
     to_canonical_gujarati_from_devanagari_list,
     to_canonical_iast_from_devanagari,
+    to_canonical_iast_from_devanagari_list,
     to_canonical_iast_from_gujarati,
+    to_canonical_iast_from_gujarati_list,
     to_devanagari,
     to_devanagari_from_gujarati,
     to_devanagari_from_iast,
@@ -403,19 +406,21 @@ def examples_bulk_list() -> None:
     banner('8. Bulk String Sequence Transliteration (List API)')
 
     items = ['Kṛṣṇa', 'Rāma', 'jñāna']
-    show('bulk IAST sequence', items)
-    show('to_devanagari_from_iast_list', to_devanagari_from_iast_list(items))
-    show('to_gujarati_from_iast_list', to_gujarati_from_iast_list(items))
-    show('to_plain_english_from_iast_list', to_plain_english_from_iast_list(items))
+    show('1. Latin (IAST) → Devanagari', to_devanagari_from_iast_list(items))
+    show('1. Latin (IAST) → Gujarati', to_gujarati_from_iast_list(items))
+    show('1. Latin (IAST) → Plain English', to_plain_english_from_iast_list(items))
 
     deva_list = to_devanagari_from_iast_list(items)
-    show(
-        'to_canonical_gujarati_from_devanagari_list',
-        to_canonical_gujarati_from_devanagari_list(deva_list),
-    )
+    show('2. Devanagari → Latin IAST', to_canonical_iast_from_devanagari_list(deva_list))
+
+    gujr_list = to_gujarati_from_iast_list(items)
+    show('2. Gujarati → Latin IAST', to_canonical_iast_from_gujarati_list(gujr_list))
+
+    show('3. Direct Devanagari → Gujarati', to_canonical_gujarati_from_devanagari_list(deva_list))
+    show('3. Direct Gujarati → Devanagari', to_canonical_devanagari_from_gujarati_list(gujr_list))
 
     env_list = to_devanagari_list(items)
-    show('to_devanagari_list (rendered)', [res.rendered for res in env_list])
+    show('4. Result Envelopes (rendered)', [res.rendered for res in env_list])
 
 
 def main() -> None:

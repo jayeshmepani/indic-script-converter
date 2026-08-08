@@ -425,18 +425,24 @@ void examplesBulkList() {
   banner('8. Bulk String List Transliteration (List Extension & Helpers)');
 
   const items = ['Kṛṣṇa', 'Rāma', 'jñāna'];
-  show('bulk IAST list', items);
-  show('toDevanagariFromIast()', items.toDevanagariFromIast());
-  show('toGujaratiFromIast()', items.toGujaratiFromIast());
-  show('toPlainEnglishFromIast()', items.toPlainEnglishFromIast());
+  show('1. Latin (IAST) → Devanagari', items.toDevanagariFromIast());
+  show('1. Latin (IAST) → Gujarati', items.toGujaratiFromIast());
+  show('1. Latin (IAST) → Plain English', items.toPlainEnglishFromIast());
 
   final devaList = items.toDevanagariFromIast();
-  show('toCanonicalGujaratiFromDevanagari()',
+  show('2. Devanagari → Latin IAST', devaList.toCanonicalIastFromDevanagari());
+
+  final gujrList = items.toGujaratiFromIast();
+  show('2. Gujarati → Latin IAST', gujrList.toCanonicalIastFromGujarati());
+
+  show('3. Direct Devanagari → Gujarati',
       devaList.toCanonicalGujaratiFromDevanagari());
+  show('3. Direct Gujarati → Devanagari',
+      gujrList.toCanonicalDevanagariFromGujarati());
 
   final envList = items.toDevanagari();
-  show(
-      'toDevanagari() (rendered)', envList.map((res) => res.rendered).toList());
+  show('4. Result Envelopes (rendered)',
+      envList.map((res) => res.rendered).toList());
 }
 
 void main() {

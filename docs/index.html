@@ -707,12 +707,37 @@ echo $r->restoreOriginal(), PHP_EOL;</code></pre>
                 </div>
               </article>
             <section class="doc-section" id="bulk-list" aria-labelledby="bulk-list-heading">
-              <h2 id="bulk-list-heading">8b. Bulk Array / List Transliteration</h2>
+              <h2 id="bulk-list-heading">8b. Bulk Array / List Transliteration API</h2>
               <article class="api-block" aria-labelledby="api-bulk-list-transliteration">
-                <h3 class="api-head" id="api-bulk-list-transliteration"><code>toDevanagariFromIastList / to_devanagari_from_iast_list</code></h3>
+                <h3 class="api-head" id="api-bulk-list-transliteration">Bulk Array / List Conversion Functions Across All 4 Ecosystems</h3>
                 <div class="api-body">
-                  <p>Bulk convert an array or sequence of text values (<code>["Kṛṣṇa", "Rāma", "jñāna"]</code>) in a single call without manual loop code.</p>
-                  <p>Available across all 4 ecosystems: <code>toDevanagariFromIastList</code>, <code>toGujaratiFromIastList</code>, <code>toPlainEnglishFromIastList</code>, <code>toCanonicalGujaratiFromDevanagariList</code>, <code>toCanonicalDevanagariFromGujaratiList</code>, <code>toDevanagariList</code>, <code>toGujaratiList</code>, and <code>toPlainEnglishList</code>.</p>
+                  <p>Bulk convert an array, list, or sequence of text values (<code>["Kṛṣṇa", "Rāma", "jñāna"]</code>) in a single operation without manual iteration loops across all conversion directions:</p>
+                  
+                  <ul>
+                    <li><strong>Latin (IAST) → Devanagari / Gujarati / Plain English:</strong> <code>toDevanagariFromIastList()</code>, <code>toGujaratiFromIastList()</code>, <code>toPlainEnglishFromIastList()</code></li>
+                    <li><strong>Brahmic (Devanagari / Gujarati) → Latin IAST:</strong> <code>toCanonicalIastFromDevanagariList()</code>, <code>toCanonicalIastFromGujaratiList()</code>, <code>toIastFromDevanagariList()</code>, <code>toIastFromGujaratiList()</code></li>
+                    <li><strong>Direct Devanagari ↔ Gujarati:</strong> <code>toCanonicalGujaratiFromDevanagariList()</code>, <code>toCanonicalDevanagariFromGujaratiList()</code>, <code>toGujaratiFromDevanagariList()</code>, <code>toDevanagariFromGujaratiList()</code></li>
+                    <li><strong>Result Envelopes:</strong> <code>toDevanagariList()</code>, <code>toGujaratiList()</code>, <code>toPlainEnglishList()</code></li>
+                  </ul>
+
+                  <h4>Code Examples Across Languages</h4>
+                  <pre class="code-block"><code>// Dart List Extension
+final devaList = ['Kṛṣṇa', 'Rāma', 'jñāna'].toDevanagariFromIast();
+// -> ['कृष्ण', 'राम', 'ज्ञान']
+
+// JavaScript / Node.js
+import { toDevanagariFromIastList, toCanonicalGujaratiFromDevanagariList } from 'lipimala';
+const deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);
+const gujr = toCanonicalGujaratiFromDevanagariList(deva);
+
+# Python
+from lipimala import to_devanagari_from_iast_list, to_canonical_iast_from_devanagari_list
+deva = to_devanagari_from_iast_list(['Kṛṣṇa', 'Rāma', 'jñāna'])
+iast = to_canonical_iast_from_devanagari_list(deva)
+
+// PHP
+use function Lipimala\toDevanagariFromIastList;
+$deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></pre>
                 </div>
               </article>
             </section>
