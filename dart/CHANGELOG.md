@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1
+
+- Re-exported all public converters, models, options, and utilities from primary barrel file `package:lipimala/lipimala.dart`.
+- Added comprehensive HTML API documentation and usage examples.
+
 ## 1.0.0
 
 - Added canonical Devanagari/Gujarati script-to-script conversion options and policies.
