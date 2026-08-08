@@ -494,19 +494,19 @@ export function toCanonicalIastFromGujarati(text, options = new ScriptToIastOpti
 }
 export const to_canonical_iast_from_gujarati = toCanonicalIastFromGujarati;
 
-export function hasExactDevanagariSourceMetadata(text) {
+export function hasExactDevanagariIastSourceMetadata(text) {
     return hasEmbeddedExactSource(text);
 }
-export const has_exact_devanagari_source_metadata = hasExactDevanagariSourceMetadata;
+export const has_exact_devanagari_iast_source_metadata = hasExactDevanagariIastSourceMetadata;
 export function visibleDevanagariWithoutExactSourceMetadata(text) {
     return stripExactSourceMetadata(text);
 }
 export const visible_devanagari_without_exact_source_metadata =
     visibleDevanagariWithoutExactSourceMetadata;
-export function hasExactGujaratiSourceMetadata(text) {
+export function hasExactGujaratiIastSourceMetadata(text) {
     return hasEmbeddedExactSource(text);
 }
-export const has_exact_gujarati_source_metadata = hasExactGujaratiSourceMetadata;
+export const has_exact_gujarati_iast_source_metadata = hasExactGujaratiIastSourceMetadata;
 export function visibleGujaratiWithoutExactSourceMetadata(text) {
     return stripExactSourceMetadata(text);
 }
@@ -532,11 +532,11 @@ export class DevanagariToIast extends String {
     to_canonical_iast_from_devanagari(options = new ScriptToIastOptions()) {
         return this.toCanonicalIastFromDevanagari(options);
     }
-    get hasExactDevanagariSourceMetadata() {
-        return hasExactDevanagariSourceMetadata(String(this));
+    get hasExactDevanagariIastSourceMetadata() {
+        return hasExactDevanagariIastSourceMetadata(String(this));
     }
-    get has_exact_devanagari_source_metadata() {
-        return this.hasExactDevanagariSourceMetadata;
+    get has_exact_devanagari_iast_source_metadata() {
+        return this.hasExactDevanagariIastSourceMetadata;
     }
     get visibleDevanagariWithoutExactSourceMetadata() {
         return visibleDevanagariWithoutExactSourceMetadata(String(this));
@@ -565,11 +565,11 @@ export class GujaratiToIast extends String {
     to_canonical_iast_from_gujarati(options = new ScriptToIastOptions()) {
         return this.toCanonicalIastFromGujarati(options);
     }
-    get hasExactGujaratiSourceMetadata() {
-        return hasExactGujaratiSourceMetadata(String(this));
+    get hasExactGujaratiIastSourceMetadata() {
+        return hasExactGujaratiIastSourceMetadata(String(this));
     }
-    get has_exact_gujarati_source_metadata() {
-        return this.hasExactGujaratiSourceMetadata;
+    get has_exact_gujarati_iast_source_metadata() {
+        return this.hasExactGujaratiIastSourceMetadata;
     }
     get visibleGujaratiWithoutExactSourceMetadata() {
         return visibleGujaratiWithoutExactSourceMetadata(String(this));

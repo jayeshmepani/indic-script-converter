@@ -1,8 +1,17 @@
-# lipimala — JavaScript
+# lipimala — Indic Script Converter (JavaScript / Node.js)
 
-A complete Node.js/ES2023 port of the supplied Dart and Python Indic-script conversion libraries.
+[![npm version](https://img.shields.io/npm/v/lipimala.svg?style=flat-square)](https://www.npmjs.com/package/lipimala)
+[![npm downloads](https://img.shields.io/npm/dm/lipimala.svg?style=flat-square)](https://www.npmjs.com/package/lipimala)
+[![node version](https://img.shields.io/badge/node-%3E%3D20-blue.svg?style=flat-square)](https://nodejs.org/)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
-The implementation preserves the same conversion inventory, defaults, profile boundaries, normalization behavior, Vedic handling, canonical reverse conversion, exact round-trip result envelope and invisible exact-source metadata format.
+A complete Node.js/ES2023 port of the Indic-script conversion library (`lipimala`).
+
+Package link on npm: [npmjs.com/package/lipimala](https://www.npmjs.com/package/lipimala)
+
+```bash
+npm install lipimala
+```
 
 ## Runtime
 

@@ -1,6 +1,13 @@
-# Exact Round-Trip Indic Transliteration — Python 3.12+ port
+# lipimala — Indic Script Converter (Python)
 
-This directory is a Python port of the supplied Dart implementation. It keeps the Dart package's default **`extendedIndic`** behavior and ports all public conversion directions:
+[![PyPI version](https://img.shields.io/pypi/v/lipimala.svg?style=flat-square)](https://pypi.org/project/lipimala/)
+[![Downloads](https://static.pepy.tech/badge/lipimala)](https://pepy.tech/projects/lipimala)
+[![Python Versions](https://img.shields.io/pypi/pyversions/lipimala.svg?style=flat-square)](https://pypi.org/project/lipimala/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![Wheel](https://img.shields.io/pypi/wheel/lipimala?style=flat-square)](https://pypi.org/project/lipimala/)
+[![Status](https://img.shields.io/pypi/status/lipimala?style=flat-square)](https://pypi.org/project/lipimala/)
+
+This directory is a Python 3.8+ port of the Indic Script Transliteration library (`lipimala`). It keeps the default **`extendedIndic`** behavior and provides all public conversion directions:
 
 - Latin/IAST → Devanagari
 - Latin/IAST → Gujarati
@@ -10,15 +17,14 @@ This directory is a Python port of the supplied Dart implementation. It keeps th
 - metadata-backed exact source recovery
 - exact round-trip result envelopes and JSON serialization
 
-The runtime has no third-party dependency. Python's standard `unicodedata` module supplies NFC/NFD normalization and Unicode mark categories.
+The runtime has zero required third-party dependencies. Python's standard `unicodedata` module supplies NFC/NFD normalization and Unicode mark categories.
 
 ## Install
 
+Package link on PyPI: [pypi.org/project/lipimala](https://pypi.org/project/lipimala/)
+
 ```bash
-cd python
-python3.12 -m venv .venv
-source .venv/bin/activate
-python -m pip install -e .
+pip install lipimala
 ```
 
 For tests:

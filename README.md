@@ -1,19 +1,25 @@
-# Indic Script Converter
+# lipimala — Indic Script Converter
 
-A premium, exact round-trip, and exact round-trip transliteration suite for Indian scripts. It provides bit-exact, true round-trip conversion between Latin (IAST/ISO-15919), Devanagari, Gujarati, and plain English transcription while preserving Vedic accents and formatting across **four different programming language runtimes**.
+[![pub version](https://img.shields.io/pub/v/lipimala.svg?style=flat-square)](https://pub.dev/packages/lipimala/)
+[![PyPI version](https://img.shields.io/pypi/v/lipimala.svg?style=flat-square)](https://pypi.org/project/lipimala/)
+[![npm version](https://img.shields.io/npm/v/lipimala.svg?style=flat-square)](https://www.npmjs.com/package/lipimala)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/jayeshmepani/lipimala.svg?style=flat-square)](https://packagist.org/packages/jayeshmepani/lipimala)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+
+A premium, exact round-trip transliteration suite for Indian scripts (`lipimala`). It provides bit-exact, true round-trip conversion between Latin (IAST/ISO-15919), Devanagari, Gujarati, and plain English transcription while preserving Vedic accents and formatting across **four different programming language runtimes**.
 
 This repository is structured as a **monorepo** containing independent, feature-parity implementations for Dart, JavaScript, Python, and PHP.
 
 ---
 
-## Runtimes & Directories
+## Runtimes & Registries
 
-| Package Directory | Target Registry | Primary Import |
-| ----------------- | --------------- | -------------- |
-| [`dart/`](./dart) | [pub.dev](https://pub.dev) | `import 'package:lipimala/lipimala.dart';` |
-| [`javascript/`](./javascript) | [npm](https://npmjs.com) | `import { ... } from 'lipimala';` |
-| [`python/`](./python) | [PyPI](https://pypi.org) | `from lipimala import ...` |
-| [`php/`](./php) | [Packagist](https://packagist.org) | `use Lipimala\...;` |
+| Package Directory | Target Registry | Package Link | Primary Import |
+| ----------------- | --------------- | ------------ | -------------- |
+| [`dart/`](./dart) | [pub.dev](https://pub.dev/packages/lipimala/) | [`pub.dev/packages/lipimala`](https://pub.dev/packages/lipimala/) | `import 'package:lipimala/lipimala.dart';` |
+| [`javascript/`](./javascript) | [npm](https://www.npmjs.com/package/lipimala) | [`npmjs.com/package/lipimala`](https://www.npmjs.com/package/lipimala) | `import { ... } from 'lipimala';` |
+| [`python/`](./python) | [PyPI](https://pypi.org/project/lipimala/) | [`pypi.org/project/lipimala`](https://pypi.org/project/lipimala/) | `from lipimala import ...` |
+| [`php/`](./php) | [Packagist](https://packagist.org/packages/jayeshmepani/lipimala) | [`packagist.org/packages/jayeshmepani/lipimala`](https://packagist.org/packages/jayeshmepani/lipimala) | `use Lipimala\...;` |
 
 ---
 

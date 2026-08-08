@@ -1,4 +1,11 @@
-# Exact Round-Trip Indic Transliteration (Dart)
+# lipimala — Indic Script Converter (Dart)
+
+[![pub version](https://img.shields.io/pub/v/lipimala.svg?style=flat-square)](https://pub.dev/packages/lipimala/)
+[![pub points](https://img.shields.io/pub/points/lipimala?style=flat-square)](https://pub.dev/packages/lipimala/)
+[![likes](https://img.shields.io/pub/likes/lipimala?style=flat-square)](https://pub.dev/packages/lipimala/)
+[![dart](https://img.shields.io/badge/dart-3.0%2B-blue.svg?style=flat-square)](https://dart.dev/)
+[![flutter](https://img.shields.io/badge/flutter-3.0%2B-blue.svg?style=flat-square)](https://flutter.dev/)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
 A high-fidelity Dart library that separates two concepts that cannot honestly be merged into a single Brahmic string:
 
@@ -14,12 +21,13 @@ Because rendered Indic scripts cannot natively represent Latin capitalization or
 
 ## Installation
 
-Add the package to your `pubspec.yaml`:
+Add the package to your `pubspec.yaml` or run:
 
-```yaml
-dependencies:
-  lipimala: ^1.0.0
+```bash
+dart pub add lipimala
 ```
+
+Package link on pub.dev: [pub.dev/packages/lipimala](https://pub.dev/packages/lipimala/)
 
 _This package uses `unorm_dart` for Unicode 17 NFC/NFD normalization and `unicode` for complete Unicode 17 Mn/Mc/Me mark classification._
 

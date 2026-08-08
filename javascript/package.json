@@ -13,6 +13,7 @@
         "./latn-iast-to-gujr": "./src/latn-iast-to-gujr.js",
         "./latn-iast-transcription": "./src/latn-iast-transcription.js",
         "./brahmic-to-latn-iast": "./src/brahmic-to-latn-iast.js",
+        "./deva-gujr-converter": "./src/deva-gujr-converter.js",
         "./transliteration-result": "./src/transliteration-result.js"
     },
     "scripts": {
