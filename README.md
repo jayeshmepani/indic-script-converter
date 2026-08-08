@@ -91,6 +91,19 @@ echo $result->restoreOriginal(); // Output: Kṛṣṇa ā́tman
 
 ---
 
+## Public API examples & technical docs
+
+Comprehensive examples exercise **all public user-facing APIs** with option permutations (profiles, digits, punctuation, OM, reverse modes, Deva↔Gujr, metadata):
+
+| Language | Example file | Run |
+| -------- | ------------ | --- |
+| Dart | [`dart/example/public_api_examples.dart`](./dart/example/public_api_examples.dart) | `cd dart && dart run example/public_api_examples.dart` |
+| JavaScript | [`javascript/examples/public-api-examples.js`](./javascript/examples/public-api-examples.js) | `node javascript/examples/public-api-examples.js` |
+| Python | [`python/examples/public_api_examples.py`](./python/examples/public_api_examples.py) | `PYTHONPATH=python python3 python/examples/public_api_examples.py` |
+| PHP | [`php/examples/public_api_examples.php`](./php/examples/public_api_examples.php) | `php php/examples/public_api_examples.php` |
+
+**Technical API reference (HTML):** open [`docs/api-reference.html`](./docs/api-reference.html) in a browser (no build step). Production-style docs site with light/dark theme, filterable sidebar, keyboard-accessible code tabs, responsive layout, and full API reference for every public function/method/enum/options type across all four languages.
+
 ## Development & Parity Testing
 
 For developers contributing to the transliteration engine, each language folder contains its own self-contained test suite and quality tooling:

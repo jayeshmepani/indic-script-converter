@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>lipimala API Reference — Exact Round-Trip Indic Transliteration</title>
+  <meta name="description" content="Technical API reference for lipimala — exact round-trip Indic transliteration across Dart, JavaScript, Python, and PHP.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#fbfaf8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f1216" media="(prefers-color-scheme: dark)">
+  <meta name="robots" content="index,follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="lipimala">
+  <meta property="og:title" content="lipimala API Reference">
+  <meta property="og:description" content="Exact round-trip Indic transliteration across Dart, JavaScript, Python, and PHP — conversion tables, options, result envelopes, and metadata trailers.">
+  <meta property="og:locale" content="en">
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Offline-friendly documentation: no external fonts, frameworks, or runtime dependencies. -->
+  <script>
+    /* Pre-paint theme resolution: prevents a flash of the wrong theme. */
+    (function () {
+      var root = document.documentElement;
+      root.classList.remove('no-js');
+      var stored = null;
+      try { stored = localStorage.getItem('lipimala-docs-theme'); } catch (e) { /* private mode */ }
+      var theme = stored === 'light' || stored === 'dark'
+        ? stored
+        : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      root.setAttribute('data-theme', theme);
+      root.style.colorScheme = theme;
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "name": "lipimala API Reference",
+    "headline": "lipimala Technical API Reference",
+    "description": "Exact round-trip Indic transliteration across Dart, JavaScript, Python, and PHP. Conversion directions, option enums, result envelopes, and exact-source metadata trailers.",
+    "inLanguage": "en",
+    "keywords": "transliteration, IAST, Devanagari, Gujarati, Hunterian, Unicode normalization, Dart, JavaScript, Python, PHP",
+    "proficiencyLevel": "Expert",
+    "about": {
+      "@type": "SoftwareSourceCode",
+      "name": "lipimala",
+      "description": "Exact round-trip Indic script transliteration library.",
+      "programmingLanguage": ["Dart", "JavaScript", "Python", "PHP"],
+      "license": "https://opensource.org/licenses/MIT"
+    }
+  }
+  </script>
+
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app">
+    <header class="site-header">
+      <button type="button" class="icon-btn menu-btn" id="menu-btn" aria-controls="sidebar" aria-expanded="false">
+        <svg class="icon icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg class="icon icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        <span class="sr-only" id="menu-btn-label">Navigation</span>
+      </button>
+
+      <a class="brand" href="#overview">
+        <span class="brand-mark" aria-hidden="true">लि</span>
+        <span class="brand-text">
+          <span class="brand-name">lipimala</span>
+          <span class="brand-tag">Technical API Reference</span>
+        </span>
+      </a>
+
+      <div class="header-actions">
+        <button type="button" class="icon-btn theme-btn" id="theme-btn" aria-pressed="false">
+          <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5z"/></svg>
+          <span class="sr-only" id="theme-btn-label">Dark theme</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="backdrop" id="backdrop" hidden></div>
+
+    <div class="shell">
+      <nav class="sidebar" id="sidebar" aria-label="Documentation sections">
+        <div class="sidebar-search">
+          <label for="nav-search">Filter topics</label>
+          <input class="search-input" id="nav-search" type="search" placeholder="Search API topics…" autocomplete="off" spellcheck="false" aria-describedby="nav-search-hint">
+          <p class="sr-only" id="nav-search-hint">Filters the section list below as you type. Press Escape to clear.</p>
+        </div>
+
+        <p class="nav-empty" id="nav-empty" role="status">No matching topics.</p>
+
+        <div class="nav-group">
+          <p class="nav-group-title" id="nav-group-overview">Overview</p>
+          <ul class="nav-list" aria-labelledby="nav-group-overview">
+            <li><a href="#overview" data-nav>What it does</a></li>
+            <li><a href="#install" data-nav>Installation</a></li>
+            <li><a href="#concepts" data-nav>Core concepts</a></li>
+            <li><a href="#naming" data-nav>Cross-language naming</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-group">
+          <p class="nav-group-title" id="nav-group-conversion">Conversion APIs</p>
+          <ul class="nav-list" aria-labelledby="nav-group-conversion">
+            <li><a href="#envelope" data-nav>Envelope APIs</a></li>
+            <li><a href="#forward-deva" data-nav>IAST → Devanagari</a></li>
+            <li><a href="#forward-gujr" data-nav>IAST → Gujarati</a></li>
+            <li><a href="#plain" data-nav>IAST → Plain English</a></li>
+            <li><a href="#reverse" data-nav>Brahmic → IAST</a></li>
+            <li><a href="#direct" data-nav>Deva ↔ Gujarati</a></li>
+            <li><a href="#metadata" data-nav>Metadata helpers</a></li>
+            <li><a href="#result" data-nav>Result structures</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-group">
+          <p class="nav-group-title" id="nav-group-options">Options &amp; enums</p>
+          <ul class="nav-list" aria-labelledby="nav-group-options">
+            <li><a href="#opts-forward" data-nav>Forward options</a></li>
+            <li><a href="#opts-plain" data-nav>Plain-English options</a></li>
+            <li><a href="#opts-reverse" data-nav>Reverse options</a></li>
+            <li><a href="#opts-direct" data-nav>Direct-script options</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-group">
+          <p class="nav-group-title" id="nav-group-languages">Languages</p>
+          <ul class="nav-list" aria-labelledby="nav-group-languages">
+            <li><a href="#lang-dart" data-nav>Dart</a></li>
+            <li><a href="#lang-js" data-nav>JavaScript</a></li>
+            <li><a href="#lang-py" data-nav>Python</a></li>
+            <li><a href="#lang-php" data-nav>PHP</a></li>
+            <li><a href="#examples" data-nav>Example files</a></li>
+            <li><a href="#errors" data-nav>Errors &amp; recovery</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="content-col">
+        <main class="content" id="main">
+          <div class="content-inner">
+
+            <header class="hero" id="overview">
+              <span class="hero-watermark" aria-hidden="true">ॐ</span>
+              <div class="hero-grid">
+                <div class="hero-copy">
+                  <p class="hero-eyebrow"><span class="live-dot" aria-hidden="true"></span>lipimala · v1.0.0</p>
+                  <h1>Technical <span class="text-gradient">API Reference</span></h1>
+                  <p class="hero-lede">
+                    Exact round-trip Indic transliteration across <strong>Dart</strong>, <strong>JavaScript</strong>,
+                    <strong>Python</strong>, and <strong>PHP</strong>. Same conversion tables, profiles, Vedic handling,
+                    metadata trailer format, and result envelopes on every runtime.
+                  </p>
+                  <ul class="meta-row" aria-label="Package identity">
+                    <li class="eco-badge eco-badge-npm"><span class="eco-badge-tag" aria-hidden="true">npm</span>lipimala</li>
+                    <li class="eco-badge eco-badge-pypi"><span class="eco-badge-tag" aria-hidden="true">PyPI</span>lipimala</li>
+                    <li class="eco-badge eco-badge-pub"><span class="eco-badge-tag" aria-hidden="true">pub</span>lipimala</li>
+                    <li class="eco-badge eco-badge-packagist"><span class="eco-badge-tag" aria-hidden="true">Packagist</span>jayeshmepani/lipimala</li>
+                    <li class="pill"><strong>PHP ns</strong> Lipimala</li>
+                    <li class="pill pill-accent"><strong>Default profile</strong> extendedIndic</li>
+                  </ul>
+                </div>
+
+                <div class="demo-card" data-live-demo>
+                  <div class="demo-head">
+                    <span class="demo-dot" aria-hidden="true"></span>
+                    <span class="demo-dot" aria-hidden="true"></span>
+                    <span class="demo-dot" aria-hidden="true"></span>
+                    <code class="demo-title">toDevanagariFromIast()</code>
+                    <span class="live-pill"><span class="live-dot" aria-hidden="true"></span>live</span>
+                  </div>
+                  <div class="demo-body">
+                    <label class="demo-label" for="demo-input">IAST / extended-Indic input</label>
+                    <input class="demo-input" id="demo-input" type="text" value="Kṛṣṇa ā́tman" spellcheck="false" autocomplete="off" autocapitalize="off">
+                    <ul class="demo-chips" data-demo-chips aria-label="Try a sample word">
+                      <li><button type="button" class="chip-sample" data-sample="kṛṣṇa">kṛṣṇa</button></li>
+                      <li><button type="button" class="chip-sample" data-sample="ātman">ātman</button></li>
+                      <li><button type="button" class="chip-sample" data-sample="dharma">dharma</button></li>
+                      <li><button type="button" class="chip-sample" data-sample="saṃskṛtam">saṃskṛtam</button></li>
+                      <li><button type="button" class="chip-sample" data-sample="namaste">namaste</button></li>
+                      <li><button type="button" class="chip-sample" data-sample="oṃ">oṃ</button></li>
+                    </ul>
+                    <div class="demo-out">
+                      <div class="demo-out-row lang-deva">
+                        <span class="demo-out-label" id="demo-out-deva-label">Devanagari</span>
+                        <output class="demo-out-text" id="demo-out-deva" for="demo-input" aria-labelledby="demo-out-deva-label" aria-live="polite">कृष्ण आत्मन्</output>
+                      </div>
+                      <div class="demo-out-row lang-gujr">
+                        <span class="demo-out-label" id="demo-out-gujr-label">Gujarati</span>
+                        <output class="demo-out-text" id="demo-out-gujr" for="demo-input" aria-labelledby="demo-out-gujr-label" aria-live="polite">કૃષ્ણ આત્મન્</output>
+                      </div>
+                    </div>
+                    <div class="demo-meta" data-demo-meta>
+                      <label class="demo-switch">
+                        <input type="checkbox" id="demo-embed">
+                        <span class="demo-switch-track" aria-hidden="true"></span>
+                        <code>embedExactSourceMetadata</code>
+                      </label>
+                      <code class="trailer-chip" id="demo-trailer" hidden></code>
+                    </div>
+                    <ul class="demo-tags">
+                      <li>profile: extendedIndic</li>
+                      <li>in: nfd → out: nfc</li>
+                      <li>renderingIsInjective: false</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </header>
+
+            <section class="doc-section" id="overview-detail" aria-labelledby="overview-heading">
+              <h2 id="overview-heading">1. What lipimala does</h2>
+              <p class="section-lead">
+                Converts between scholarly Latin (IAST / extended Indic / ISO-style tables), Devanagari, Gujarati,
+                and plain-English / Hunterian views. Visible Brahmic rendering is many-to-one—case, aliases, and
+                normalization collapse—so exact recovery uses an envelope or an invisible metadata trailer.
+              </p>
+              <div class="grid-2">
+                <article class="card" aria-labelledby="card-directions">
+                  <h3 class="card-title" id="card-directions">Supported directions</h3>
+                  <ul>
+                    <li>Latin/IAST → Devanagari</li>
+                    <li>Latin/IAST → Gujarati</li>
+                    <li>Latin/IAST → plain English / Hunterian</li>
+                    <li>Devanagari → IAST (canonical / smart / exact)</li>
+                    <li>Gujarati → IAST (canonical / smart / exact)</li>
+                    <li>Devanagari ↔ Gujarati (canonical / smart / exact)</li>
+                  </ul>
+                </article>
+                <article class="card" aria-labelledby="card-recovery">
+                  <h3 class="card-title" id="card-recovery">Two recovery strategies</h3>
+                  <ol>
+                    <li><strong>TransliterationResult</strong> — keep the object / JSON and call <code>restoreOriginal()</code>.</li>
+                    <li><strong>Exact-source trailer</strong> — set <code>embedExactSourceMetadata: true</code> so the string carries a checksummed Unicode-Tag payload (<code>LIT1:</code>).</li>
+                  </ol>
+                </article>
+              </div>
+            </section>
+
+            <section class="doc-section" id="install" aria-labelledby="install-heading">
+              <h2 id="install-heading">2. Installation &amp; imports</h2>
+              <div class="table-wrap" role="region" aria-labelledby="cap-install" tabindex="0">
+                <table>
+                  <caption id="cap-install">Install commands and primary import paths</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Language</th>
+                      <th scope="col">Install</th>
+                      <th scope="col">Import / use</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Python</th>
+                      <td><code>pip install lipimala</code></td>
+                      <td><code>from lipimala import to_devanagari, ...</code><br>
+                          Deva↔Gujr: <code>from lipimala.deva_gujr_converter import ...</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">JavaScript</th>
+                      <td><code>npm install lipimala</code></td>
+                      <td><code>import { toDevanagari } from 'lipimala'</code><br>
+                          Deva↔Gujr: deep import of <code>deva-gujr-converter</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Dart</th>
+                      <td><code>dart pub add lipimala</code></td>
+                      <td><code>import 'package:lipimala/lipimala.dart';</code><br>
+                          Extensions on <code>String</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">PHP</th>
+                      <td><code>composer require jayeshmepani/lipimala</code></td>
+                      <td><code>use function Lipimala\toDevanagari;</code><br>
+                          <code>use Lipimala\IastToDevanagariOptions;</code></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="doc-section" id="concepts" aria-labelledby="concepts-heading">
+              <h2 id="concepts-heading">3. Core concepts</h2>
+
+              <h3 id="concepts-layers">3.1 Two API layers</h3>
+              <div class="table-wrap" role="region" aria-labelledby="cap-layers" tabindex="0">
+                <table>
+                  <caption id="cap-layers">String converters versus envelope converters</caption>
+                  <thead>
+                    <tr><th scope="col">Layer</th><th scope="col">Returns</th><th scope="col">When to use</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">String converters<br><code>toDevanagariFromIast</code></th>
+                      <td><code>string</code></td>
+                      <td>Rendered text only; optional invisible trailer for later exact reverse.</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Envelope converters<br><code>toDevanagari</code></th>
+                      <td><code>TransliterationResult</code></td>
+                      <td>Structured output, issues, profile metadata, JSON, <code>restoreOriginal()</code>.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h3 id="concepts-reverse">3.2 Smart vs exact vs canonical reverse</h3>
+              <div class="table-wrap" role="region" aria-labelledby="cap-reverse-modes" tabindex="0">
+                <table>
+                  <caption id="cap-reverse-modes">Reverse recovery modes (Devanagari → IAST example)</caption>
+                  <thead>
+                    <tr><th scope="col">Variant</th><th scope="col">Behavior</th><th scope="col">Fails when</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row"><code>toIastFromDevanagari</code></th>
+                      <td>Exact trailer if present, else canonical reverse</td>
+                      <td>Never throws for missing trailer</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>toExactIastFromDevanagari</code></th>
+                      <td>Requires valid embedded metadata</td>
+                      <td>Throws if trailer missing/corrupt (empty → empty)</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>toCanonicalIastFromDevanagari</code></th>
+                      <td>Always visible-script reverse</td>
+                      <td>Does not throw for missing trailer</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="section-lead">Same pattern for Gujarati→IAST and Deva↔Gujr with typed markers <code>ISC:D:</code> / <code>ISC:G:</code>.</p>
+
+              <h3 id="concepts-norm">3.3 Unicode normalization</h3>
+              <p>
+                Enum <code>UnicodeNormalizationForm</code>:
+                <span class="pill">preserve</span>
+                <span class="pill">nfc</span>
+                <span class="pill">nfd</span>
+              </p>
+              <p>Envelope defaults: input <code>nfd</code>, output <code>nfc</code>. Reverse APIs use <code>ScriptToIastOptions</code>.</p>
+            </section>
+
+            <section class="doc-section" id="naming" aria-labelledby="naming-heading">
+              <h2 id="naming-heading">4. Cross-language naming map</h2>
+              <div class="table-wrap" role="region" aria-labelledby="cap-naming" tabindex="0">
+                <table>
+                  <caption id="cap-naming">Primary API names across runtimes</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Concept</th>
+                      <th scope="col">Dart</th>
+                      <th scope="col">JavaScript</th>
+                      <th scope="col">Python</th>
+                      <th scope="col">PHP</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Envelope Deva</th>
+                      <td><code>str.toDevanagari()</code></td>
+                      <td><code>toDevanagari(text)</code></td>
+                      <td><code>to_devanagari(text)</code></td>
+                      <td><code>toDevanagari($text)</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">String Deva</th>
+                      <td><code>toDevanagariFromIast()</code></td>
+                      <td><code>toDevanagariFromIast(text)</code></td>
+                      <td><code>to_devanagari_from_iast</code></td>
+                      <td><code>toDevanagariFromIast</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Envelope Gujr</th>
+                      <td><code>toGujarati()</code></td>
+                      <td><code>toGujarati(text)</code></td>
+                      <td><code>to_gujarati(text)</code></td>
+                      <td><code>toGujarati($text)</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Restore</th>
+                      <td><code>restoreOriginal()</code></td>
+                      <td><code>restoreOriginal()</code></td>
+                      <td><code>restore_original()</code></td>
+                      <td><code>-&gt;restoreOriginal()</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Options fields</th>
+                      <td>camelCase</td>
+                      <td>camel + snake</td>
+                      <td>snake (+ camel props)</td>
+                      <td>camelCase promoted</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Enum style</th>
+                      <td><code>.extendedIndic</code></td>
+                      <td><code>EXTENDED_INDIC</code></td>
+                      <td><code>.EXTENDED_INDIC</code></td>
+                      <td><code>::EXTENDED_INDIC</code></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <aside class="callout callout-success">
+                <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                <p><strong>Alias tip:</strong> JS and Python expose both camelCase and snake_case for most functions. Pick one style per codebase.</p>
+              </aside>
+            </section>
+
+            <section class="doc-section" id="envelope" aria-labelledby="envelope-heading">
+              <h2 id="envelope-heading">5. Envelope APIs</h2>
+              <p class="section-lead">Return <code>TransliterationResult</code>. Always set <code>renderingIsInjective = false</code> for script/plain views.</p>
+
+              <article class="api-block" aria-labelledby="api-to-devanagari">
+                <h3 class="api-head" id="api-to-devanagari"><code>toDevanagari / to_devanagari</code></h3>
+                <div class="api-body">
+                  <ul class="tag-row" aria-label="Signature summary">
+                    <li class="tag tag-dir">IAST → Devanagari</li>
+                    <li class="tag tag-ret">TransliterationResult</li>
+                  </ul>
+                  <div class="table-wrap" role="region" aria-labelledby="cap-params-deva" tabindex="0">
+                    <table>
+                      <caption id="cap-params-deva">Parameters</caption>
+                      <thead>
+                        <tr><th scope="col">Parameter</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><th scope="row"><code>text</code></th><td>string</td><td>required</td><td>Latin/IAST (or extended) source</td></tr>
+                        <tr><th scope="row"><code>options</code></th><td>IastToDevanagariOptions</td><td>defaults</td><td>Profile + policies — see <a href="#opts-forward">§13</a></td></tr>
+                        <tr><th scope="row"><code>inputNormalization</code></th><td>UnicodeNormalizationForm</td><td>nfd</td><td>Applied before conversion</td></tr>
+                        <tr><th scope="row"><code>outputNormalization</code></th><td>UnicodeNormalizationForm</td><td>nfc</td><td>Applied to visible rendered text</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p>Issue attached: <code>SOURCE_METADATA_REQUIRED_FOR_EXACT_REVERSE</code> (info).</p>
+                  <p class="section-lead">Dart: method on <code>String</code>. JS: second arg is <code>{ options, inputNormalization, outputNormalization }</code>.</p>
+                </div>
+              </article>
+
+              <article class="api-block" aria-labelledby="api-to-gujarati">
+                <h3 class="api-head" id="api-to-gujarati"><code>toGujarati / to_gujarati</code></h3>
+                <div class="api-body">
+                  <ul class="tag-row" aria-label="Signature summary">
+                    <li class="tag tag-dir">IAST → Gujarati</li>
+                    <li class="tag tag-ret">TransliterationResult</li>
+                  </ul>
+                  <p>Same shape as <code>toDevanagari</code> with <code>IastToGujaratiOptions</code>.</p>
+                </div>
+              </article>
+
+              <article class="api-block" aria-labelledby="api-to-plain-english">
+                <h3 class="api-head" id="api-to-plain-english"><code>toPlainEnglish / to_plain_english</code></h3>
+                <div class="api-body">
+                  <ul class="tag-row" aria-label="Signature summary">
+                    <li class="tag tag-dir">IAST → plain English</li>
+                    <li class="tag tag-ret">TransliterationResult</li>
+                  </ul>
+                  <p>Uses <code>IastPlainEnglishOptions</code>. Result profile is <code>hunterian</code> or <code>plainEnglish</code>.</p>
+                  <p>Issue: <code>HUNTERIAN_VIEW_IS_INTRINSICALLY_LOSSY</code> or <code>PLAIN_ENGLISH_VIEW_IS_INTRINSICALLY_LOSSY</code> (info).</p>
+                </div>
+              </article>
+
+              <h3 id="envelope-examples">Minimal multi-language example</h3>
+              <div class="code-tabs" data-code-tabs>
+                <div class="tablist" role="tablist" aria-label="Language">
+                  <button type="button" class="tab" role="tab" id="tab-dart" aria-controls="panel-dart" aria-selected="true"><span class="tab-dot tab-dot-dart" aria-hidden="true"></span>Dart</button>
+                  <button type="button" class="tab" role="tab" id="tab-js" aria-controls="panel-js" aria-selected="false" tabindex="-1"><span class="tab-dot tab-dot-js" aria-hidden="true"></span>JavaScript</button>
+                  <button type="button" class="tab" role="tab" id="tab-py" aria-controls="panel-py" aria-selected="false" tabindex="-1"><span class="tab-dot tab-dot-py" aria-hidden="true"></span>Python</button>
+                  <button type="button" class="tab" role="tab" id="tab-php" aria-controls="panel-php" aria-selected="false" tabindex="-1"><span class="tab-dot tab-dot-php" aria-hidden="true"></span>PHP</button>
+                </div>
+                <div class="tabpanel is-active" role="tabpanel" id="panel-dart" aria-labelledby="tab-dart" tabindex="0">
+<pre data-lang="Dart"><code class="language-dart">import 'package:lipimala/lipimala.dart';
+
+final r = 'Kṛṣṇa ā́tman'.toDevanagari();
+print(r.rendered);          // कृष्ण आ॑त्मन्
+print(r.restoreOriginal()); // Kṛṣṇa ā́tman</code></pre>
+                </div>
+                <div class="tabpanel" role="tabpanel" id="panel-js" aria-labelledby="tab-js" tabindex="0" hidden>
+<pre data-lang="JavaScript"><code class="language-javascript">import { toDevanagari } from 'lipimala';
+
+const r = toDevanagari('Kṛṣṇa ā́tman');
+console.log(r.rendered);
+console.log(r.restoreOriginal());</code></pre>
+                </div>
+                <div class="tabpanel" role="tabpanel" id="panel-py" aria-labelledby="tab-py" tabindex="0" hidden>
+<pre data-lang="Python"><code class="language-python">from lipimala import to_devanagari
+
+r = to_devanagari('Kṛṣṇa ā́tman')
+print(r.rendered)
+print(r.restore_original())</code></pre>
+                </div>
+                <div class="tabpanel" role="tabpanel" id="panel-php" aria-labelledby="tab-php" tabindex="0" hidden>
+<pre data-lang="PHP"><code class="language-php">use function Lipimala\toDevanagari;
+
+$r = toDevanagari('Kṛṣṇa ā́tman');
+echo $r->rendered, PHP_EOL;
+echo $r->restoreOriginal(), PHP_EOL;</code></pre>
+                </div>
+              </div>
+            </section>
+
+            <section class="doc-section" id="forward-deva" aria-labelledby="forward-deva-heading">
+              <h2 id="forward-deva-heading">6. IAST → Devanagari (string API)</h2>
+              <article class="api-block" aria-labelledby="api-to-devanagari-from-iast">
+                <h3 class="api-head" id="api-to-devanagari-from-iast"><code>toDevanagariFromIast / to_devanagari_from_iast</code></h3>
+                <div class="api-body">
+                  <ul class="tag-row" aria-label="Signature summary">
+                    <li class="tag tag-ret">string</li>
+                    <li class="tag">optional metadata trailer</li>
+                  </ul>
+                  <div class="table-wrap" role="region" aria-labelledby="cap-params-string-deva" tabindex="0">
+                    <table>
+                      <caption id="cap-params-string-deva">Parameters</caption>
+                      <thead>
+                        <tr><th scope="col">Parameter</th><th scope="col">Type</th><th scope="col">Default</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><th scope="row"><code>text</code></th><td>string</td><td>required</td></tr>
+                        <tr><th scope="row"><code>options</code></th><td>IastToDevanagariOptions</td><td>all defaults (<a href="#opts-forward">§13</a>)</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p><strong>When:</strong> you only need the rendered script string, or you will reverse later via metadata.</p>
+                  <p><strong>How exact reverse works:</strong> pass <code>embedExactSourceMetadata: true</code>, then call <code>toExactIastFromDevanagari(tagged)</code>.</p>
+                </div>
+              </article>
+            </section>
+
+            <section class="doc-section" id="forward-gujr" aria-labelledby="forward-gujr-heading">
+              <h2 id="forward-gujr-heading">7. IAST → Gujarati (string API)</h2>
+              <article class="api-block" aria-labelledby="api-to-gujarati-from-iast">
+                <h3 class="api-head" id="api-to-gujarati-from-iast"><code>toGujaratiFromIast / to_gujarati_from_iast</code></h3>
+                <div class="api-body">
+                  <p>Mirror of the Devanagari string API with <code>IastToGujaratiOptions</code> and Gujarati profile/policy enums.</p>
+                  <p>Exact reverse: <code>toExactIastFromGujarati</code>.</p>
+                </div>
+              </article>
+            </section>
+
+            <section class="doc-section" id="plain" aria-labelledby="plain-heading">
+              <h2 id="plain-heading">8. IAST → plain English / Hunterian</h2>
+              <article class="api-block" aria-labelledby="api-to-plain-english-from-iast">
+                <h3 class="api-head" id="api-to-plain-english-from-iast"><code>toPlainEnglishFromIast / to_plain_english_from_iast</code></h3>
+                <div class="api-body">
+                  <ul class="tag-row" aria-label="Signature summary">
+                    <li class="tag tag-ret">string</li>
+                    <li class="tag tag-warn">intrinsically lossy</li>
+                  </ul>
+                  <p>ASCII-friendly transcription. Keep the envelope for exact Latin recovery. Options control final-a, jñ, ñ, glottal stop, Hunterian features — see <a href="#opts-plain">§14</a>.</p>
+                </div>
+              </article>
+            </section>
+
+            <section class="doc-section" id="reverse" aria-labelledby="reverse-heading">
+              <h2 id="reverse-heading">9. Brahmic → IAST reverse</h2>
+              <div class="table-wrap" role="region" aria-labelledby="cap-reverse-fns" tabindex="0">
+                <table>
+                  <caption id="cap-reverse-fns">Reverse IAST functions</caption>
+                  <thead>
+                    <tr><th scope="col">Function</th><th scope="col">Args</th><th scope="col">Returns</th><th scope="col">Behavior</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row"><code>toIastFromDevanagari</code><br><code>toIastFromGujarati</code></th>
+                      <td>text, ScriptToIastOptions?</td>
+                      <td>string</td>
+                      <td>Exact if trailer present, else canonical</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>toExactIastFromDevanagari</code><br><code>toExactIastFromGujarati</code></th>
+                      <td>text</td>
+                      <td>string</td>
+                      <td>Requires metadata; throws otherwise</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>toCanonicalIastFromDevanagari</code><br><code>toCanonicalIastFromGujarati</code></th>
+                      <td>text, ScriptToIastOptions?</td>
+                      <td>string</td>
+                      <td>Always canonical visible reverse</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>hasExact*SourceMetadata</code></th>
+                      <td>text</td>
+                      <td>bool</td>
+                      <td>Whether generic LIT1 trailer present</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>visible*WithoutExactSourceMetadata</code></th>
+                      <td>text</td>
+                      <td>string</td>
+                      <td>Strip trailer; visible only</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h3 id="script-to-iast-options">ScriptToIastOptions</h3>
+              <div class="table-wrap" role="region" aria-labelledby="cap-reverse-opts" tabindex="0">
+                <table>
+                  <caption id="cap-reverse-opts">Reverse options fields</caption>
+                  <thead>
+                    <tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Meaning</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row">inputNormalization</th><td>UnicodeNormalizationForm</td><td>nfd</td><td>Normalize input before reverse map</td></tr>
+                    <tr><th scope="row">outputNormalization</th><td>UnicodeNormalizationForm</td><td>nfc</td><td>Normalize Latin output</td></tr>
+                    <tr><th scope="row">preserveUnmapped</th><td>bool</td><td>true</td><td>Keep unmapped characters as-is</td></tr>
+                    <tr><th scope="row">preserveEncodedVedicMarks</th><td>bool</td><td>true</td><td>Keep Vedic svara marks</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="doc-section" id="direct" aria-labelledby="direct-heading">
+              <h2 id="direct-heading">10. Direct Devanagari ↔ Gujarati</h2>
+              <aside class="callout callout-warn">
+                <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+                <p><strong>Import note:</strong> Python uses <code>lipimala.deva_gujr_converter</code>. JS uses a deep import of <code>deva-gujr-converter</code>. Dart and PHP expose these APIs on the main surface.</p>
+              </aside>
+              <div class="table-wrap" role="region" aria-labelledby="cap-direct-fns" tabindex="0">
+                <table>
+                  <caption id="cap-direct-fns">Direct script conversion functions</caption>
+                  <thead>
+                    <tr><th scope="col">Function</th><th scope="col">Direction</th><th scope="col">Mode</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row"><code>toCanonicalGujaratiFromDevanagari</code></th><td>Deva → Gujr</td><td>always visible canonical</td></tr>
+                    <tr><th scope="row"><code>toGujaratiFromDevanagari</code></th><td>Deva → Gujr</td><td>smart exact-or-canonical</td></tr>
+                    <tr><th scope="row"><code>toExactGujaratiFromDevanagari</code></th><td>Deva → Gujr</td><td>requires typed Gujr trailer</td></tr>
+                    <tr><th scope="row"><code>toCanonicalDevanagariFromGujarati</code></th><td>Gujr → Deva</td><td>always visible canonical</td></tr>
+                    <tr><th scope="row"><code>toDevanagariFromGujarati</code></th><td>Gujr → Deva</td><td>smart exact-or-canonical</td></tr>
+                    <tr><th scope="row"><code>toExactDevanagariFromGujarati</code></th><td>Gujr → Deva</td><td>requires typed Deva trailer</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>Options: <code>IndicScriptConversionOptions</code> (<a href="#opts-direct">§16</a>). Typed prefixes: <code>\0ISC:D:</code> / <code>\0ISC:G:</code>.</p>
+            </section>
+
+            <section class="doc-section" id="metadata" aria-labelledby="metadata-heading">
+              <h2 id="metadata-heading">11. Metadata &amp; Unicode helpers</h2>
+              <div class="table-wrap" role="region" aria-labelledby="cap-metadata" tabindex="0">
+                <table>
+                  <caption id="cap-metadata">Shared helper functions</caption>
+                  <thead>
+                    <tr><th scope="col">Function</th><th scope="col">Args</th><th scope="col">Returns</th><th scope="col">Use when</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row"><code>embedExactSourceMetadata</code></th><td>rendered, originalSource</td><td>string</td><td>Manually attach trailer</td></tr>
+                    <tr><th scope="row"><code>tryDecodeExactSourceMetadata</code></th><td>text</td><td>EmbeddedExactSource | null</td><td>Inspect trailer payload</td></tr>
+                    <tr><th scope="row"><code>stripExactSourceMetadata</code></th><td>text</td><td>string</td><td>Display-only visible text</td></tr>
+                    <tr><th scope="row"><code>recoverEmbeddedExactSource</code></th><td>text</td><td>string | null</td><td>Get original if present</td></tr>
+                    <tr><th scope="row"><code>hasEmbeddedExactSource</code></th><td>text</td><td>bool</td><td>Probe for valid trailer</td></tr>
+                    <tr><th scope="row"><code>normalizeUnicode</code></th><td>text, form</td><td>string</td><td>NFC / NFD / preserve</td></tr>
+                    <tr><th scope="row"><code>isUnicodeCombiningMark</code></th><td>codepoint|char</td><td>bool</td><td>Mark classification</td></tr>
+                    <tr><th scope="row"><code>isEncodedVedicMark</code></th><td>codepoint|char</td><td>bool</td><td>Vedic svara detection</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="section-lead">Trailer format: Unicode Tags U+E0001…U+E007F, magic <code>LIT1:</code>, dual FNV-1a checksums over UTF-16LE source and visible text — byte-compatible across all four runtimes.</p>
+            </section>
+
+            <section class="doc-section" id="result" aria-labelledby="result-heading">
+              <h2 id="result-heading">12. Result structures</h2>
+
+              <h3 id="transliteration-result">TransliterationResult</h3>
+              <div class="table-wrap" role="region" aria-labelledby="cap-result-fields" tabindex="0">
+                <table>
+                  <caption id="cap-result-fields">Envelope fields and methods</caption>
+                  <thead>
+                    <tr><th scope="col">Field / method</th><th scope="col">Type</th><th scope="col">Description</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row"><code>original</code></th><td>string</td><td>Exact source string from caller</td></tr>
+                    <tr><th scope="row"><code>normalizedInput</code></th><td>string</td><td>Source after input normalization</td></tr>
+                    <tr><th scope="row"><code>rendered</code></th><td>string</td><td>Converted view (may include trailer)</td></tr>
+                    <tr><th scope="row"><code>profile</code></th><td>TransliterationProfile</td><td>Profile used for this conversion</td></tr>
+                    <tr><th scope="row"><code>inputNormalization</code> / <code>outputNormalization</code></th><td>UnicodeNormalizationForm</td><td>Forms applied</td></tr>
+                    <tr><th scope="row"><code>renderingIsInjective</code></th><td>bool</td><td>Always false for these views</td></tr>
+                    <tr><th scope="row"><code>issues</code></th><td>list of TransliterationIssue</td><td>Diagnostics</td></tr>
+                    <tr><th scope="row"><code>originalCodePoints</code></th><td>list&lt;int&gt;</td><td>Integrity codes of original</td></tr>
+                    <tr><th scope="row"><code>restoreOriginal()</code></th><td>string</td><td>Returns <code>original</code></td></tr>
+                    <tr><th scope="row"><code>hasErrors</code></th><td>bool</td><td>Any issue with severity error</td></tr>
+                    <tr><th scope="row"><code>toJson()</code> / <code>fromJson</code></th><td>object / factory</td><td>Serialize / rebuild with integrity check</td></tr>
+                    <tr><th scope="row"><code>toJsonText</code> / <code>fromJsonText</code></th><td>string / factory</td><td>JSON text form</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h3 id="json-envelope">JSON envelope shape</h3>
+<pre data-lang="JSON"><code class="language-json">{
+  "schema": "indic-script-converter/1" | "exact round-trip-indic-transliteration/1",
+  "original": "Kṛṣṇa",
+  "originalCodePoints": [75, 7771, 7779, 7751, 97],
+  "normalizedInput": "...",
+  "rendered": "कृष्ण",
+  "profile": "extendedIndic",
+  "inputNormalization": "nfd",
+  "outputNormalization": "nfc",
+  "renderingIsInjective": false,
+  "issues": [
+    { "code": "...", "message": "...", "severity": "info", "sourceRuneOffset": null }
+  ]
+}</code></pre>
+
+              <h3 id="issue">TransliterationIssue</h3>
+              <div class="table-wrap" role="region" aria-labelledby="cap-issue" tabindex="0">
+                <table>
+                  <caption id="cap-issue">Issue object fields</caption>
+                  <thead>
+                    <tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Default</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row">code</th><td>string</td><td>required</td></tr>
+                    <tr><th scope="row">message</th><td>string</td><td>required</td></tr>
+                    <tr><th scope="row">severity</th><td>info | warning | error</td><td>warning</td></tr>
+                    <tr><th scope="row">sourceRuneOffset</th><td>int | null</td><td>null</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h3 id="embedded">EmbeddedExactSource</h3>
+              <p>Fields: <code>visibleText</code>, <code>originalSource</code>.</p>
+            </section>
+
+            <section class="doc-section" id="opts-forward" aria-labelledby="opts-forward-heading">
+              <h2 id="opts-forward-heading">13. Forward options (IAST → Deva / Gujr)</h2>
+              <h3 id="iast-to-script-options">IastToDevanagariOptions / IastToGujaratiOptions</h3>
+              <div class="table-wrap" role="region" aria-labelledby="cap-forward-opts" tabindex="0">
+                <table>
+                  <caption id="cap-forward-opts">Forward conversion option fields</caption>
+                  <thead>
+                    <tr><th scope="col">Field</th><th scope="col">Values</th><th scope="col">Default</th><th scope="col">Effect</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row">profile</th><td>strictIast | iso15919Core | extendedIndic</td><td>extendedIndic</td><td>Accepted Latin inventory</td></tr>
+                    <tr><th scope="row">unknownLatinPolicy</th><td>passThrough | bracket | throwError</td><td>passThrough</td><td>Unknown Latin handling</td></tr>
+                    <tr><th scope="row">digitPolicy</th><td>preserveAscii | convertToScript</td><td>preserveAscii</td><td>ASCII vs script digits</td></tr>
+                    <tr><th scope="row">punctuationPolicy</th><td>preserve | indicDanda</td><td>preserve</td><td>Period → danda</td></tr>
+                    <tr><th scope="row">omPolicy</th><td>transliterateLetters | useOmSign</td><td>transliterateLetters</td><td>oṃ → letters vs ॐ/ૐ</td></tr>
+                    <tr><th scope="row">ambiguousLPolicy</th><td>context | preferVocalic | preferConsonant</td><td>context</td><td>Resolve ḷ</td></tr>
+                    <tr><th scope="row">acceptAsciiLongVowels</th><td>bool</td><td>false</td><td>Allow aa/ii/uu</td></tr>
+                    <tr><th scope="row">acceptPlainSh</th><td>bool</td><td>true</td><td>Plain <code>sh</code></td></tr>
+                    <tr><th scope="row">acceptPlainXAsKha</th><td>bool</td><td>true</td><td>Compatibility for <code>x</code></td></tr>
+                    <tr><th scope="row">acceptWAsVa</th><td>bool</td><td>true</td><td>Treat <code>w</code> as <code>v</code></td></tr>
+                    <tr><th scope="row">preserveVedicAccentMarks</th><td>bool</td><td>true</td><td>Keep svara marks</td></tr>
+                    <tr><th scope="row">collapseWhitespace</th><td>bool</td><td>false</td><td>Collapse whitespace runs</td></tr>
+                    <tr><th scope="row">embedExactSourceMetadata</th><td>bool</td><td>false</td><td>Append exact-source trailer</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="section-lead">Gujarati types mirror the same fields with Gujarati-prefixed enum type names.</p>
+            </section>
+
+            <section class="doc-section" id="opts-plain" aria-labelledby="opts-plain-heading">
+              <h2 id="opts-plain-heading">14. Plain-English options</h2>
+              <h3 id="iast-plain-english-options">IastPlainEnglishOptions</h3>
+              <div class="table-wrap" role="region" aria-labelledby="cap-plain-opts" tabindex="0">
+                <table>
+                  <caption id="cap-plain-opts">Plain-English / Hunterian option fields</caption>
+                  <thead>
+                    <tr><th scope="col">Field</th><th scope="col">Values</th><th scope="col">Default</th><th scope="col">Effect</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row">finalA</th><td>keep | drop | smart</td><td>smart</td><td>Trailing inherent a</td></tr>
+                    <tr><th scope="row">jna</th><td>gya | jnya | jna</td><td>gya</td><td>jñ conjunct</td></tr>
+                    <tr><th scope="row">nya</th><td>na | nya | gna</td><td>na</td><td>Standalone ñ</td></tr>
+                    <tr><th scope="row">profile</th><td>strictIast | extendedIndic | hunterian</td><td>extendedIndic</td><td>Input inventory / style</td></tr>
+                    <tr><th scope="row">glottalStop</th><td>remove | apostrophe</td><td>remove</td><td>ʔ handling</td></tr>
+                    <tr><th scope="row">convertCToCh</th><td>bool</td><td>true</td><td>c → ch style</td></tr>
+                    <tr><th scope="row">assimilateAnusvara</th><td>bool</td><td>true</td><td>Anusvara assimilation</td></tr>
+                    <tr><th scope="row">removeAvagraha</th><td>bool</td><td>true</td><td>Strip avagraha-like marks</td></tr>
+                    <tr><th scope="row">collapseWhitespace</th><td>bool</td><td>false</td><td>Whitespace collapse</td></tr>
+                    <tr><th scope="row">enableInternalSchwaSyncope</th><td>bool</td><td>false</td><td>Hunterian schwa drop</td></tr>
+                    <tr><th scope="row">useWForVAfterConsonants</th><td>bool</td><td>false</td><td>Hunterian v/w</td></tr>
+                    <tr><th scope="row">preserveVedicAccentMarks</th><td>bool</td><td>false</td><td>Usually stripped</td></tr>
+                    <tr><th scope="row">keepFinalAForWords</th><td>set/list</td><td>empty</td><td>Force keep final a</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="doc-section" id="opts-reverse" aria-labelledby="opts-reverse-heading">
+              <h2 id="opts-reverse-heading">15. Reverse options</h2>
+              <p>See <a href="#script-to-iast-options">ScriptToIastOptions</a> in §9.</p>
+            </section>
+
+            <section class="doc-section" id="opts-direct" aria-labelledby="opts-direct-heading">
+              <h2 id="opts-direct-heading">16. Direct-script options</h2>
+              <h3 id="indic-script-conversion-options">IndicScriptConversionOptions</h3>
+              <div class="table-wrap" role="region" aria-labelledby="cap-direct-opts" tabindex="0">
+                <table>
+                  <caption id="cap-direct-opts">Direct Devanagari ↔ Gujarati options</caption>
+                  <thead>
+                    <tr><th scope="col">Field</th><th scope="col">Values</th><th scope="col">Default</th><th scope="col">Effect</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row">inputNormalization</th><td>preserve | nfc | nfd</td><td>nfd</td><td>Input normalize</td></tr>
+                    <tr><th scope="row">outputNormalization</th><td>preserve | nfc | nfd</td><td>nfc</td><td>Output normalize</td></tr>
+                    <tr><th scope="row">unknownPolicy</th><td>preserve | throwError</td><td>preserve</td><td>Unmapped chars</td></tr>
+                    <tr><th scope="row">digitPolicy</th><td>convertToTarget | preserveSource</td><td>convertToTarget</td><td>Digit block conversion</td></tr>
+                    <tr><th scope="row">collapseWhitespace</th><td>bool</td><td>false</td><td>Whitespace collapse</td></tr>
+                    <tr><th scope="row">embedExactSourceMetadata</th><td>bool</td><td>false</td><td>Typed exact source trailer</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="doc-section" id="lang-dart" aria-labelledby="lang-dart-heading">
+              <h2 id="lang-dart-heading">17. Dart-specific notes</h2>
+              <ul>
+                <li>Primary import: <code>package:lipimala/lipimala.dart</code></li>
+                <li>API style: <strong>extensions on String</strong> plus top-level Deva↔Gujr helpers</li>
+                <li>Example: <code>'Kṛṣṇa'.toDevanagariFromIast(options: IastToDevanagariOptions(...))</code></li>
+                <li>Enums use camelCase members: <code>DevanagariRomanizationProfile.extendedIndic</code></li>
+                <li>Examples: <code>dart/example/public_api_examples.dart</code></li>
+              </ul>
+            </section>
+
+            <section class="doc-section" id="lang-js" aria-labelledby="lang-js-heading">
+              <h2 id="lang-js-heading">18. JavaScript-specific notes</h2>
+              <ul>
+                <li>ESM only, Node ≥ 20</li>
+                <li>Main export re-exports core, forward, reverse, envelopes, corpus samples</li>
+                <li>Deva↔Gujr: deep import of <code>deva-gujr-converter</code></li>
+                <li>Options accept plain objects or class instances; camelCase and snake_case keys both work</li>
+                <li>Examples: <code>javascript/examples/public-api-examples.js</code></li>
+              </ul>
+            </section>
+
+            <section class="doc-section" id="lang-py" aria-labelledby="lang-py-heading">
+              <h2 id="lang-py-heading">19. Python-specific notes</h2>
+              <ul>
+                <li>Requires Python ≥ 3.12</li>
+                <li>Package root re-exports most APIs; Deva↔Gujr is <code>lipimala.deva_gujr_converter</code></li>
+                <li>Prefer snake_case constructors; camelCase property aliases exist for Dart parity</li>
+                <li>Enums are <code>str, Enum</code> with both <code>EXTENDED_INDIC</code> and <code>extendedIndic</code></li>
+                <li>Examples: <code>python/examples/public_api_examples.py</code></li>
+              </ul>
+            </section>
+
+            <section class="doc-section" id="lang-php" aria-labelledby="lang-php-heading">
+              <h2 id="lang-php-heading">20. PHP-specific notes</h2>
+              <ul>
+                <li>Package: <code>jayeshmepani/lipimala</code>, namespace <code>Lipimala</code>, PHP ≥ 8.3</li>
+                <li>Functions and enums in package namespace; snake_case aliases for most functions</li>
+                <li>Options are <code>final readonly</code> classes with promoted constructor properties</li>
+                <li>Composer autoload uses classmap + files so namespaced functions load</li>
+                <li>Examples: <code>php/examples/public_api_examples.php</code></li>
+              </ul>
+            </section>
+
+            <section class="doc-section" id="examples" aria-labelledby="examples-heading">
+              <h2 id="examples-heading">21. Example files</h2>
+              <p class="section-lead">Each runtime has a comprehensive example that exercises public APIs with option permutations.</p>
+              <div class="table-wrap" role="region" aria-labelledby="cap-examples" tabindex="0">
+                <table>
+                  <caption id="cap-examples">Runnable public-API example entry points</caption>
+                  <thead>
+                    <tr><th scope="col">Language</th><th scope="col">Path</th><th scope="col">Run</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Python</th>
+                      <td><code>python/examples/public_api_examples.py</code></td>
+                      <td><code>PYTHONPATH=python python3 python/examples/public_api_examples.py</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">JavaScript</th>
+                      <td><code>javascript/examples/public-api-examples.js</code></td>
+                      <td><code>node javascript/examples/public-api-examples.js</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Dart</th>
+                      <td><code>dart/example/public_api_examples.dart</code></td>
+                      <td><code>cd dart &amp;&amp; dart run example/public_api_examples.dart</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">PHP</th>
+                      <td><code>php/examples/public_api_examples.php</code></td>
+                      <td><code>php php/examples/public_api_examples.php</code></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <article class="card" aria-labelledby="card-example-coverage">
+                <h3 class="card-title" id="card-example-coverage">What each example covers</h3>
+                <ol>
+                  <li>Envelope APIs + JSON round-trip + normalization permutations</li>
+                  <li>IAST→Devanagari option permutations</li>
+                  <li>IAST→Gujarati option permutations</li>
+                  <li>Plain English / Hunterian option permutations</li>
+                  <li>Reverse canonical / smart / exact</li>
+                  <li>Direct Deva↔Gujr with policies + exact recovery</li>
+                  <li>Metadata helper functions</li>
+                </ol>
+              </article>
+            </section>
+
+            <section class="doc-section" id="errors" aria-labelledby="errors-heading">
+              <h2 id="errors-heading">22. Errors &amp; recovery matrix</h2>
+              <div class="table-wrap" role="region" aria-labelledby="cap-errors" tabindex="0">
+                <table>
+                  <caption id="cap-errors">Common failure modes and outcomes</caption>
+                  <thead>
+                    <tr><th scope="col">Situation</th><th scope="col">Typical outcome</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row">unknownLatinPolicy = throwError</th><td>Throws / raises on unmapped Latin</td></tr>
+                    <tr><th scope="row">unknownPolicy = throwError (direct)</th><td>Throws / raises on unmapped script chars</td></tr>
+                    <tr><th scope="row">toExact* without trailer</th><td>FormatException / TypeError / ValueError / InvalidArgumentException</td></tr>
+                    <tr><th scope="row">toExact* with empty string</th><td>Returns empty string</td></tr>
+                    <tr><th scope="row">fromJson integrity failure</th><td>Throws; schema or code-point mismatch</td></tr>
+                    <tr><th scope="row">Tampered metadata trailer</th><td>Checksum fails; treated as no exact source</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <aside class="callout callout-info">
+                <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                <p>
+                  <strong>Recommended production pattern:</strong> display with string converters;
+                  round-trip user edits with <code>TransliterationResult</code> (or its JSON);
+                  transport a single reverseable string with <code>embedExactSourceMetadata</code>.
+                </p>
+              </aside>
+            </section>
+
+          </div>
+        </main>
+
+        <footer class="site-footer">
+          <div class="content-inner">
+            <p>lipimala monorepo · Dart · JavaScript · Python · PHP · MIT License</p>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <p class="toast" id="toast" role="status" aria-live="polite"></p>
+</body>
+</html>
