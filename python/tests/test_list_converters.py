@@ -56,10 +56,10 @@ def test_bulk_list_converters_all_directions():
 
 def test_bulk_list_converters_custom_options():
     from lipimala import (
+        FinalAPolicy,
         IastPlainEnglishOptions,
         IastToDevanagariDigitPolicy,
         IastToDevanagariOptions,
-        PlainEnglishFinalAPolicy,
     )
 
     items = ['Rāma 123', 'jñāna']
@@ -72,6 +72,6 @@ def test_bulk_list_converters_custom_options():
 
     plain_keep_final_a = to_plain_english_from_iast_list(
         items,
-        options=IastPlainEnglishOptions(final_a_policy=PlainEnglishFinalAPolicy.KEEP),
+        options=IastPlainEnglishOptions(final_a=FinalAPolicy.KEEP),
     )
     assert plain_keep_final_a == ['Rama 123', 'gyana']
