@@ -492,6 +492,13 @@
                       <td><code>toExactDevanagariFromGujarati()</code><br><code>to_exact_devanagari_from_gujarati()</code></td>
                     </tr>
                     <tr>
+                      <th scope="row">Check IAST Source Metadata</th>
+                      <td><code>hasExactGujaratiIastSourceMetadata</code><br><code>hasExactDevanagariIastSourceMetadata</code></td>
+                      <td><code>hasExactGujaratiIastSourceMetadata</code><br><code>hasExactDevanagariIastSourceMetadata</code></td>
+                      <td><code>has_exact_gujarati_iast_source_metadata</code><br><code>has_exact_devanagari_iast_source_metadata</code></td>
+                      <td><code>hasExactGujaratiIastSourceMetadata()</code><br><code>hasExactDevanagariIastSourceMetadata()</code></td>
+                    </tr>
+                    <tr>
                       <th scope="row">Check Direct Metadata</th>
                       <td><code>hasExactGujaratiSourceMetadata()</code><br><code>hasExactDevanagariSourceMetadata()</code></td>
                       <td><code>hasExactGujaratiSourceMetadata()</code><br><code>hasExactDevanagariSourceMetadata()</code></td>
@@ -760,7 +767,7 @@ echo $r->restoreOriginal(), PHP_EOL;</code></pre>
               <h2 id="direct-heading">10. Direct Devanagari ↔ Gujarati</h2>
               <aside class="callout callout-warn">
                 <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
-                <p><strong>Import note:</strong> In Python, direct script functions are in <code>lipimala.deva_gujr_converter</code>. In JavaScript, use a deep import from <code>deva-gujr-converter</code> or main module. In Dart and PHP, they are exposed directly on the primary library surface.</p>
+                <p><strong>Import note:</strong> In JavaScript (<code>import { ... } from 'lipimala'</code>), Python (<code>from lipimala import ...</code>), Dart (<code>import 'package:lipimala/lipimala.dart'</code>), and PHP (<code>namespace Lipimala</code>), direct script functions are re-exported directly on the primary library root for seamless usage.</p>
               </aside>
 
               <p class="section-lead">Direct script conversion maps characters natively between Devanagari and Gujarati. Because the two scripts have unequal Unicode repertoires, Lipimala supports direct-script metadata trailers (using markers <code>DEV1</code> and <code>GUJ1</code>) for 100% exact round-trip source script recovery.</p>
@@ -1189,7 +1196,7 @@ console.assert(exactDeva === result.rendered);</code></pre>
               <p class="section-lead">The Python package (<code>pip install lipimala</code>) requires Python ≥ 3.12, utilizing modern type hints and dataclasses.</p>
               
               <ul>
-                <li><strong>Imports:</strong> Main converters: <code>from lipimala import to_devanagari, to_devanagari_from_iast</code><br>Direct script converters: <code>from lipimala.deva_gujr_converter import to_devanagari_from_gujarati</code></li>
+                <li><strong>Imports:</strong> Main &amp; direct script converters: <code>from lipimala import to_devanagari, to_devanagari_from_iast, to_devanagari_from_gujarati</code></li>
                 <li><strong>Function &amp; Enum Aliases:</strong> Supports standard Python PEP 8 <code>snake_case</code> functions and camelCase aliases for cross-language parity. Enums inherit <code>(str, Enum)</code> and support both <code>EXTENDED_INDIC</code> and <code>extendedIndic</code> member access.</li>
                 <li><strong>Dataclass Options:</strong> Options are Python <code>@dataclass</code> objects instantiated with keyword arguments: <code>IastToDevanagariOptions(embed_exact_source_metadata=True)</code>.</li>
                 <li><strong>String Subclass Returns:</strong> Returns <code>IastToDevanagariString</code>, <code>IastToGujaratiString</code>, <code>IastToPlainEnglish</code> subclasses of <code>str</code> with <code>.to_exact_iast()</code> / <code>.restore_original()</code>.</li>
@@ -1197,8 +1204,9 @@ console.assert(exactDeva === result.rendered);</code></pre>
               </ul>
 
               <h3 id="python-runnable-example">Complete Runnable Python Example</h3>
-              <pre><code class="language-python">from lipimala import to_devanagari, IastToDevanagariOptions
-from lipimala.deva_gujr_converter import (
+              <pre><code class="language-python">from lipimala import (
+    to_devanagari,
+    IastToDevanagariOptions,
     to_gujarati_from_devanagari,
     to_exact_devanagari_from_gujarati,
     IndicScriptConversionOptions
@@ -1228,7 +1236,7 @@ assert exact_deva == result.rendered</code></pre>
               <p class="section-lead">The PHP port (<code>composer require jayeshmepani/lipimala</code>) requires PHP ≥ 8.3 with strict typing throughout.</p>
               
               <ul>
-                <li><strong>Namespace &amp; Autoload:</strong> Namespace <code>IndicScriptConverter</code> (or root functions via Composer classmap). Import functions with <code>use function IndicScriptConverter\toDevanagariFromIast;</code>.</li>
+                <li><strong>Namespace &amp; Autoload:</strong> Namespace <code>Lipimala</code>. Import functions with <code>use function Lipimala\toDevanagariFromIast;</code>.</li>
                 <li><strong>Dual Function Aliases:</strong> Supports both <code>toDevanagariFromIast()</code> and <code>to_devanagari_from_iast()</code> namespaced functions.</li>
                 <li><strong>Final Readonly Options:</strong> Options are <code>final readonly class</code> instances with promoted constructor properties and default values. Options parameters are nullable (pass <code>null</code> for defaults).</li>
                 <li><strong>Zero Runtime Dependencies:</strong> Pure PHP code with bundled Unicode 17.0.0 data tables; does not require <code>mbstring</code> or <code>intl</code> extensions.</li>
