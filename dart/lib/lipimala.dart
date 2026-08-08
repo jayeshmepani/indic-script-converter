@@ -1,6 +1,10 @@
-/// Exact Round-Trip IAST/ISO-style Indic transliteration envelopes with Devanagari,
-/// Gujarati, Hunterian views, Unicode normalization, and Vedic-mark preservation.
+/// Primary barrel file exporting all lipimala models, converters, options, and utilities.
 library lipimala;
 
-export 'transliteration_result.dart';
+export 'brahmic_to_latn_iast.dart';
 export 'deva_gujr_converter.dart';
+export 'latn_iast_to_deva.dart';
+export 'latn_iast_to_gujr.dart' hide RomanizationProfile;
+export 'latn_iast_transcription.dart' hide RomanizationProfile;
+export 'transliteration_core.dart';
+export 'transliteration_result.dart';

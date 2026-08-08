@@ -102,7 +102,6 @@ Comprehensive examples exercise **all public user-facing APIs** with option perm
 | Python | [`python/examples/public_api_examples.py`](./python/examples/public_api_examples.py) | `PYTHONPATH=python python3 python/examples/public_api_examples.py` |
 | PHP | [`php/examples/public_api_examples.php`](./php/examples/public_api_examples.php) | `php php/examples/public_api_examples.php` |
 
-**Technical API reference (HTML):** open [`docs/api-reference.html`](./docs/api-reference.html) in a browser (no build step). Production-style docs site with light/dark theme, filterable sidebar, keyboard-accessible code tabs, responsive layout, and full API reference for every public function/method/enum/options type across all four languages.
 
 ## Development & Parity Testing
 

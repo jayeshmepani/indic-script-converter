@@ -139,7 +139,7 @@ void examplesIastToDeva() {
           options: IastToDevanagariOptions(unknownLatinPolicy: unk),
         ),
       );
-    } catch (e) {
+    } on Object catch (e) {
       show('unknownLatinPolicy=$unk', 'RAISED $e');
     }
   }
@@ -362,7 +362,7 @@ void examplesDirectScript() {
           options: IndicScriptConversionOptions(unknownPolicy: unk),
         ),
       );
-    } catch (e) {
+    } on Object catch (e) {
       show('unknownPolicy=$unk', 'RAISED $e');
     }
   }
