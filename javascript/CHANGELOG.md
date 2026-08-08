@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1
+
+- Synchronized package version across all runtimes to 1.0.1.
+- Re-exported direct script converters from main package root (`import { ... } from 'lipimala'`).
+- Added top-level metadata helpers (`hasExactGujaratiSourceMetadata`, `hasExactDevanagariSourceMetadata`, `visibleWithoutExactSourceMetadata`).
+- Added exhaustive public API example runner exercising all 35 core functions, options, and enums.
+
 ## 1.0.0
 
 - Added canonical Devanagari/Gujarati script-to-script conversion options and policies.
