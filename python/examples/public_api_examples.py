@@ -35,6 +35,8 @@ from lipimala import (
     UnicodeNormalizationForm,
     embed_exact_source_metadata,
     has_embedded_exact_source,
+    is_encoded_vedic_mark,
+    is_unicode_combining_mark,
     normalize_unicode,
     recover_embedded_exact_source,
     strip_exact_source_metadata,
@@ -50,17 +52,21 @@ from lipimala import (
     to_iast_from_gujarati,
     to_plain_english,
     to_plain_english_from_iast,
+    try_decode_exact_source_metadata,
 )
 from lipimala.deva_gujr_converter import (
     IndicScriptConversionOptions,
     IndicScriptDigitPolicy,
     IndicScriptUnknownPolicy,
+    has_exact_devanagari_source_metadata,
+    has_exact_gujarati_source_metadata,
     to_canonical_devanagari_from_gujarati,
     to_canonical_gujarati_from_devanagari,
     to_devanagari_from_gujarati,
     to_exact_devanagari_from_gujarati,
     to_exact_gujarati_from_devanagari,
     to_gujarati_from_devanagari,
+    visible_without_exact_source_metadata,
 )
 
 IAST = 'Kṛṣṇa ā́tman'
@@ -359,13 +365,31 @@ def examples_direct_script() -> None:
 # 7. Metadata helpers
 # ---------------------------------------------------------------------------
 def examples_metadata() -> None:
-    banner('7. Exact-source metadata helpers')
+    banner('7. Exact-source metadata helpers & Unicode utilities')
 
     rendered = to_devanagari_from_iast(IAST)
     tagged = embed_exact_source_metadata(rendered, IAST)
     show('has_embedded_exact_source', has_embedded_exact_source(tagged))
     show('recover', recover_embedded_exact_source(tagged))
     show('strip', strip_exact_source_metadata(tagged))
+    show('visible_without_exact_source_metadata', visible_without_exact_source_metadata(tagged))
+
+    meta = try_decode_exact_source_metadata(tagged)
+    if meta is not None:
+        show('meta.original_source', meta.original_source)
+        show('meta.visible_text', meta.visible_text)
+
+    gujr_tagged = to_canonical_gujarati_from_devanagari(
+        'ऄ ऎ ऍ', options=IndicScriptConversionOptions(embed_exact_source_metadata=True)
+    )
+    show('has_exact_gujarati_source_metadata', has_exact_gujarati_source_metadata(gujr_tagged))
+    deva_tagged = to_canonical_devanagari_from_gujarati(
+        'અ એ ઍ', options=IndicScriptConversionOptions(embed_exact_source_metadata=True)
+    )
+    show('has_exact_devanagari_source_metadata', has_exact_devanagari_source_metadata(deva_tagged))
+
+    show('is_unicode_combining_mark(\\u0301)', is_unicode_combining_mark(ord('\u0301')))
+    show('is_encoded_vedic_mark(\\u0951)', is_encoded_vedic_mark(0x0951))
     show('normalize NFC', normalize_unicode(IAST, UnicodeNormalizationForm.NFC))
     show('normalize NFD', normalize_unicode(IAST, UnicodeNormalizationForm.NFD))
 

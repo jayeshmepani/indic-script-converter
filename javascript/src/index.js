@@ -7,3 +7,4 @@ export * from './transliteration-result.js';
 export * from './example-latn-iast.js';
 export * from './example-deva.js';
 export * from './example-gujr.js';
+export * from './deva-gujr-converter.js';

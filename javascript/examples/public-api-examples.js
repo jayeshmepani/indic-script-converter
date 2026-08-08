@@ -37,6 +37,9 @@ import {
     normalizeUnicode,
     recoverEmbeddedExactSource,
     stripExactSourceMetadata,
+    tryDecodeExactSourceMetadata,
+    isUnicodeCombiningMark,
+    isEncodedVedicMark,
     toCanonicalIastFromDevanagari,
     toCanonicalIastFromGujarati,
     toDevanagari,
@@ -56,12 +59,15 @@ import {
     IndicScriptConversionOptions,
     IndicScriptDigitPolicy,
     IndicScriptUnknownPolicy,
+    hasExactDevanagariSourceMetadata,
+    hasExactGujaratiSourceMetadata,
     toCanonicalDevanagariFromGujarati,
     toCanonicalGujaratiFromDevanagari,
     toDevanagariFromGujarati,
     toExactDevanagariFromGujarati,
     toExactGujaratiFromDevanagari,
     toGujaratiFromDevanagari,
+    visibleWithoutExactSourceMetadata,
 } from '../src/deva-gujr-converter.js';
 
 const IAST = 'Kṛṣṇa ā́tman';
@@ -398,13 +404,32 @@ function examplesDirectScript() {
 // 7. Metadata helpers
 // ---------------------------------------------------------------------------
 function examplesMetadata() {
-    banner('7. Exact-source metadata helpers');
+    banner('7. Exact-source metadata helpers & Unicode utilities');
 
     const rendered = toDevanagariFromIast(IAST);
     const tagged = embedExactSourceMetadata(rendered, IAST);
     show('hasEmbeddedExactSource', hasEmbeddedExactSource(tagged));
     show('recover', recoverEmbeddedExactSource(tagged));
     show('strip', stripExactSourceMetadata(tagged));
+    show('visibleWithoutExactSourceMetadata', visibleWithoutExactSourceMetadata(tagged));
+
+    const meta = tryDecodeExactSourceMetadata(tagged);
+    if (meta) {
+        show('meta.originalSource', meta.originalSource);
+        show('meta.visibleText', meta.visibleText);
+    }
+
+    const gujrTagged = toCanonicalGujaratiFromDevanagari('ऄ ऎ ऍ', {
+        embedExactSourceMetadata: true,
+    });
+    show('hasExactGujaratiSourceMetadata', hasExactGujaratiSourceMetadata(gujrTagged));
+    const devaTagged = toCanonicalDevanagariFromGujarati('અ એ ઍ', {
+        embedExactSourceMetadata: true,
+    });
+    show('hasExactDevanagariSourceMetadata', hasExactDevanagariSourceMetadata(devaTagged));
+
+    show('isUnicodeCombiningMark(\u0301)', isUnicodeCombiningMark('\u0301'));
+    show('isEncodedVedicMark(\u0951)', isEncodedVedicMark('\u0951'));
     show('normalize NFC', normalizeUnicode(IAST, UnicodeNormalizationForm.NFC));
     show('normalize NFD', normalizeUnicode(IAST, UnicodeNormalizationForm.NFD));
 }

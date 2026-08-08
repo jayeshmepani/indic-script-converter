@@ -382,13 +382,40 @@ void examplesDirectScript() {
 // 7. Metadata helpers
 // ---------------------------------------------------------------------------
 void examplesMetadata() {
-  banner('7. Exact-source metadata helpers');
+  banner('7. Exact-source metadata helpers & Unicode utilities');
 
   final rendered = iast.toDevanagariFromIast();
   final tagged = embedExactSourceMetadata(rendered, iast);
   show('hasEmbeddedExactSource', hasEmbeddedExactSource(tagged));
   show('recover', recoverEmbeddedExactSource(tagged));
   show('strip', stripExactSourceMetadata(tagged));
+  show('visibleWithoutExactScriptSourceMetadata',
+      tagged.visibleWithoutExactScriptSourceMetadata);
+
+  // tryDecodeExactSourceMetadata inspection
+  final meta = tryDecodeExactSourceMetadata(tagged);
+  if (meta != null) {
+    show('meta.originalSource', meta.originalSource);
+    show('meta.visibleText', meta.visibleText);
+  }
+
+  // Direct script metadata helpers
+  final gujrTagged = 'ऄ ऎ ऍ'.toCanonicalGujaratiFromDevanagari(
+    options: const IndicScriptConversionOptions(embedExactSourceMetadata: true),
+  );
+  show('hasExactGujaratiSourceMetadata',
+      GujaratiDevanagariConversion(gujrTagged).hasExactGujaratiSourceMetadata);
+  final devaTagged = 'અ એ ઍ'.toCanonicalDevanagariFromGujarati(
+    options: const IndicScriptConversionOptions(embedExactSourceMetadata: true),
+  );
+  show(
+      'hasExactDevanagariSourceMetadata',
+      GujaratiDevanagariConversion(devaTagged)
+          .hasExactDevanagariSourceMetadata);
+
+  // Unicode utilities
+  show(r'isUnicodeCombiningMark(\u0301)', isUnicodeCombiningMark(0x0301));
+  show(r'isEncodedVedicMark(\u0951)', isEncodedVedicMark(0x0951));
   show('normalize NFC', normalizeUnicode(iast, UnicodeNormalizationForm.nfc));
   show('normalize NFD', normalizeUnicode(iast, UnicodeNormalizationForm.nfd));
 }
