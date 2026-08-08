@@ -54,7 +54,7 @@ void main() {
       final script = key.toDevanagariFromIast(options: devanagariOptions);
       expect(script.toExactIastFromDevanagari(), sameCodeUnits(key));
       expect(script.toIastFromDevanagari(), sameCodeUnits(key));
-      expect(script.hasExactDevanagariSourceMetadata, isTrue);
+      expect(script.hasExactDevanagariIastSourceMetadata, isTrue);
     }
   });
 
@@ -63,7 +63,7 @@ void main() {
       final script = key.toGujaratiFromIast(options: gujaratiOptions);
       expect(script.toExactIastFromGujarati(), sameCodeUnits(key));
       expect(script.toIastFromGujarati(), sameCodeUnits(key));
-      expect(script.hasExactGujaratiSourceMetadata, isTrue);
+      expect(script.hasExactGujaratiIastSourceMetadata, isTrue);
     }
   });
 

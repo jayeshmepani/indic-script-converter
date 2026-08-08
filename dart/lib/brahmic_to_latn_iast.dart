@@ -48,7 +48,7 @@ extension DevanagariToIast on String {
   }) =>
       _BrahmicToIast.convert(this, _devanagari, options);
 
-  bool get hasExactDevanagariSourceMetadata => hasEmbeddedExactSource(this);
+  bool get hasExactDevanagariIastSourceMetadata => hasEmbeddedExactSource(this);
 
   String get visibleDevanagariWithoutExactSourceMetadata =>
       stripExactSourceMetadata(this);
@@ -82,7 +82,7 @@ extension GujaratiToIast on String {
   }) =>
       _BrahmicToIast.convert(this, _gujarati, options);
 
-  bool get hasExactGujaratiSourceMetadata => hasEmbeddedExactSource(this);
+  bool get hasExactGujaratiIastSourceMetadata => hasEmbeddedExactSource(this);
 
   String get visibleGujaratiWithoutExactSourceMetadata =>
       stripExactSourceMetadata(this);

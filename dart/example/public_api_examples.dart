@@ -389,8 +389,8 @@ void examplesMetadata() {
   show('hasEmbeddedExactSource', hasEmbeddedExactSource(tagged));
   show('recover', recoverEmbeddedExactSource(tagged));
   show('strip', stripExactSourceMetadata(tagged));
-  show('visibleWithoutExactScriptSourceMetadata',
-      tagged.visibleWithoutExactScriptSourceMetadata);
+  show('visibleWithoutExactSourceMetadata',
+      visibleWithoutExactSourceMetadata(tagged));
 
   // tryDecodeExactSourceMetadata inspection
   final meta = tryDecodeExactSourceMetadata(tagged);
@@ -404,14 +404,12 @@ void examplesMetadata() {
     options: const IndicScriptConversionOptions(embedExactSourceMetadata: true),
   );
   show('hasExactGujaratiSourceMetadata',
-      GujaratiDevanagariConversion(gujrTagged).hasExactGujaratiSourceMetadata);
+      hasExactGujaratiSourceMetadata(gujrTagged));
   final devaTagged = 'અ એ ઍ'.toCanonicalDevanagariFromGujarati(
     options: const IndicScriptConversionOptions(embedExactSourceMetadata: true),
   );
-  show(
-      'hasExactDevanagariSourceMetadata',
-      GujaratiDevanagariConversion(devaTagged)
-          .hasExactDevanagariSourceMetadata);
+  show('hasExactDevanagariSourceMetadata',
+      hasExactDevanagariSourceMetadata(devaTagged));
 
   // Unicode utilities
   show(r'isUnicodeCombiningMark(\u0301)', isUnicodeCombiningMark(0x0301));

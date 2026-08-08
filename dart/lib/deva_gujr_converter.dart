@@ -162,6 +162,18 @@ String toGujaratiFromDevanagari(
 String toExactGujaratiFromDevanagari(String input) =>
     input.toExactGujaratiFromDevanagari();
 
+bool hasExactGujaratiSourceMetadata(String input) =>
+    input.hasExactGujaratiSourceMetadata;
+
+bool hasExactDevanagariSourceMetadata(String input) =>
+    input.hasExactDevanagariSourceMetadata;
+
+String visibleWithoutExactSourceMetadata(String input) =>
+    stripExactSourceMetadata(input);
+
+String visibleWithoutExactScriptSourceMetadata(String input) =>
+    input.visibleWithoutExactScriptSourceMetadata;
+
 const int _devaDigitStart = 0x0966;
 const int _devaDigitEnd = 0x096F;
 const int _gujrDigitStart = 0x0AE6;
