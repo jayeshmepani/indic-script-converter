@@ -47,7 +47,7 @@ npm install /path/to/lipimala-js
 
 ## Basic usage
 
-```js
+````js
 import {
     toDevanagariFromIast,
     toGujaratiFromIast,
@@ -58,11 +58,31 @@ import {
 
 console.log(toDevanagariFromIast('Kṛṣṇa')); // कृष्ण
 console.log(toGujaratiFromIast('Kṛṣṇa')); // કૃષ્ણ
+
+## Bulk Array Transliteration
+
+```js
+import {
+    toDevanagariFromIastList,
+    toGujaratiFromIastList,
+    toPlainEnglishFromIastList,
+} from 'lipimala';
+
+const items = ['Kṛṣṇa', 'Rāma', 'jñāna'];
+
+console.log(toDevanagariFromIastList(items));
+// Output: ['कृष्ण', 'राम', 'ज्ञान']
+
+console.log(toGujaratiFromIastList(items));
+// Output: ['કૃષ્ણ', 'રામ', 'જ્ઞાન']
+````
+
 console.log(toPlainEnglishFromIast('Kṛṣṇa')); // Krishna
 
 console.log(toCanonicalIastFromDevanagari('कृष्ण')); // kṛṣṇa
 console.log(toCanonicalIastFromGujarati('કૃષ્ણ')); // kṛṣṇa
-```
+
+````
 
 ## Exact original-key recovery
 
@@ -81,7 +101,7 @@ const tagged = toDevanagariFromIast(
 );
 
 console.assert(toExactIastFromDevanagari(tagged) === source);
-```
+````
 
 Gujarati uses the corresponding APIs:
 

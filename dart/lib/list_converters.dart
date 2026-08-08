@@ -39,6 +39,18 @@ extension IndicScriptListConversion on Iterable<String> {
   }) =>
       map((s) => s.toPlainEnglishFromIast(options: options)).toList();
 
+  /// Smart converts each Devanagari string in the collection back to IAST (recovers exact source if embedded metadata exists).
+  List<String> toIastFromDevanagari({
+    ScriptToIastOptions options = const ScriptToIastOptions(),
+  }) =>
+      map((s) => s.toIastFromDevanagari(options: options)).toList();
+
+  /// Smart converts each Gujarati string in the collection back to IAST (recovers exact source if embedded metadata exists).
+  List<String> toIastFromGujarati({
+    ScriptToIastOptions options = const ScriptToIastOptions(),
+  }) =>
+      map((s) => s.toIastFromGujarati(options: options)).toList();
+
   /// Converts each Devanagari string in the collection back to canonical IAST.
   List<String> toCanonicalIastFromDevanagari({
     ScriptToIastOptions options = const ScriptToIastOptions(),
@@ -114,6 +126,56 @@ List<String> toPlainEnglishFromIastList(
   IastPlainEnglishOptions options = const IastPlainEnglishOptions(),
 }) =>
     items.toPlainEnglishFromIast(options: options);
+
+/// Converts a list of Devanagari strings back to IAST (recovers exact source if metadata present).
+List<String> toIastFromDevanagariList(
+  Iterable<String> items, {
+  ScriptToIastOptions options = const ScriptToIastOptions(),
+}) =>
+    items.toIastFromDevanagari(options: options);
+
+/// Converts a list of Gujarati strings back to IAST (recovers exact source if metadata present).
+List<String> toIastFromGujaratiList(
+  Iterable<String> items, {
+  ScriptToIastOptions options = const ScriptToIastOptions(),
+}) =>
+    items.toIastFromGujarati(options: options);
+
+/// Converts a list of Devanagari strings to canonical IAST strings.
+List<String> toCanonicalIastFromDevanagariList(
+  Iterable<String> items, {
+  ScriptToIastOptions options = const ScriptToIastOptions(),
+}) =>
+    items.toCanonicalIastFromDevanagari(options: options);
+
+/// Converts a list of Gujarati strings to canonical IAST strings.
+List<String> toCanonicalIastFromGujaratiList(
+  Iterable<String> items, {
+  ScriptToIastOptions options = const ScriptToIastOptions(),
+}) =>
+    items.toCanonicalIastFromGujarati(options: options);
+
+/// Recovers exact original IAST strings from a list of Devanagari strings.
+List<String> toExactIastFromDevanagariList(Iterable<String> items) =>
+    items.toExactIastFromDevanagari();
+
+/// Recovers exact original IAST strings from a list of Gujarati strings.
+List<String> toExactIastFromGujaratiList(Iterable<String> items) =>
+    items.toExactIastFromGujarati();
+
+/// Converts a list of Devanagari strings to Gujarati strings (with metadata recovery).
+List<String> toGujaratiFromDevanagariList(
+  Iterable<String> items, {
+  IndicScriptConversionOptions options = const IndicScriptConversionOptions(),
+}) =>
+    items.toGujaratiFromDevanagari(options: options);
+
+/// Converts a list of Gujarati strings to Devanagari strings (with metadata recovery).
+List<String> toDevanagariFromGujaratiList(
+  Iterable<String> items, {
+  IndicScriptConversionOptions options = const IndicScriptConversionOptions(),
+}) =>
+    items.toDevanagariFromGujarati(options: options);
 
 /// Converts a list of Devanagari strings to canonical Gujarati script strings.
 List<String> toCanonicalGujaratiFromDevanagariList(

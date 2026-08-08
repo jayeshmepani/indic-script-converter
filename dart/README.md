@@ -32,6 +32,33 @@ _This package uses `unorm_dart` for Unicode 17 NFC/NFD normalization and `unicod
 
 ---
 
+## Bulk String List Transliteration
+
+Convert a list of text values in a single call without manual iteration logic:
+
+```dart
+import 'package:lipimala/lipimala.dart';
+
+final items = ['Kṛṣṇa', 'Rāma', 'jñāna'];
+
+// Bulk convert to Devanagari script strings
+final devaList = items.toDevanagariFromIast(); 
+// -> ['कृष्ण', 'राम', 'ज्ञान']
+
+// Bulk convert to Gujarati script strings
+final gujrList = items.toGujaratiFromIast(); 
+// -> ['કૃષ્ણ', 'રામ', 'જ્ઞાન']
+
+// Bulk convert to Plain English strings
+final plainList = items.toPlainEnglishFromIast(); 
+// -> ['Krishna', 'Ram', 'gyan']
+
+// Bulk convert to TransliterationResult envelopes
+final envList = items.toDevanagari();
+```
+
+---
+
 ## Usage & Exact Recovery Modes
 
 ### Strategy 1: Envelope Pattern (`TransliterationResult`)

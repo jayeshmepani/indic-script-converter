@@ -7,6 +7,8 @@ from .brahmic_to_latn_iast import (
     to_canonical_iast_from_gujarati,
     to_exact_iast_from_devanagari,
     to_exact_iast_from_gujarati,
+    to_iast_from_devanagari,
+    to_iast_from_gujarati,
 )
 from .deva_gujr_converter import (
     to_canonical_devanagari_from_gujarati,
@@ -40,6 +42,16 @@ def to_gujarati_from_iast_list(items: Iterable[str], options=None) -> list[str]:
 def to_plain_english_from_iast_list(items: Iterable[str], options=None) -> list[str]:
     """Bulk converts a sequence of IAST strings to Plain English strings."""
     return [to_plain_english_from_iast(item, options=options) for item in items]
+
+
+def to_iast_from_devanagari_list(items: Iterable[str], options=None) -> list[str]:
+    """Smart converts a sequence of Devanagari strings back to IAST (recovers exact source if embedded metadata exists)."""
+    return [to_iast_from_devanagari(item, options=options) for item in items]
+
+
+def to_iast_from_gujarati_list(items: Iterable[str], options=None) -> list[str]:
+    """Smart converts a sequence of Gujarati strings back to IAST (recovers exact source if embedded metadata exists)."""
+    return [to_iast_from_gujarati(item, options=options) for item in items]
 
 
 def to_canonical_iast_from_devanagari_list(items: Iterable[str], options=None) -> list[str]:

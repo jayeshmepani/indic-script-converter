@@ -52,6 +52,21 @@ assert to_canonical_iast_from_devanagari('कृष्ण') == 'kṛṣṇa'
 assert to_canonical_iast_from_gujarati('કૃષ્ણ') == 'kṛṣṇa'
 ```
 
+## Bulk Sequence Transliteration
+
+```python
+from lipimala import (
+    to_devanagari_from_iast_list,
+    to_gujarati_from_iast_list,
+    to_plain_english_from_iast_list,
+)
+
+items = ['Kṛṣṇa', 'Rāma', 'jñāna']
+
+assert to_devanagari_from_iast_list(items) == ['कृष्ण', 'राम', 'ज्ञान']
+assert to_gujarati_from_iast_list(items) == ['કૃષ્ણ', 'રામ', 'જ્ઞાન']
+```
+
 ## Exact original-key recovery
 
 Visible Brahmic output is many-to-one. For example, aliases, case, and NFC/NFD forms can render identically. Exact recovery therefore uses the same checksummed invisible Unicode-tag trailer as the Dart implementation.

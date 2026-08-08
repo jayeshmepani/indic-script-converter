@@ -418,6 +418,27 @@ void examplesMetadata() {
   show('normalize NFD', normalizeUnicode(iast, UnicodeNormalizationForm.nfd));
 }
 
+// ---------------------------------------------------------------------------
+// 8. Bulk string list transliteration
+// ---------------------------------------------------------------------------
+void examplesBulkList() {
+  banner('8. Bulk String List Transliteration (List Extension & Helpers)');
+
+  const items = ['Kṛṣṇa', 'Rāma', 'jñāna'];
+  show('bulk IAST list', items);
+  show('toDevanagariFromIast()', items.toDevanagariFromIast());
+  show('toGujaratiFromIast()', items.toGujaratiFromIast());
+  show('toPlainEnglishFromIast()', items.toPlainEnglishFromIast());
+
+  final devaList = items.toDevanagariFromIast();
+  show('toCanonicalGujaratiFromDevanagari()',
+      devaList.toCanonicalGujaratiFromDevanagari());
+
+  final envList = items.toDevanagari();
+  show(
+      'toDevanagari() (rendered)', envList.map((res) => res.rendered).toList());
+}
+
 void main() {
   print('lipimala — Dart public API examples');
   examplesEnvelope();
@@ -427,6 +448,7 @@ void main() {
   examplesReverse();
   examplesDirectScript();
   examplesMetadata();
+  examplesBulkList();
   print('');
   print('Done. All public-API example sections executed.');
 }

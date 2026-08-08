@@ -40,35 +40,36 @@ import {
     tryDecodeExactSourceMetadata,
     isUnicodeCombiningMark,
     isEncodedVedicMark,
+    toCanonicalDevanagariFromGujarati,
+    toCanonicalGujaratiFromDevanagari,
+    toCanonicalGujaratiFromDevanagariList,
     toCanonicalIastFromDevanagari,
     toCanonicalIastFromGujarati,
     toDevanagari,
+    toDevanagariFromGujarati,
     toDevanagariFromIast,
+    toDevanagariFromIastList,
+    toDevanagariList,
+    toExactDevanagariFromGujarati,
+    toExactGujaratiFromDevanagari,
     toExactIastFromDevanagari,
     toExactIastFromGujarati,
     toGujarati,
+    toGujaratiFromDevanagari,
     toGujaratiFromIast,
+    toGujaratiFromIastList,
     toIastFromDevanagari,
     toIastFromGujarati,
     toPlainEnglish,
     toPlainEnglishFromIast,
-} from '../src/index.js';
-
-// Direct Deva↔Gujr is a deep import (not on package main exports map).
-import {
+    toPlainEnglishFromIastList,
     IndicScriptConversionOptions,
     IndicScriptDigitPolicy,
     IndicScriptUnknownPolicy,
     hasExactDevanagariSourceMetadata,
     hasExactGujaratiSourceMetadata,
-    toCanonicalDevanagariFromGujarati,
-    toCanonicalGujaratiFromDevanagari,
-    toDevanagariFromGujarati,
-    toExactDevanagariFromGujarati,
-    toExactGujaratiFromDevanagari,
-    toGujaratiFromDevanagari,
     visibleWithoutExactSourceMetadata,
-} from '../src/deva-gujr-converter.js';
+} from '../src/index.js';
 
 const IAST = 'Kṛṣṇa ā́tman';
 const VEDIC = 'vásōḥ';
@@ -434,6 +435,28 @@ function examplesMetadata() {
     show('normalize NFD', normalizeUnicode(IAST, UnicodeNormalizationForm.NFD));
 }
 
+// ---------------------------------------------------------------------------
+// 8. Bulk string array transliteration
+// ---------------------------------------------------------------------------
+function examplesBulkList() {
+    banner('8. Bulk String Array Transliteration (List API)');
+
+    const items = ['Kṛṣṇa', 'Rāma', 'jñāna'];
+    show('bulk IAST array', items);
+    show('toDevanagariFromIastList', toDevanagariFromIastList(items));
+    show('toGujaratiFromIastList', toGujaratiFromIastList(items));
+    show('toPlainEnglishFromIastList', toPlainEnglishFromIastList(items));
+
+    const devaList = toDevanagariFromIastList(items);
+    show('toCanonicalGujaratiFromDevanagariList', toCanonicalGujaratiFromDevanagariList(devaList));
+
+    const envList = toDevanagariList(items);
+    show(
+        'toDevanagariList (rendered)',
+        envList.map((res) => res.rendered),
+    );
+}
+
 console.log('lipimala — JavaScript public API examples');
 examplesEnvelope();
 examplesIastToDeva();
@@ -442,5 +465,6 @@ examplesPlainEnglish();
 examplesReverse();
 examplesDirectScript();
 examplesMetadata();
+examplesBulkList();
 console.log('');
 console.log('Done. All public-API example sections executed.');

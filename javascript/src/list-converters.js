@@ -2,10 +2,16 @@ import { toDevanagariFromIast } from './latn-iast-to-deva.js';
 import { toGujaratiFromIast } from './latn-iast-to-gujr.js';
 import { toPlainEnglishFromIast } from './latn-iast-transcription.js';
 import {
+    toIastFromDevanagari,
+    toIastFromGujarati,
     toCanonicalIastFromDevanagari,
     toCanonicalIastFromGujarati,
+    toExactIastFromDevanagari,
+    toExactIastFromGujarati,
 } from './brahmic-to-latn-iast.js';
 import {
+    toDevanagariFromGujarati,
+    toGujaratiFromDevanagari,
     toCanonicalGujaratiFromDevanagari,
     toCanonicalDevanagariFromGujarati,
     toExactDevanagariFromGujarati,
@@ -47,6 +53,28 @@ export function toPlainEnglishFromIastList(items, options) {
 }
 
 /**
+ * Smart converts an array of Devanagari strings back to IAST (recovers exact source if embedded metadata exists).
+ * @param {Array<string>} items Array of Devanagari strings.
+ * @param {object} [options] Conversion options.
+ * @returns {Array<string>} Array of IAST strings.
+ */
+export function toIastFromDevanagariList(items, options) {
+    if (!Array.isArray(items)) throw new TypeError('Expected an array of strings.');
+    return items.map((item) => toIastFromDevanagari(item, options));
+}
+
+/**
+ * Smart converts an array of Gujarati strings back to IAST (recovers exact source if embedded metadata exists).
+ * @param {Array<string>} items Array of Gujarati strings.
+ * @param {object} [options] Conversion options.
+ * @returns {Array<string>} Array of IAST strings.
+ */
+export function toIastFromGujaratiList(items, options) {
+    if (!Array.isArray(items)) throw new TypeError('Expected an array of strings.');
+    return items.map((item) => toIastFromGujarati(item, options));
+}
+
+/**
  * Bulk converts an array of Devanagari strings back to canonical IAST.
  * @param {Array<string>} items Array of Devanagari strings.
  * @param {object} [options] Conversion options.
@@ -66,6 +94,48 @@ export function toCanonicalIastFromDevanagariList(items, options) {
 export function toCanonicalIastFromGujaratiList(items, options) {
     if (!Array.isArray(items)) throw new TypeError('Expected an array of strings.');
     return items.map((item) => toCanonicalIastFromGujarati(item, options));
+}
+
+/**
+ * Bulk recovers exact original IAST strings from an array of Devanagari strings.
+ * @param {Array<string>} items Array of Devanagari strings.
+ * @returns {Array<string>} Array of exact IAST strings.
+ */
+export function toExactIastFromDevanagariList(items) {
+    if (!Array.isArray(items)) throw new TypeError('Expected an array of strings.');
+    return items.map((item) => toExactIastFromDevanagari(item));
+}
+
+/**
+ * Bulk recovers exact original IAST strings from an array of Gujarati strings.
+ * @param {Array<string>} items Array of Gujarati strings.
+ * @returns {Array<string>} Array of exact IAST strings.
+ */
+export function toExactIastFromGujaratiList(items) {
+    if (!Array.isArray(items)) throw new TypeError('Expected an array of strings.');
+    return items.map((item) => toExactIastFromGujarati(item));
+}
+
+/**
+ * Bulk converts an array of Devanagari strings to Gujarati strings (recovers exact source metadata if present).
+ * @param {Array<string>} items Array of Devanagari strings.
+ * @param {object} [options] Conversion options.
+ * @returns {Array<string>} Array of Gujarati strings.
+ */
+export function toGujaratiFromDevanagariList(items, options) {
+    if (!Array.isArray(items)) throw new TypeError('Expected an array of strings.');
+    return items.map((item) => toGujaratiFromDevanagari(item, options));
+}
+
+/**
+ * Bulk converts an array of Gujarati strings to Devanagari strings (recovers exact source metadata if present).
+ * @param {Array<string>} items Array of Gujarati strings.
+ * @param {object} [options] Conversion options.
+ * @returns {Array<string>} Array of Devanagari strings.
+ */
+export function toDevanagariFromGujaratiList(items, options) {
+    if (!Array.isArray(items)) throw new TypeError('Expected an array of strings.');
+    return items.map((item) => toDevanagariFromGujarati(item, options));
 }
 
 /**

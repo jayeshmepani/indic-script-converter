@@ -40,18 +40,27 @@ from lipimala import (
     normalize_unicode,
     recover_embedded_exact_source,
     strip_exact_source_metadata,
+    to_canonical_gujarati_from_devanagari_list,
     to_canonical_iast_from_devanagari,
     to_canonical_iast_from_gujarati,
     to_devanagari,
+    to_devanagari_from_gujarati,
     to_devanagari_from_iast,
+    to_devanagari_from_iast_list,
+    to_devanagari_list,
+    to_exact_devanagari_from_gujarati,
+    to_exact_gujarati_from_devanagari,
     to_exact_iast_from_devanagari,
     to_exact_iast_from_gujarati,
     to_gujarati,
+    to_gujarati_from_devanagari,
     to_gujarati_from_iast,
+    to_gujarati_from_iast_list,
     to_iast_from_devanagari,
     to_iast_from_gujarati,
     to_plain_english,
     to_plain_english_from_iast,
+    to_plain_english_from_iast_list,
     try_decode_exact_source_metadata,
 )
 from lipimala.deva_gujr_converter import (
@@ -62,10 +71,6 @@ from lipimala.deva_gujr_converter import (
     has_exact_gujarati_source_metadata,
     to_canonical_devanagari_from_gujarati,
     to_canonical_gujarati_from_devanagari,
-    to_devanagari_from_gujarati,
-    to_exact_devanagari_from_gujarati,
-    to_exact_gujarati_from_devanagari,
-    to_gujarati_from_devanagari,
     visible_without_exact_source_metadata,
 )
 
@@ -394,6 +399,25 @@ def examples_metadata() -> None:
     show('normalize NFD', normalize_unicode(IAST, UnicodeNormalizationForm.NFD))
 
 
+def examples_bulk_list() -> None:
+    banner('8. Bulk String Sequence Transliteration (List API)')
+
+    items = ['Kṛṣṇa', 'Rāma', 'jñāna']
+    show('bulk IAST sequence', items)
+    show('to_devanagari_from_iast_list', to_devanagari_from_iast_list(items))
+    show('to_gujarati_from_iast_list', to_gujarati_from_iast_list(items))
+    show('to_plain_english_from_iast_list', to_plain_english_from_iast_list(items))
+
+    deva_list = to_devanagari_from_iast_list(items)
+    show(
+        'to_canonical_gujarati_from_devanagari_list',
+        to_canonical_gujarati_from_devanagari_list(deva_list),
+    )
+
+    env_list = to_devanagari_list(items)
+    show('to_devanagari_list (rendered)', [res.rendered for res in env_list])
+
+
 def main() -> None:
     print('lipimala — Python public API examples')
     examples_envelope()
@@ -403,6 +427,7 @@ def main() -> None:
     examples_reverse()
     examples_direct_script()
     examples_metadata()
+    examples_bulk_list()
     print()
     print('Done. All public-API example sections executed.')
 

@@ -97,6 +97,39 @@ echo $result->restoreOriginal(); // Output: Kṛṣṇa ā́tman
 
 ---
 
+## Bulk String List / Array Transliteration
+
+Convert a list or array of text values in a single call without manual iteration logic:
+
+```dart
+// Dart
+final list = ['Kṛṣṇa', 'Rāma', 'jñāna'].toDevanagariFromIast();
+// -> ['कृष्ण', 'राम', 'ज्ञान']
+```
+
+```javascript
+// JavaScript
+import { toDevanagariFromIastList } from 'lipimala';
+const list = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);
+// -> ['कृष्ण', 'राम', 'ज्ञान']
+```
+
+```python
+# Python
+from lipimala import to_devanagari_from_iast_list
+items = to_devanagari_from_iast_list(['Kṛṣṇa', 'Rāma', 'jñāna'])
+# -> ['कृष्ण', 'राम', 'ज्ञान']
+```
+
+```php
+// PHP
+use function Lipimala\toDevanagariFromIastList;
+$items = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);
+// -> ['कृष्ण', 'राम', 'ज्ञान']
+```
+
+---
+
 ## Public API examples & technical docs
 
 Comprehensive examples exercise **all public user-facing APIs** with option permutations (profiles, digits, punctuation, OM, reverse modes, Deva↔Gujr, metadata):

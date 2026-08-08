@@ -406,6 +406,13 @@
                       <td><code>toPlainEnglishFromIast()</code><br><code>to_plain_english_from_iast()</code></td>
                     </tr>
                     <tr>
+                      <th scope="row">Bulk Array / List Transliteration</th>
+                      <td><code>items.toDevanagariFromIast()</code><br><code>toDevanagariFromIastList()</code></td>
+                      <td><code>toDevanagariFromIastList()</code></td>
+                      <td><code>to_devanagari_from_iast_list()</code></td>
+                      <td><code>toDevanagariFromIastList()</code></td>
+                    </tr>
+                    <tr>
                       <th scope="row">Devanagari → Smart IAST</th>
                       <td><code>toIastFromDevanagari()</code></td>
                       <td><code>toIastFromDevanagari()</code><br><code>to_iast_from_devanagari()</code></td>
@@ -697,6 +704,15 @@ echo $r->restoreOriginal(), PHP_EOL;</code></pre>
                     <li class="tag tag-warn">intrinsically lossy</li>
                   </ul>
                   <p>ASCII-friendly transcription. Keep the envelope for exact Latin recovery. Options control final-a, jñ, ñ, glottal stop, Hunterian features — see <a href="#opts-plain">§14</a>.</p>
+                </div>
+              </article>
+            <section class="doc-section" id="bulk-list" aria-labelledby="bulk-list-heading">
+              <h2 id="bulk-list-heading">8b. Bulk Array / List Transliteration</h2>
+              <article class="api-block" aria-labelledby="api-bulk-list-transliteration">
+                <h3 class="api-head" id="api-bulk-list-transliteration"><code>toDevanagariFromIastList / to_devanagari_from_iast_list</code></h3>
+                <div class="api-body">
+                  <p>Bulk convert an array or sequence of text values (<code>["Kṛṣṇa", "Rāma", "jñāna"]</code>) in a single call without manual loop code.</p>
+                  <p>Available across all 4 ecosystems: <code>toDevanagariFromIastList</code>, <code>toGujaratiFromIastList</code>, <code>toPlainEnglishFromIastList</code>, <code>toCanonicalGujaratiFromDevanagariList</code>, <code>toCanonicalDevanagariFromGujaratiList</code>, <code>toDevanagariList</code>, <code>toGujaratiList</code>, and <code>toPlainEnglishList</code>.</p>
                 </div>
               </article>
             </section>
