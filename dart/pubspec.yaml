@@ -1,6 +1,6 @@
 name: lipimala
-version: 1.0.1
-description: Exact Round-Trip IAST/ISO-style Indic transliteration envelopes with Devanagari, Gujarati, Hunterian views, Unicode normalization, and Vedic-mark preservation.
+version: 1.0.2
+description: Premium exact round-trip Indic transliteration library for Devanagari, Gujarati, plain English, and canonical reverse conversion.
 homepage: https://github.com/jayeshmepani/indic-script-converter
 repository: https://github.com/jayeshmepani/indic-script-converter
 issue_tracker: https://github.com/jayeshmepani/indic-script-converter/issues

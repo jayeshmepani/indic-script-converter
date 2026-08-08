@@ -1,6 +1,6 @@
 {
     "name": "lipimala",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Exact Round-Trip IAST/extended Indic transliteration for Devanagari, Gujarati, plain English and canonical reverse conversion.",
     "type": "module",
     "engines": {
@@ -14,6 +14,7 @@
         "./latn-iast-transcription": "./src/latn-iast-transcription.js",
         "./brahmic-to-latn-iast": "./src/brahmic-to-latn-iast.js",
         "./deva-gujr-converter": "./src/deva-gujr-converter.js",
+        "./list-converters": "./src/list-converters.js",
         "./transliteration-result": "./src/transliteration-result.js"
     },
     "scripts": {

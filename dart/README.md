@@ -4,7 +4,6 @@
 [![pub points](https://img.shields.io/pub/points/lipimala?style=flat-square)](https://pub.dev/packages/lipimala/)
 [![likes](https://img.shields.io/pub/likes/lipimala?style=flat-square)](https://pub.dev/packages/lipimala/)
 [![dart](https://img.shields.io/badge/dart-3.0%2B-blue.svg?style=flat-square)](https://dart.dev/)
-[![flutter](https://img.shields.io/badge/flutter-3.0%2B-blue.svg?style=flat-square)](https://flutter.dev/)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
 A high-fidelity Dart library that separates two concepts that cannot honestly be merged into a single Brahmic string:

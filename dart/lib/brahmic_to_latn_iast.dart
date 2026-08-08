@@ -1,6 +1,8 @@
 import 'transliteration_core.dart';
 
+/// Options for script-to-IAST reverse transliteration.
 class ScriptToIastOptions {
+  /// Creates options for script-to-IAST reverse transliteration.
   const ScriptToIastOptions({
     this.inputNormalization = UnicodeNormalizationForm.nfd,
     this.outputNormalization = UnicodeNormalizationForm.nfc,
@@ -8,9 +10,16 @@ class ScriptToIastOptions {
     this.preserveEncodedVedicMarks = true,
   });
 
+  /// Input Unicode normalization form.
   final UnicodeNormalizationForm inputNormalization;
+
+  /// Output Unicode normalization form.
   final UnicodeNormalizationForm outputNormalization;
+
+  /// Whether to preserve unmapped characters in output.
   final bool preserveUnmapped;
+
+  /// Whether to preserve encoded Vedic marks in output.
   final bool preserveEncodedVedicMarks;
 }
 
@@ -48,12 +57,15 @@ extension DevanagariToIast on String {
   }) =>
       _BrahmicToIast.convert(this, _devanagari, options);
 
+  /// Returns true if an embedded exact Devanagari IAST source metadata trailer is attached.
   bool get hasExactDevanagariIastSourceMetadata => hasEmbeddedExactSource(this);
 
+  /// Returns the visible text without the exact Devanagari IAST source metadata trailer.
   String get visibleDevanagariWithoutExactSourceMetadata =>
       stripExactSourceMetadata(this);
 }
 
+/// Extension methods on [String] for Gujarati to IAST transliteration.
 extension GujaratiToIast on String {
   /// Returns the exact original Latin key when embedded metadata is present;
   /// otherwise falls back to canonical IAST.
@@ -82,8 +94,10 @@ extension GujaratiToIast on String {
   }) =>
       _BrahmicToIast.convert(this, _gujarati, options);
 
+  /// Returns true if an embedded exact Gujarati IAST source metadata trailer is attached.
   bool get hasExactGujaratiIastSourceMetadata => hasEmbeddedExactSource(this);
 
+  /// Returns the visible text without the exact Gujarati IAST source metadata trailer.
   String get visibleGujaratiWithoutExactSourceMetadata =>
       stripExactSourceMetadata(this);
 }

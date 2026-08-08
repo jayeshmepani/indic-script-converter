@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "lipimala"
-version = "1.0.1"
+version = "1.0.2"
 description = "Exact Round-Trip IAST/extended Indic transliteration for Devanagari, Gujarati, plain English and canonical reverse conversion."
 readme = "README.md"
 requires-python = ">=3.12"

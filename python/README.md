@@ -7,7 +7,7 @@
 [![Wheel](https://img.shields.io/pypi/wheel/lipimala?style=flat-square)](https://pypi.org/project/lipimala/)
 [![Status](https://img.shields.io/pypi/status/lipimala?style=flat-square)](https://pypi.org/project/lipimala/)
 
-This directory is a Python 3.8+ port of the Indic Script Transliteration library (`lipimala`). It keeps the default **`extendedIndic`** behavior and provides all public conversion directions:
+This directory is a Python 3.12+ port of the Indic Script Transliteration library (`lipimala`). It keeps the default **`extendedIndic`** behavior and provides all public conversion directions:
 
 - Latin/IAST → Devanagari
 - Latin/IAST → Gujarati

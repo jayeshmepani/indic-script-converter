@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+- Added bulk list transliteration extensions and top-level functions (`toDevanagariFromIastList`, `toGujaratiFromIastList`, `toPlainEnglishFromIastList`, `toCanonicalGujaratiFromDevanagariList`, `toCanonicalDevanagariFromGujaratiList`, `toExactDevanagariFromGujaratiList`, `toExactGujaratiFromDevanagariList`, `toDevanagariList`, `toGujaratiList`, `toPlainEnglishList`).
+- Added primary package example `example/example.dart` and complete dartdoc comments to achieve 160/160 pub points score on pub.dev.
+- Cleaned up obsolete Flutter references in package documentation and badges.
+
 ## 1.0.1
 
 - Re-exported all public converters, models, options, and utilities from primary barrel file `package:lipimala/lipimala.dart`.

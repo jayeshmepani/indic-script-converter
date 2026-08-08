@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2
+
+- Added bulk sequence transliteration functions (`to_devanagari_from_iast_list`, `to_gujarati_from_iast_list`, `to_plain_english_from_iast_list`, `to_canonical_gujarati_from_devanagari_list`, `to_canonical_devanagari_from_gujarati_list`, `to_exact_devanagari_from_gujarati_list`, `to_exact_gujarati_from_devanagari_list`, `to_devanagari_list`, `to_gujarati_list`, `to_plain_english_list`).
+- Standardized target Python runtime references to Python 3.12+.
+
 ## 1.0.1
 
 - Synchronized package version across all runtimes to 1.0.1.

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+- Added bulk array transliteration functions (`toDevanagariFromIastList`, `toGujaratiFromIastList`, `toPlainEnglishFromIastList`, `toCanonicalGujaratiFromDevanagariList`, `toCanonicalDevanagariFromGujaratiList`, `toExactDevanagariFromGujaratiList`, `toExactGujaratiFromDevanagariList`, `toDevanagariList`, `toGujaratiList`, `toPlainEnglishList`).
+- Resolved ES module star export collision in `brahmic-to-latn-iast.js`.
+- Added `./deva-gujr-converter` and `./list-converters` to `package.json` exports map.
+
 ## 1.0.1
 
 - Synchronized package version across all runtimes to 1.0.1.
