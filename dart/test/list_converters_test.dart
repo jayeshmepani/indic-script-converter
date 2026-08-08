@@ -32,8 +32,7 @@ void main() {
 
       expect(
           toCanonicalIastFromDevanagariList(devaItems), equals(iastFromDeva));
-      expect(
-          toCanonicalIastFromGujaratiList(gujrItems), equals(iastFromGujr));
+      expect(toCanonicalIastFromGujaratiList(gujrItems), equals(iastFromGujr));
     });
 
     test('Direct Devanagari ↔ Gujarati (Bulk)', () {
@@ -46,10 +45,10 @@ void main() {
       final devaFromGujr = gujrItems.toCanonicalDevanagariFromGujarati();
       expect(devaFromGujr, equals(devaItems));
 
-      expect(toCanonicalGujaratiFromDevanagariList(devaItems),
-          equals(gujrItems));
-      expect(toCanonicalDevanagariFromGujaratiList(gujrItems),
-          equals(devaItems));
+      expect(
+          toCanonicalGujaratiFromDevanagariList(devaItems), equals(gujrItems));
+      expect(
+          toCanonicalDevanagariFromGujaratiList(gujrItems), equals(devaItems));
     });
 
     test('TransliterationResult Envelopes (Bulk)', () {
