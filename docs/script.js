@@ -86,6 +86,7 @@
     var sidebar = document.getElementById('sidebar');
     var backdrop = document.getElementById('backdrop');
     var search = document.getElementById('nav-search');
+    var content = document.querySelector('.content-col');
     if (!button || !sidebar || !backdrop) return;
 
     var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -105,6 +106,7 @@
       button.setAttribute('aria-expanded', open ? 'true' : 'false');
       button.title = open ? 'Close navigation' : 'Open navigation';
       backdrop.hidden = !open;
+      if (content && 'inert' in content) content.inert = open && isDrawerMode();
 
       if (open && search) {
         search.focus({ preventScroll: true });
@@ -163,6 +165,7 @@
     /* Leaving drawer mode must not strand the page in the open state. */
     var onModeChange = function () {
       if (!isDrawerMode() && isOpen) setOpen(false, false);
+      else if (content && 'inert' in content) content.inert = isOpen && isDrawerMode();
     };
     if (typeof drawerMedia.addEventListener === 'function') {
       drawerMedia.addEventListener('change', onModeChange);

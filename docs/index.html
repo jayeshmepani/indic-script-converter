@@ -1,29 +1,142 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lipimala API Reference — Exact Round-Trip Indic Transliteration</title>
-  <meta name="description" content="Technical API reference for lipimala — exact round-trip Indic transliteration across Dart, JavaScript, Python, and PHP.">
   <meta name="color-scheme" content="light dark">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- Mobile web app -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- Theme color (prefers-color-scheme handled via CSS vars) -->
   <meta name="theme-color" content="#fbfaf8" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0f1216" media="(prefers-color-scheme: dark)">
-  <meta name="robots" content="index,follow">
 
+  <!-- SEO -->
+  <meta name="robots" content="index,follow">
+  <title>lipimala API Reference — Exact Round-Trip Indic Transliteration</title>
+  <meta name="description"
+    content="Technical API reference for lipimala — exact round-trip Indic transliteration across Dart, JavaScript, Python, and PHP. Conversion tables, options, result envelopes, and metadata trailers.">
+  <link rel="canonical" href="https://jayeshmepani.github.io/indic-script-converter/">
+
+  <!-- Open Graph -->
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="lipimala">
   <meta property="og:title" content="lipimala API Reference">
-  <meta property="og:description" content="Exact round-trip Indic transliteration across Dart, JavaScript, Python, and PHP — conversion tables, options, result envelopes, and metadata trailers.">
-  <meta property="og:locale" content="en">
+  <meta property="og:description"
+    content="Exact round-trip Indic transliteration across Dart, JavaScript, Python, and PHP — conversion tables, options, result envelopes, and metadata trailers.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://jayeshmepani.github.io/indic-script-converter/social-preview.png">
 
+  <!-- Favicon (embedded SVG) -->
+  <link rel="icon"
+    href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="12" fill="%23a94e1d"/%3E%3Ctext x="32" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-size="30" font-weight="700" fill="white"%3EL%3C/text%3E%3C/svg%3E'>
+
+  <!-- Styles -->
+  <link rel="preload" href="style.css" as="style">
   <link rel="stylesheet" href="style.css">
 
-  <!-- Offline-friendly documentation: no external fonts, frameworks, or runtime dependencies. -->
+  <!-- Fonts (with minimal blocking) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload"
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  </noscript>
+
+  <!-- Structured data (JSON-LD) -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "lipimala",
+          "codeRepository": "https://github.com/jayeshmepani/indic-script-converter",
+          "url": "https://jayeshmepani.github.io/indic-script-converter/",
+          "description": "Deterministic Indic transliteration library for IAST/extended Indic, Devanagari, Gujarati, and Plain English/Hunterian with exact Unicode source recovery.",
+          "runtimePlatform": ["Dart 3.0+", "Node.js 20+", "Python 3.12+", "PHP 8.3+"],
+          "programmingLanguage": ["Dart", "JavaScript", "Python", "PHP"],
+          "license": "https://opensource.org/licenses/MIT",
+          "author": {
+            "@type": "Person",
+            "name": "Jayesh Mepani",
+            "url": "https://jayeshmepani.site",
+            "sameAs": ["https://github.com/jayeshmepani", "https://www.linkedin.com/in/jayeshmepani/"]
+          },
+          "applicationCategory": "DeveloperApplication",
+          "functionalities": [
+            "IAST to Devanagari transliteration",
+            "Devanagari to IAST reverse transliteration",
+            "Gujarati to Devanagari conversion",
+            "Unicode normalization handling",
+            "Exact source provenance recovery",
+            "Vedic accent preservation"
+          ],
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "distribution": [
+            {
+              "@type": "SoftwareApplication",
+              "name": "lipimala (npm)",
+              "url": "https://www.npmjs.com/package/lipimala"
+            },
+            {
+              "@type": "SoftwareApplication",
+              "name": "lipimala (PyPI)",
+              "url": "https://pypi.org/project/lipimala/"
+            },
+            {
+              "@type": "SoftwareApplication",
+              "name": "lipimala (pub.dev)",
+              "url": "https://pub.dev/packages/lipimala/"
+            },
+            {
+              "@type": "SoftwareApplication",
+              "name": "lipimala (Packagist)",
+              "url": "https://packagist.org/packages/jayeshmepani/lipimala"
+            }
+          ],
+          "keywords": "transliteration, IAST, Devanagari, Gujarati, Hunterian, Unicode normalization, Vedic, Sanskrit, Dart, JavaScript, Python, PHP"
+        },
+        {
+          "@type": "TechArticle",
+          "name": "lipimala API Reference",
+          "headline": "lipimala Technical API Reference and Documentation",
+          "url": "https://jayeshmepani.github.io/indic-script-converter/",
+          "description": "Exact round-trip Indic transliteration technical reference. Covers conversion directions, option enums, result envelopes, exact-source metadata trailers, and multi-runtime implementation details.",
+          "inLanguage": "en",
+          "proficiencyLevel": "Expert",
+          "about": { "@id": "#lipimala" },
+          "isPartOf": {
+            "@type": "WebSite",
+            "name": "lipimala Documentation",
+            "url": "https://jayeshmepani.github.io/indic-script-converter/"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Jayesh Mepani",
+            "url": "https://jayeshmepani.site"
+          }
+        }
+      ]
+    }
+  </script>
+
+  <!-- Theme script (non-blocking, prevents FOUC) -->
   <script>
-    /* Pre-paint theme resolution: prevents a flash of the wrong theme. */
     (function () {
       var root = document.documentElement;
-      root.classList.remove('no-js');
       var stored = null;
       try { stored = localStorage.getItem('lipimala-docs-theme'); } catch (e) { /* private mode */ }
       var theme = stored === 'light' || stored === 'dark'
@@ -34,36 +147,24 @@
     })();
   </script>
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "TechArticle",
-    "name": "lipimala API Reference",
-    "headline": "lipimala Technical API Reference",
-    "description": "Exact round-trip Indic transliteration across Dart, JavaScript, Python, and PHP. Conversion directions, option enums, result envelopes, and exact-source metadata trailers.",
-    "inLanguage": "en",
-    "keywords": "transliteration, IAST, Devanagari, Gujarati, Hunterian, Unicode normalization, Dart, JavaScript, Python, PHP",
-    "proficiencyLevel": "Expert",
-    "about": {
-      "@type": "SoftwareSourceCode",
-      "name": "lipimala",
-      "description": "Exact round-trip Indic script transliteration library.",
-      "programmingLanguage": ["Dart", "JavaScript", "Python", "PHP"],
-      "license": "https://opensource.org/licenses/MIT"
-    }
-  }
-  </script>
-
+  <!-- Main script (deferred) -->
   <script src="script.js" defer></script>
 </head>
+
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="app">
     <header class="site-header">
       <button type="button" class="icon-btn menu-btn" id="menu-btn" aria-controls="sidebar" aria-expanded="false">
-        <svg class="icon icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-        <svg class="icon icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        <svg class="icon icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" aria-hidden="true" focusable="false">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+        <svg class="icon icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6 6 18" />
+        </svg>
         <span class="sr-only" id="menu-btn-label">Navigation</span>
       </button>
 
@@ -77,8 +178,16 @@
 
       <div class="header-actions">
         <button type="button" class="icon-btn theme-btn" id="theme-btn" aria-pressed="false">
-          <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-          <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5z"/></svg>
+          <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="4" />
+            <path
+              d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+          </svg>
+          <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5z" />
+          </svg>
           <span class="sr-only" id="theme-btn-label">Dark theme</span>
         </button>
       </div>
@@ -90,7 +199,8 @@
       <nav class="sidebar" id="sidebar" aria-label="Documentation sections">
         <div class="sidebar-search">
           <label for="nav-search">Filter topics</label>
-          <input class="search-input" id="nav-search" type="search" placeholder="Search API topics…" autocomplete="off" spellcheck="false" aria-describedby="nav-search-hint">
+          <input class="search-input" id="nav-search" type="search" placeholder="Search API topics…" autocomplete="off"
+            spellcheck="false" aria-describedby="nav-search-hint">
           <p class="sr-only" id="nav-search-hint">Filters the section list below as you type. Press Escape to clear.</p>
         </div>
 
@@ -159,10 +269,14 @@
                     metadata trailer format, and result envelopes on every runtime.
                   </p>
                   <ul class="meta-row" aria-label="Package identity">
-                    <li class="eco-badge eco-badge-npm"><span class="eco-badge-tag" aria-hidden="true">npm</span>lipimala</li>
-                    <li class="eco-badge eco-badge-pypi"><span class="eco-badge-tag" aria-hidden="true">PyPI</span>lipimala</li>
-                    <li class="eco-badge eco-badge-pub"><span class="eco-badge-tag" aria-hidden="true">pub</span>lipimala</li>
-                    <li class="eco-badge eco-badge-packagist"><span class="eco-badge-tag" aria-hidden="true">Packagist</span>jayeshmepani/lipimala</li>
+                    <li class="eco-badge eco-badge-npm"><span class="eco-badge-tag"
+                        aria-hidden="true">npm</span>lipimala</li>
+                    <li class="eco-badge eco-badge-pypi"><span class="eco-badge-tag"
+                        aria-hidden="true">PyPI</span>lipimala</li>
+                    <li class="eco-badge eco-badge-pub"><span class="eco-badge-tag"
+                        aria-hidden="true">pub</span>lipimala</li>
+                    <li class="eco-badge eco-badge-packagist"><span class="eco-badge-tag"
+                        aria-hidden="true">Packagist</span>jayeshmepani/lipimala</li>
                     <li class="pill"><strong>PHP ns</strong> Lipimala</li>
                     <li class="pill pill-accent"><strong>Default profile</strong> extendedIndic</li>
                   </ul>
@@ -178,7 +292,8 @@
                   </div>
                   <div class="demo-body">
                     <label class="demo-label" for="demo-input">IAST / extended-Indic input</label>
-                    <input class="demo-input" id="demo-input" type="text" value="Kṛṣṇa ā́tman" spellcheck="false" autocomplete="off" autocapitalize="off">
+                    <input class="demo-input" id="demo-input" type="text" value="Kṛṣṇa ā́tman" spellcheck="false"
+                      autocomplete="off" autocapitalize="off">
                     <ul class="demo-chips" data-demo-chips aria-label="Try a sample word">
                       <li><button type="button" class="chip-sample" data-sample="kṛṣṇa">kṛṣṇa</button></li>
                       <li><button type="button" class="chip-sample" data-sample="ātman">ātman</button></li>
@@ -190,11 +305,13 @@
                     <div class="demo-out">
                       <div class="demo-out-row lang-deva">
                         <span class="demo-out-label" id="demo-out-deva-label">Devanagari</span>
-                        <output class="demo-out-text" id="demo-out-deva" for="demo-input" aria-labelledby="demo-out-deva-label" aria-live="polite">कृष्ण आत्मन्</output>
+                        <output class="demo-out-text" id="demo-out-deva" for="demo-input"
+                          aria-labelledby="demo-out-deva-label" aria-live="polite">कृष्ण आत्मन्</output>
                       </div>
                       <div class="demo-out-row lang-gujr">
                         <span class="demo-out-label" id="demo-out-gujr-label">Gujarati</span>
-                        <output class="demo-out-text" id="demo-out-gujr" for="demo-input" aria-labelledby="demo-out-gujr-label" aria-live="polite">કૃષ્ણ આત્મન્</output>
+                        <output class="demo-out-text" id="demo-out-gujr" for="demo-input"
+                          aria-labelledby="demo-out-gujr-label" aria-live="polite">કૃષ્ણ આત્મન્</output>
                       </div>
                     </div>
                     <div class="demo-meta" data-demo-meta>
@@ -237,8 +354,11 @@
                 <article class="card" aria-labelledby="card-recovery">
                   <h3 class="card-title" id="card-recovery">Two recovery strategies</h3>
                   <ol>
-                    <li><strong>TransliterationResult</strong> — keep the object / JSON and call <code>restoreOriginal()</code>.</li>
-                    <li><strong>Exact-source trailer</strong> — set <code>embedExactSourceMetadata: true</code> so the string carries a checksummed Unicode-Tag payload (<code>LIT1:</code>).</li>
+                    <li><strong>TransliterationResult</strong> — keep the object / JSON and call
+                      <code>restoreOriginal()</code>.
+                    </li>
+                    <li><strong>Exact-source trailer</strong> — set <code>embedExactSourceMetadata: true</code> so the
+                      string carries a checksummed Unicode-Tag payload (<code>LIT1:</code>).</li>
                   </ol>
                 </article>
               </div>
@@ -258,26 +378,31 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <th scope="row"><a href="https://pypi.org/project/lipimala/" target="_blank" rel="noopener">Python</a></th>
+                      <th scope="row"><a href="https://pypi.org/project/lipimala/" target="_blank"
+                          rel="noopener">Python</a></th>
                       <td><code>pip install lipimala</code></td>
                       <td><code>from lipimala import to_devanagari, to_devanagari_from_gujarati, ...</code></td>
                     </tr>
                     <tr>
-                      <th scope="row"><a href="https://www.npmjs.com/package/lipimala" target="_blank" rel="noopener">JavaScript</a></th>
+                      <th scope="row"><a href="https://www.npmjs.com/package/lipimala" target="_blank"
+                          rel="noopener">JavaScript</a></th>
                       <td><code>npm install lipimala</code></td>
                       <td><code>import { toDevanagari, toDevanagariFromGujarati } from 'lipimala'</code></td>
                     </tr>
                     <tr>
-                      <th scope="row"><a href="https://pub.dev/packages/lipimala/" target="_blank" rel="noopener">Dart</a></th>
+                      <th scope="row"><a href="https://pub.dev/packages/lipimala/" target="_blank"
+                          rel="noopener">Dart</a></th>
                       <td><code>dart pub add lipimala</code></td>
                       <td><code>import 'package:lipimala/lipimala.dart';</code><br>
-                          Extensions on <code>String</code></td>
+                        Extensions on <code>String</code></td>
                     </tr>
                     <tr>
-                      <th scope="row"><a href="https://packagist.org/packages/jayeshmepani/lipimala" target="_blank" rel="noopener">PHP</a></th>
+                      <th scope="row"><a href="https://packagist.org/packages/jayeshmepani/lipimala" target="_blank"
+                          rel="noopener">PHP</a></th>
                       <td><code>composer require jayeshmepani/lipimala</code></td>
                       <td><code>use function Lipimala\toDevanagari;</code><br>
-                          <code>use Lipimala\IastToDevanagariOptions;</code></td>
+                        <code>use Lipimala\IastToDevanagariOptions;</code>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -292,7 +417,11 @@
                 <table>
                   <caption id="cap-layers">String converters versus envelope converters</caption>
                   <thead>
-                    <tr><th scope="col">Layer</th><th scope="col">Returns</th><th scope="col">When to use</th></tr>
+                    <tr>
+                      <th scope="col">Layer</th>
+                      <th scope="col">Returns</th>
+                      <th scope="col">When to use</th>
+                    </tr>
                   </thead>
                   <tbody>
                     <tr>
@@ -314,7 +443,11 @@
                 <table>
                   <caption id="cap-reverse-modes">Reverse recovery modes (Devanagari → IAST example)</caption>
                   <thead>
-                    <tr><th scope="col">Variant</th><th scope="col">Behavior</th><th scope="col">Fails when</th></tr>
+                    <tr>
+                      <th scope="col">Variant</th>
+                      <th scope="col">Behavior</th>
+                      <th scope="col">Fails when</th>
+                    </tr>
                   </thead>
                   <tbody>
                     <tr>
@@ -335,7 +468,9 @@
                   </tbody>
                 </table>
               </div>
-              <p class="section-lead">Same pattern for Gujarati→IAST and Deva↔Gujr with typed markers <code>ISC:D:</code> / <code>ISC:G:</code>.</p>
+              <p class="section-lead">Same pattern for Gujarati→IAST and Deva↔Gujr with typed markers
+                <code>ISC:D:</code> / <code>ISC:G:</code>.
+              </p>
 
               <h3 id="concepts-norm">3.3 Unicode normalization</h3>
               <p>
@@ -344,12 +479,16 @@
                 <span class="pill">nfc</span>
                 <span class="pill">nfd</span>
               </p>
-              <p>Envelope defaults: input <code>nfd</code>, output <code>nfc</code>. Reverse APIs use <code>ScriptToIastOptions</code>.</p>
+              <p>Envelope defaults: input <code>nfd</code>, output <code>nfc</code>. Reverse APIs use
+                <code>ScriptToIastOptions</code>.
+              </p>
             </section>
 
             <section class="doc-section" id="naming" aria-labelledby="naming-heading">
               <h2 id="naming-heading">4. Cross-language naming map</h2>
-              <p class="section-lead">The table below maps all primary public functions, envelope APIs, reverse converters, script-to-script transformers, and metadata helpers across Dart, JavaScript, Python, and PHP environments.</p>
+              <p class="section-lead">The table below maps all primary public functions, envelope APIs, reverse
+                converters, script-to-script transformers, and metadata helpers across Dart, JavaScript, Python, and PHP
+                environments.</p>
               <div class="table-wrap" role="region" aria-labelledby="cap-naming" tabindex="0">
                 <table>
                   <caption id="cap-naming">Comprehensive API names across runtimes</caption>
@@ -422,9 +561,15 @@
                     <tr>
                       <th scope="row">Devanagari → Canonical IAST</th>
                       <td><code>toCanonicalIastFromDevanagari()</code></td>
-                      <td><code>toCanonicalIastFromDevanagari()</code><br><code>to_canonical_iast_from_devanagari()</code></td>
-                      <td><code>to_canonical_iast_from_devanagari()</code><br><code>toCanonicalIastFromDevanagari()</code></td>
-                      <td><code>toCanonicalIastFromDevanagari()</code><br><code>to_canonical_iast_from_devanagari()</code></td>
+                      <td>
+                        <code>toCanonicalIastFromDevanagari()</code><br><code>to_canonical_iast_from_devanagari()</code>
+                      </td>
+                      <td>
+                        <code>to_canonical_iast_from_devanagari()</code><br><code>toCanonicalIastFromDevanagari()</code>
+                      </td>
+                      <td>
+                        <code>toCanonicalIastFromDevanagari()</code><br><code>to_canonical_iast_from_devanagari()</code>
+                      </td>
                     </tr>
                     <tr>
                       <th scope="row">Devanagari → Exact IAST</th>
@@ -443,9 +588,12 @@
                     <tr>
                       <th scope="row">Gujarati → Canonical IAST</th>
                       <td><code>toCanonicalIastFromGujarati()</code></td>
-                      <td><code>toCanonicalIastFromGujarati()</code><br><code>to_canonical_iast_from_gujarati()</code></td>
-                      <td><code>to_canonical_iast_from_gujarati()</code><br><code>toCanonicalIastFromGujarati()</code></td>
-                      <td><code>toCanonicalIastFromGujarati()</code><br><code>to_canonical_iast_from_gujarati()</code></td>
+                      <td><code>toCanonicalIastFromGujarati()</code><br><code>to_canonical_iast_from_gujarati()</code>
+                      </td>
+                      <td><code>to_canonical_iast_from_gujarati()</code><br><code>toCanonicalIastFromGujarati()</code>
+                      </td>
+                      <td><code>toCanonicalIastFromGujarati()</code><br><code>to_canonical_iast_from_gujarati()</code>
+                      </td>
                     </tr>
                     <tr>
                       <th scope="row">Gujarati → Exact IAST</th>
@@ -464,16 +612,28 @@
                     <tr>
                       <th scope="row">Devanagari → Canonical Gujarati</th>
                       <td><code>toCanonicalGujaratiFromDevanagari()</code></td>
-                      <td><code>toCanonicalGujaratiFromDevanagari()</code><br><code>to_canonical_gujarati_from_devanagari()</code></td>
-                      <td><code>to_canonical_gujarati_from_devanagari()</code><br><code>toCanonicalGujaratiFromDevanagari()</code></td>
-                      <td><code>toCanonicalGujaratiFromDevanagari()</code><br><code>to_canonical_gujarati_from_devanagari()</code></td>
+                      <td>
+                        <code>toCanonicalGujaratiFromDevanagari()</code><br><code>to_canonical_gujarati_from_devanagari()</code>
+                      </td>
+                      <td>
+                        <code>to_canonical_gujarati_from_devanagari()</code><br><code>toCanonicalGujaratiFromDevanagari()</code>
+                      </td>
+                      <td>
+                        <code>toCanonicalGujaratiFromDevanagari()</code><br><code>to_canonical_gujarati_from_devanagari()</code>
+                      </td>
                     </tr>
                     <tr>
                       <th scope="row">Devanagari → Exact Gujarati</th>
                       <td><code>toExactGujaratiFromDevanagari()</code></td>
-                      <td><code>toExactGujaratiFromDevanagari()</code><br><code>to_exact_gujarati_from_devanagari()</code></td>
-                      <td><code>to_exact_gujarati_from_devanagari()</code><br><code>toExactGujaratiFromDevanagari()</code></td>
-                      <td><code>toExactGujaratiFromDevanagari()</code><br><code>to_exact_gujarati_from_devanagari()</code></td>
+                      <td>
+                        <code>toExactGujaratiFromDevanagari()</code><br><code>to_exact_gujarati_from_devanagari()</code>
+                      </td>
+                      <td>
+                        <code>to_exact_gujarati_from_devanagari()</code><br><code>toExactGujaratiFromDevanagari()</code>
+                      </td>
+                      <td>
+                        <code>toExactGujaratiFromDevanagari()</code><br><code>to_exact_gujarati_from_devanagari()</code>
+                      </td>
                     </tr>
                     <tr>
                       <th scope="row">Gujarati → Smart Devanagari</th>
@@ -485,30 +645,58 @@
                     <tr>
                       <th scope="row">Gujarati → Canonical Devanagari</th>
                       <td><code>toCanonicalDevanagariFromGujarati()</code></td>
-                      <td><code>toCanonicalDevanagariFromGujarati()</code><br><code>to_canonical_devanagari_from_gujarati()</code></td>
-                      <td><code>to_canonical_devanagari_from_gujarati()</code><br><code>toCanonicalDevanagariFromGujarati()</code></td>
-                      <td><code>toCanonicalDevanagariFromGujarati()</code><br><code>to_canonical_devanagari_from_gujarati()</code></td>
+                      <td>
+                        <code>toCanonicalDevanagariFromGujarati()</code><br><code>to_canonical_devanagari_from_gujarati()</code>
+                      </td>
+                      <td>
+                        <code>to_canonical_devanagari_from_gujarati()</code><br><code>toCanonicalDevanagariFromGujarati()</code>
+                      </td>
+                      <td>
+                        <code>toCanonicalDevanagariFromGujarati()</code><br><code>to_canonical_devanagari_from_gujarati()</code>
+                      </td>
                     </tr>
                     <tr>
                       <th scope="row">Gujarati → Exact Devanagari</th>
                       <td><code>toExactDevanagariFromGujarati()</code></td>
-                      <td><code>toExactDevanagariFromGujarati()</code><br><code>to_exact_devanagari_from_gujarati()</code></td>
-                      <td><code>to_exact_devanagari_from_gujarati()</code><br><code>toExactDevanagariFromGujarati()</code></td>
-                      <td><code>toExactDevanagariFromGujarati()</code><br><code>to_exact_devanagari_from_gujarati()</code></td>
+                      <td>
+                        <code>toExactDevanagariFromGujarati()</code><br><code>to_exact_devanagari_from_gujarati()</code>
+                      </td>
+                      <td>
+                        <code>to_exact_devanagari_from_gujarati()</code><br><code>toExactDevanagariFromGujarati()</code>
+                      </td>
+                      <td>
+                        <code>toExactDevanagariFromGujarati()</code><br><code>to_exact_devanagari_from_gujarati()</code>
+                      </td>
                     </tr>
                     <tr>
                       <th scope="row">Check IAST Source Metadata</th>
-                      <td><code>hasExactGujaratiIastSourceMetadata</code><br><code>hasExactDevanagariIastSourceMetadata</code></td>
-                      <td><code>hasExactGujaratiIastSourceMetadata</code><br><code>hasExactDevanagariIastSourceMetadata</code></td>
-                      <td><code>has_exact_gujarati_iast_source_metadata</code><br><code>has_exact_devanagari_iast_source_metadata</code></td>
-                      <td><code>hasExactGujaratiIastSourceMetadata()</code><br><code>hasExactDevanagariIastSourceMetadata()</code></td>
+                      <td>
+                        <code>hasExactGujaratiIastSourceMetadata</code><br><code>hasExactDevanagariIastSourceMetadata</code>
+                      </td>
+                      <td>
+                        <code>hasExactGujaratiIastSourceMetadata</code><br><code>hasExactDevanagariIastSourceMetadata</code>
+                      </td>
+                      <td>
+                        <code>has_exact_gujarati_iast_source_metadata</code><br><code>has_exact_devanagari_iast_source_metadata</code>
+                      </td>
+                      <td>
+                        <code>hasExactGujaratiIastSourceMetadata()</code><br><code>hasExactDevanagariIastSourceMetadata()</code>
+                      </td>
                     </tr>
                     <tr>
                       <th scope="row">Check Direct Metadata</th>
-                      <td><code>hasExactGujaratiSourceMetadata()</code><br><code>hasExactDevanagariSourceMetadata()</code></td>
-                      <td><code>hasExactGujaratiSourceMetadata()</code><br><code>hasExactDevanagariSourceMetadata()</code></td>
-                      <td><code>has_exact_gujarati_source_metadata()</code><br><code>has_exact_devanagari_source_metadata()</code></td>
-                      <td><code>hasExactGujaratiSourceMetadata()</code><br><code>hasExactDevanagariSourceMetadata()</code></td>
+                      <td>
+                        <code>hasExactGujaratiSourceMetadata()</code><br><code>hasExactDevanagariSourceMetadata()</code>
+                      </td>
+                      <td>
+                        <code>hasExactGujaratiSourceMetadata()</code><br><code>hasExactDevanagariSourceMetadata()</code>
+                      </td>
+                      <td>
+                        <code>has_exact_gujarati_source_metadata()</code><br><code>has_exact_devanagari_source_metadata()</code>
+                      </td>
+                      <td>
+                        <code>hasExactGujaratiSourceMetadata()</code><br><code>hasExactDevanagariSourceMetadata()</code>
+                      </td>
                     </tr>
                     <tr>
                       <th scope="row">Strip Direct Metadata</th>
@@ -527,9 +715,12 @@
                     <tr>
                       <th scope="row">Decode Metadata</th>
                       <td><code>tryDecodeExactSourceMetadata()</code></td>
-                      <td><code>tryDecodeExactSourceMetadata()</code><br><code>try_decode_exact_source_metadata()</code></td>
-                      <td><code>try_decode_exact_source_metadata()</code><br><code>tryDecodeExactSourceMetadata()</code></td>
-                      <td><code>tryDecodeExactSourceMetadata()</code><br><code>try_decode_exact_source_metadata()</code></td>
+                      <td><code>tryDecodeExactSourceMetadata()</code><br><code>try_decode_exact_source_metadata()</code>
+                      </td>
+                      <td><code>try_decode_exact_source_metadata()</code><br><code>tryDecodeExactSourceMetadata()</code>
+                      </td>
+                      <td><code>tryDecodeExactSourceMetadata()</code><br><code>try_decode_exact_source_metadata()</code>
+                      </td>
                     </tr>
                     <tr>
                       <th scope="row">Strip Tag Metadata</th>
@@ -566,7 +757,9 @@
 
             <section class="doc-section" id="envelope" aria-labelledby="envelope-heading">
               <h2 id="envelope-heading">5. Envelope APIs</h2>
-              <p class="section-lead">Return <code>TransliterationResult</code>. Always set <code>renderingIsInjective = false</code> for script/plain views.</p>
+              <p class="section-lead">Return <code>TransliterationResult</code>. Always set
+                <code>renderingIsInjective = false</code> for script/plain views.
+              </p>
 
               <article class="api-block" aria-labelledby="api-to-devanagari">
                 <h3 class="api-head" id="api-to-devanagari"><code>toDevanagari / to_devanagari</code></h3>
@@ -579,18 +772,45 @@
                     <table>
                       <caption id="cap-params-deva">Parameters</caption>
                       <thead>
-                        <tr><th scope="col">Parameter</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Description</th></tr>
+                        <tr>
+                          <th scope="col">Parameter</th>
+                          <th scope="col">Type</th>
+                          <th scope="col">Default</th>
+                          <th scope="col">Description</th>
+                        </tr>
                       </thead>
                       <tbody>
-                        <tr><th scope="row"><code>text</code></th><td>string</td><td>required</td><td>Latin/IAST (or extended) source</td></tr>
-                        <tr><th scope="row"><code>options</code></th><td>IastToDevanagariOptions</td><td>defaults</td><td>Profile + policies — see <a href="#opts-forward">§13</a></td></tr>
-                        <tr><th scope="row"><code>inputNormalization</code></th><td>UnicodeNormalizationForm</td><td>nfd</td><td>Applied before conversion</td></tr>
-                        <tr><th scope="row"><code>outputNormalization</code></th><td>UnicodeNormalizationForm</td><td>nfc</td><td>Applied to visible rendered text</td></tr>
+                        <tr>
+                          <th scope="row"><code>text</code></th>
+                          <td>string</td>
+                          <td>required</td>
+                          <td>Latin/IAST (or extended) source</td>
+                        </tr>
+                        <tr>
+                          <th scope="row"><code>options</code></th>
+                          <td>IastToDevanagariOptions</td>
+                          <td>defaults</td>
+                          <td>Profile + policies — see <a href="#opts-forward">§13</a></td>
+                        </tr>
+                        <tr>
+                          <th scope="row"><code>inputNormalization</code></th>
+                          <td>UnicodeNormalizationForm</td>
+                          <td>nfd</td>
+                          <td>Applied before conversion</td>
+                        </tr>
+                        <tr>
+                          <th scope="row"><code>outputNormalization</code></th>
+                          <td>UnicodeNormalizationForm</td>
+                          <td>nfc</td>
+                          <td>Applied to visible rendered text</td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
                   <p>Issue attached: <code>SOURCE_METADATA_REQUIRED_FOR_EXACT_REVERSE</code> (info).</p>
-                  <p class="section-lead">Dart: method on <code>String</code>. JS: second arg is <code>{ options, inputNormalization, outputNormalization }</code>.</p>
+                  <p class="section-lead">Dart: method on <code>String</code>. JS: second arg is
+                    <code>{ options, inputNormalization, outputNormalization }</code>.
+                  </p>
                 </div>
               </article>
 
@@ -612,42 +832,53 @@
                     <li class="tag tag-dir">IAST → plain English</li>
                     <li class="tag tag-ret">TransliterationResult</li>
                   </ul>
-                  <p>Uses <code>IastPlainEnglishOptions</code>. Result profile is <code>hunterian</code> or <code>plainEnglish</code>.</p>
-                  <p>Issue: <code>HUNTERIAN_VIEW_IS_INTRINSICALLY_LOSSY</code> or <code>PLAIN_ENGLISH_VIEW_IS_INTRINSICALLY_LOSSY</code> (info).</p>
+                  <p>Uses <code>IastPlainEnglishOptions</code>. Result profile is <code>hunterian</code> or
+                    <code>plainEnglish</code>.
+                  </p>
+                  <p>Issue: <code>HUNTERIAN_VIEW_IS_INTRINSICALLY_LOSSY</code> or
+                    <code>PLAIN_ENGLISH_VIEW_IS_INTRINSICALLY_LOSSY</code> (info).
+                  </p>
                 </div>
               </article>
 
               <h3 id="envelope-examples">Minimal multi-language example</h3>
               <div class="code-tabs" data-code-tabs>
                 <div class="tablist" role="tablist" aria-label="Language">
-                  <button type="button" class="tab" role="tab" id="tab-dart" aria-controls="panel-dart" aria-selected="true"><span class="tab-dot tab-dot-dart" aria-hidden="true"></span>Dart</button>
-                  <button type="button" class="tab" role="tab" id="tab-js" aria-controls="panel-js" aria-selected="false" tabindex="-1"><span class="tab-dot tab-dot-js" aria-hidden="true"></span>JavaScript</button>
-                  <button type="button" class="tab" role="tab" id="tab-py" aria-controls="panel-py" aria-selected="false" tabindex="-1"><span class="tab-dot tab-dot-py" aria-hidden="true"></span>Python</button>
-                  <button type="button" class="tab" role="tab" id="tab-php" aria-controls="panel-php" aria-selected="false" tabindex="-1"><span class="tab-dot tab-dot-php" aria-hidden="true"></span>PHP</button>
+                  <button type="button" class="tab" role="tab" id="tab-dart" aria-controls="panel-dart"
+                    aria-selected="true"><span class="tab-dot tab-dot-dart" aria-hidden="true"></span>Dart</button>
+                  <button type="button" class="tab" role="tab" id="tab-js" aria-controls="panel-js"
+                    aria-selected="false" tabindex="-1"><span class="tab-dot tab-dot-js"
+                      aria-hidden="true"></span>JavaScript</button>
+                  <button type="button" class="tab" role="tab" id="tab-py" aria-controls="panel-py"
+                    aria-selected="false" tabindex="-1"><span class="tab-dot tab-dot-py"
+                      aria-hidden="true"></span>Python</button>
+                  <button type="button" class="tab" role="tab" id="tab-php" aria-controls="panel-php"
+                    aria-selected="false" tabindex="-1"><span class="tab-dot tab-dot-php"
+                      aria-hidden="true"></span>PHP</button>
                 </div>
                 <div class="tabpanel is-active" role="tabpanel" id="panel-dart" aria-labelledby="tab-dart" tabindex="0">
-<pre data-lang="Dart"><code class="language-dart">import 'package:lipimala/lipimala.dart';
+                  <pre data-lang="Dart"><code class="language-dart">import 'package:lipimala/lipimala.dart';
 
 final r = 'Kṛṣṇa ā́tman'.toDevanagari();
 print(r.rendered);          // कृष्ण आ॑त्मन्
 print(r.restoreOriginal()); // Kṛṣṇa ā́tman</code></pre>
                 </div>
                 <div class="tabpanel" role="tabpanel" id="panel-js" aria-labelledby="tab-js" tabindex="0" hidden>
-<pre data-lang="JavaScript"><code class="language-javascript">import { toDevanagari } from 'lipimala';
+                  <pre data-lang="JavaScript"><code class="language-javascript">import { toDevanagari } from 'lipimala';
 
 const r = toDevanagari('Kṛṣṇa ā́tman');
 console.log(r.rendered);
 console.log(r.restoreOriginal());</code></pre>
                 </div>
                 <div class="tabpanel" role="tabpanel" id="panel-py" aria-labelledby="tab-py" tabindex="0" hidden>
-<pre data-lang="Python"><code class="language-python">from lipimala import to_devanagari
+                  <pre data-lang="Python"><code class="language-python">from lipimala import to_devanagari
 
 r = to_devanagari('Kṛṣṇa ā́tman')
 print(r.rendered)
 print(r.restore_original())</code></pre>
                 </div>
                 <div class="tabpanel" role="tabpanel" id="panel-php" aria-labelledby="tab-php" tabindex="0" hidden>
-<pre data-lang="PHP"><code class="language-php">use function Lipimala\toDevanagari;
+                  <pre data-lang="PHP"><code class="language-php">use function Lipimala\toDevanagari;
 
 $r = toDevanagari('Kṛṣṇa ā́tman');
 echo $r->rendered, PHP_EOL;
@@ -659,7 +890,9 @@ echo $r->restoreOriginal(), PHP_EOL;</code></pre>
             <section class="doc-section" id="forward-deva" aria-labelledby="forward-deva-heading">
               <h2 id="forward-deva-heading">6. IAST → Devanagari (string API)</h2>
               <article class="api-block" aria-labelledby="api-to-devanagari-from-iast">
-                <h3 class="api-head" id="api-to-devanagari-from-iast"><code>toDevanagariFromIast / to_devanagari_from_iast</code></h3>
+                <h3 class="api-head" id="api-to-devanagari-from-iast">
+                  <code>toDevanagariFromIast / to_devanagari_from_iast</code>
+                </h3>
                 <div class="api-body">
                   <ul class="tag-row" aria-label="Signature summary">
                     <li class="tag tag-ret">string</li>
@@ -669,16 +902,30 @@ echo $r->restoreOriginal(), PHP_EOL;</code></pre>
                     <table>
                       <caption id="cap-params-string-deva">Parameters</caption>
                       <thead>
-                        <tr><th scope="col">Parameter</th><th scope="col">Type</th><th scope="col">Default</th></tr>
+                        <tr>
+                          <th scope="col">Parameter</th>
+                          <th scope="col">Type</th>
+                          <th scope="col">Default</th>
+                        </tr>
                       </thead>
                       <tbody>
-                        <tr><th scope="row"><code>text</code></th><td>string</td><td>required</td></tr>
-                        <tr><th scope="row"><code>options</code></th><td>IastToDevanagariOptions</td><td>all defaults (<a href="#opts-forward">§13</a>)</td></tr>
+                        <tr>
+                          <th scope="row"><code>text</code></th>
+                          <td>string</td>
+                          <td>required</td>
+                        </tr>
+                        <tr>
+                          <th scope="row"><code>options</code></th>
+                          <td>IastToDevanagariOptions</td>
+                          <td>all defaults (<a href="#opts-forward">§13</a>)</td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
-                  <p><strong>When:</strong> you only need the rendered script string, or you will reverse later via metadata.</p>
-                  <p><strong>How exact reverse works:</strong> pass <code>embedExactSourceMetadata: true</code>, then call <code>toExactIastFromDevanagari(tagged)</code>.</p>
+                  <p><strong>When:</strong> you only need the rendered script string, or you will reverse later via
+                    metadata.</p>
+                  <p><strong>How exact reverse works:</strong> pass <code>embedExactSourceMetadata: true</code>, then
+                    call <code>toExactIastFromDevanagari(tagged)</code>.</p>
                 </div>
               </article>
             </section>
@@ -686,9 +933,12 @@ echo $r->restoreOriginal(), PHP_EOL;</code></pre>
             <section class="doc-section" id="forward-gujr" aria-labelledby="forward-gujr-heading">
               <h2 id="forward-gujr-heading">7. IAST → Gujarati (string API)</h2>
               <article class="api-block" aria-labelledby="api-to-gujarati-from-iast">
-                <h3 class="api-head" id="api-to-gujarati-from-iast"><code>toGujaratiFromIast / to_gujarati_from_iast</code></h3>
+                <h3 class="api-head" id="api-to-gujarati-from-iast">
+                  <code>toGujaratiFromIast / to_gujarati_from_iast</code>
+                </h3>
                 <div class="api-body">
-                  <p>Mirror of the Devanagari string API with <code>IastToGujaratiOptions</code> and Gujarati profile/policy enums.</p>
+                  <p>Mirror of the Devanagari string API with <code>IastToGujaratiOptions</code> and Gujarati
+                    profile/policy enums.</p>
                   <p>Exact reverse: <code>toExactIastFromGujarati</code>.</p>
                 </div>
               </article>
@@ -697,27 +947,46 @@ echo $r->restoreOriginal(), PHP_EOL;</code></pre>
             <section class="doc-section" id="plain" aria-labelledby="plain-heading">
               <h2 id="plain-heading">8. IAST → plain English / Hunterian</h2>
               <article class="api-block" aria-labelledby="api-to-plain-english-from-iast">
-                <h3 class="api-head" id="api-to-plain-english-from-iast"><code>toPlainEnglishFromIast / to_plain_english_from_iast</code></h3>
+                <h3 class="api-head" id="api-to-plain-english-from-iast">
+                  <code>toPlainEnglishFromIast / to_plain_english_from_iast</code>
+                </h3>
                 <div class="api-body">
                   <ul class="tag-row" aria-label="Signature summary">
                     <li class="tag tag-ret">string</li>
                     <li class="tag tag-warn">intrinsically lossy</li>
                   </ul>
-                  <p>ASCII-friendly transcription. Keep the envelope for exact Latin recovery. Options control final-a, jñ, ñ, glottal stop, Hunterian features — see <a href="#opts-plain">§14</a>.</p>
+                  <p>ASCII-friendly transcription. Keep the envelope for exact Latin recovery. Options control final-a,
+                    jñ, ñ, glottal stop, Hunterian features — see <a href="#opts-plain">§14</a>.</p>
                 </div>
               </article>
+            </section>
+
             <section class="doc-section" id="bulk-list" aria-labelledby="bulk-list-heading">
               <h2 id="bulk-list-heading">8b. Bulk Array / List Transliteration API</h2>
               <article class="api-block" aria-labelledby="api-bulk-list-transliteration">
-                <h3 class="api-head" id="api-bulk-list-transliteration">Bulk Array / List Conversion Functions Across All 4 Ecosystems</h3>
+                <h3 class="api-head" id="api-bulk-list-transliteration">Bulk Array / List Conversion Functions Across
+                  All 4 Ecosystems</h3>
                 <div class="api-body">
-                  <p>Bulk convert an array, list, or sequence of text values (<code>["Kṛṣṇa", "Rāma", "jñāna"]</code>) in a single operation without manual iteration loops across all conversion directions:</p>
-                  
+                  <p>Bulk convert an array, list, or sequence of text values (<code>["Kṛṣṇa", "Rāma", "jñāna"]</code>)
+                    in a single operation without manual iteration loops across all conversion directions:</p>
+
                   <ul>
-                    <li><strong>Latin (IAST) → Devanagari / Gujarati / Plain English:</strong> <code>toDevanagariFromIastList()</code>, <code>toGujaratiFromIastList()</code>, <code>toPlainEnglishFromIastList()</code></li>
-                    <li><strong>Brahmic (Devanagari / Gujarati) → Latin IAST:</strong> <code>toCanonicalIastFromDevanagariList()</code>, <code>toCanonicalIastFromGujaratiList()</code>, <code>toIastFromDevanagariList()</code>, <code>toIastFromGujaratiList()</code></li>
-                    <li><strong>Direct Devanagari ↔ Gujarati:</strong> <code>toCanonicalGujaratiFromDevanagariList()</code>, <code>toCanonicalDevanagariFromGujaratiList()</code>, <code>toGujaratiFromDevanagariList()</code>, <code>toDevanagariFromGujaratiList()</code></li>
-                    <li><strong>Result Envelopes:</strong> <code>toDevanagariList()</code>, <code>toGujaratiList()</code>, <code>toPlainEnglishList()</code></li>
+                    <li><strong>Latin (IAST) → Devanagari / Gujarati / Plain English:</strong>
+                      <code>toDevanagariFromIastList()</code>, <code>toGujaratiFromIastList()</code>,
+                      <code>toPlainEnglishFromIastList()</code>
+                    </li>
+                    <li><strong>Brahmic (Devanagari / Gujarati) → Latin IAST:</strong>
+                      <code>toCanonicalIastFromDevanagariList()</code>, <code>toCanonicalIastFromGujaratiList()</code>,
+                      <code>toIastFromDevanagariList()</code>, <code>toIastFromGujaratiList()</code>
+                    </li>
+                    <li><strong>Direct Devanagari ↔ Gujarati:</strong>
+                      <code>toCanonicalGujaratiFromDevanagariList()</code>,
+                      <code>toCanonicalDevanagariFromGujaratiList()</code>, <code>toGujaratiFromDevanagariList()</code>,
+                      <code>toDevanagariFromGujaratiList()</code>
+                    </li>
+                    <li><strong>Result Envelopes:</strong> <code>toDevanagariList()</code>,
+                      <code>toGujaratiList()</code>, <code>toPlainEnglishList()</code>
+                    </li>
                   </ul>
 
                   <h4>Code Examples Across Languages</h4>
@@ -744,8 +1013,10 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
 
             <section class="doc-section" id="reverse" aria-labelledby="reverse-heading">
               <h2 id="reverse-heading">9. Brahmic → IAST reverse</h2>
-              <p class="section-lead">Lipimala provides three distinct reverse conversion strategies for translating Devanagari or Gujarati text back into Latin IAST. Choose between smart metadata-aware recovery, pure canonical visible reverse, or strict metadata verification.</p>
-              
+              <p class="section-lead">Lipimala provides three distinct reverse conversion strategies for translating
+                Devanagari or Gujarati text back into Latin IAST. Choose between smart metadata-aware recovery, pure
+                canonical visible reverse, or strict metadata verification.</p>
+
               <div class="table-wrap" role="region" aria-labelledby="cap-reverse-fns" tabindex="0">
                 <table>
                   <caption id="cap-reverse-fns">Reverse IAST conversion functions</caption>
@@ -759,57 +1030,89 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                   </thead>
                   <tbody>
                     <tr>
-                      <th scope="row"><code>toIastFromDevanagari(text, options?)</code><br><code>to_iast_from_devanagari(text, options?)</code></th>
+                      <th scope="row">
+                        <code>toIastFromDevanagari(text, options?)</code><br><code>to_iast_from_devanagari(text, options?)</code>
+                      </th>
                       <td><code>text</code>: string<br><code>options</code>: ScriptToIastOptions?</td>
                       <td><code>string</code></td>
-                      <td><strong>Smart Reverse:</strong> If an embedded exact-source metadata trailer is present and valid, recovers exact original Latin. Otherwise, performs canonical visible reverse transliteration.</td>
+                      <td><strong>Smart Reverse:</strong> If an embedded exact-source metadata trailer is present and
+                        valid, recovers exact original Latin. Otherwise, performs canonical visible reverse
+                        transliteration.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>toCanonicalIastFromDevanagari(text, options?)</code><br><code>to_canonical_iast_from_devanagari(text, options?)</code></th>
+                      <th scope="row">
+                        <code>toCanonicalIastFromDevanagari(text, options?)</code><br><code>to_canonical_iast_from_devanagari(text, options?)</code>
+                      </th>
                       <td><code>text</code>: string<br><code>options</code>: ScriptToIastOptions?</td>
                       <td><code>string</code></td>
-                      <td><strong>Canonical Reverse:</strong> Always performs deterministic visible reverse conversion from Devanagari to lower-case IAST, completely ignoring any embedded metadata trailer.</td>
+                      <td><strong>Canonical Reverse:</strong> Always performs deterministic visible reverse conversion
+                        from Devanagari to lower-case IAST, completely ignoring any embedded metadata trailer.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>toExactIastFromDevanagari(text)</code><br><code>to_exact_iast_from_devanagari(text)</code></th>
+                      <th scope="row">
+                        <code>toExactIastFromDevanagari(text)</code><br><code>to_exact_iast_from_devanagari(text)</code>
+                      </th>
                       <td><code>text</code>: string</td>
                       <td><code>string</code></td>
-                      <td><strong>Strict Exact Recovery:</strong> Decodes and verifies the embedded metadata trailer. Returns exact original Latin input (with original casing/aliases). Throws/raises an exception if metadata is missing or checksum validation fails.</td>
+                      <td><strong>Strict Exact Recovery:</strong> Decodes and verifies the embedded metadata trailer.
+                        Returns exact original Latin input (with original casing/aliases). Throws/raises an exception if
+                        metadata is missing or checksum validation fails.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>toIastFromGujarati(text, options?)</code><br><code>to_iast_from_gujarati(text, options?)</code></th>
+                      <th scope="row">
+                        <code>toIastFromGujarati(text, options?)</code><br><code>to_iast_from_gujarati(text, options?)</code>
+                      </th>
                       <td><code>text</code>: string<br><code>options</code>: ScriptToIastOptions?</td>
                       <td><code>string</code></td>
-                      <td><strong>Smart Reverse:</strong> Recovers exact original Latin if embedded metadata trailer is valid; falls back to canonical Gujarati → IAST visible reverse.</td>
+                      <td><strong>Smart Reverse:</strong> Recovers exact original Latin if embedded metadata trailer is
+                        valid; falls back to canonical Gujarati → IAST visible reverse.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>toCanonicalIastFromGujarati(text, options?)</code><br><code>to_canonical_iast_from_gujarati(text, options?)</code></th>
+                      <th scope="row">
+                        <code>toCanonicalIastFromGujarati(text, options?)</code><br><code>to_canonical_iast_from_gujarati(text, options?)</code>
+                      </th>
                       <td><code>text</code>: string<br><code>options</code>: ScriptToIastOptions?</td>
                       <td><code>string</code></td>
-                      <td><strong>Canonical Reverse:</strong> Always performs visible reverse conversion from Gujarati to lower-case IAST, ignoring metadata trailers.</td>
+                      <td><strong>Canonical Reverse:</strong> Always performs visible reverse conversion from Gujarati
+                        to lower-case IAST, ignoring metadata trailers.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>toExactIastFromGujarati(text)</code><br><code>to_exact_iast_from_gujarati(text)</code></th>
+                      <th scope="row">
+                        <code>toExactIastFromGujarati(text)</code><br><code>to_exact_iast_from_gujarati(text)</code>
+                      </th>
                       <td><code>text</code>: string</td>
                       <td><code>string</code></td>
-                      <td><strong>Strict Exact Recovery:</strong> Decodes and verifies the Gujarati metadata trailer. Returns exact original Latin input. Throws/raises an error if trailer is missing or corrupted.</td>
+                      <td><strong>Strict Exact Recovery:</strong> Decodes and verifies the Gujarati metadata trailer.
+                        Returns exact original Latin input. Throws/raises an error if trailer is missing or corrupted.
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
               <h3 id="script-to-iast-options">ScriptToIastOptions</h3>
-              <p>Options object controlling reverse transliteration behavior. Parameter fields, default values, and effects are detailed in <a href="#opts-reverse">§15 Reverse options</a>.</p>
+              <p>Options object controlling reverse transliteration behavior. Parameter fields, default values, and
+                effects are detailed in <a href="#opts-reverse">§15 Reverse options</a>.</p>
             </section>
 
             <section class="doc-section" id="direct" aria-labelledby="direct-heading">
               <h2 id="direct-heading">10. Direct Devanagari ↔ Gujarati</h2>
               <aside class="callout callout-warn">
-                <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
-                <p><strong>Import note:</strong> In JavaScript (<code>import { ... } from 'lipimala'</code>), Python (<code>from lipimala import ...</code>), Dart (<code>import 'package:lipimala/lipimala.dart'</code>), and PHP (<code>namespace Lipimala</code>), direct script functions are re-exported directly on the primary library root for seamless usage.</p>
+                <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M12 9v4M12 17h.01" />
+                  <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+                </svg>
+                <p><strong>Import note:</strong> In JavaScript (<code>import { ... } from 'lipimala'</code>), Python
+                  (<code>from lipimala import ...</code>), Dart (<code>import 'package:lipimala/lipimala.dart'</code>),
+                  and PHP (<code>namespace Lipimala</code>), direct script functions are re-exported directly on the
+                  primary library root for seamless usage.</p>
               </aside>
 
-              <p class="section-lead">Direct script conversion maps characters natively between Devanagari and Gujarati. Because the two scripts have unequal Unicode repertoires, Lipimala supports direct-script metadata trailers (using markers <code>DEV1</code> and <code>GUJ1</code>) for 100% exact round-trip source script recovery.</p>
+              <p class="section-lead">Direct script conversion maps characters natively between Devanagari and Gujarati.
+                Because the two scripts have unequal Unicode repertoires, Lipimala supports direct-script metadata
+                trailers (using markers <code>DEV1</code> and <code>GUJ1</code>) for 100% exact round-trip source script
+                recovery.</p>
 
               <div class="table-wrap" role="region" aria-labelledby="cap-direct-fns" tabindex="0">
                 <table>
@@ -824,58 +1127,90 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                   </thead>
                   <tbody>
                     <tr>
-                      <th scope="row"><code>toGujaratiFromDevanagari(input, options?)</code><br><code>to_gujarati_from_devanagari()</code></th>
+                      <th scope="row">
+                        <code>toGujaratiFromDevanagari(input, options?)</code><br><code>to_gujarati_from_devanagari()</code>
+                      </th>
                       <td><code>input</code>: string<br><code>options</code>: IndicScriptConversionOptions?</td>
                       <td><code>string</code></td>
-                      <td><strong>Smart Direct Conversion:</strong> Converts Devanagari to Gujarati. If an exact Gujarati source trailer (<code>GUJ1</code>) is present, recovers original Gujarati; otherwise performs canonical conversion.</td>
+                      <td><strong>Smart Direct Conversion:</strong> Converts Devanagari to Gujarati. If an exact
+                        Gujarati source trailer (<code>GUJ1</code>) is present, recovers original Gujarati; otherwise
+                        performs canonical conversion.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>toCanonicalGujaratiFromDevanagari(input, options?)</code><br><code>to_canonical_gujarati_from_devanagari()</code></th>
+                      <th scope="row">
+                        <code>toCanonicalGujaratiFromDevanagari(input, options?)</code><br><code>to_canonical_gujarati_from_devanagari()</code>
+                      </th>
                       <td><code>input</code>: string<br><code>options</code>: IndicScriptConversionOptions?</td>
                       <td><code>string</code></td>
-                      <td><strong>Canonical Conversion:</strong> Maps Devanagari code points directly to Gujarati equivalents, ignoring any metadata trailers.</td>
+                      <td><strong>Canonical Conversion:</strong> Maps Devanagari code points directly to Gujarati
+                        equivalents, ignoring any metadata trailers.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>toExactGujaratiFromDevanagari(input)</code><br><code>to_exact_gujarati_from_devanagari()</code></th>
+                      <th scope="row">
+                        <code>toExactGujaratiFromDevanagari(input)</code><br><code>to_exact_gujarati_from_devanagari()</code>
+                      </th>
                       <td><code>input</code>: string</td>
                       <td><code>string</code></td>
-                      <td><strong>Strict Exact Recovery:</strong> Decodes exact Gujarati source trailer (<code>GUJ1</code>). Returns exact original Gujarati input text. Throws/raises an error if trailer is missing or invalid.</td>
+                      <td><strong>Strict Exact Recovery:</strong> Decodes exact Gujarati source trailer
+                        (<code>GUJ1</code>). Returns exact original Gujarati input text. Throws/raises an error if
+                        trailer is missing or invalid.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>hasExactGujaratiSourceMetadata(input)</code><br><code>has_exact_gujarati_source_metadata()</code></th>
+                      <th scope="row">
+                        <code>hasExactGujaratiSourceMetadata(input)</code><br><code>has_exact_gujarati_source_metadata()</code>
+                      </th>
                       <td><code>input</code>: string</td>
                       <td><code>bool</code></td>
-                      <td>Returns <code>true</code> if the input text contains a valid direct Gujarati exact-source metadata trailer (<code>GUJ1</code>).</td>
+                      <td>Returns <code>true</code> if the input text contains a valid direct Gujarati exact-source
+                        metadata trailer (<code>GUJ1</code>).</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>toDevanagariFromGujarati(input, options?)</code><br><code>to_devanagari_from_gujarati()</code></th>
+                      <th scope="row">
+                        <code>toDevanagariFromGujarati(input, options?)</code><br><code>to_devanagari_from_gujarati()</code>
+                      </th>
                       <td><code>input</code>: string<br><code>options</code>: IndicScriptConversionOptions?</td>
                       <td><code>string</code></td>
-                      <td><strong>Smart Direct Conversion:</strong> Converts Gujarati to Devanagari. Recovers exact Devanagari if a <code>DEV1</code> trailer is present; otherwise performs canonical conversion.</td>
+                      <td><strong>Smart Direct Conversion:</strong> Converts Gujarati to Devanagari. Recovers exact
+                        Devanagari if a <code>DEV1</code> trailer is present; otherwise performs canonical conversion.
+                      </td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>toCanonicalDevanagariFromGujarati(input, options?)</code><br><code>to_canonical_devanagari_from_gujarati()</code></th>
+                      <th scope="row">
+                        <code>toCanonicalDevanagariFromGujarati(input, options?)</code><br><code>to_canonical_devanagari_from_gujarati()</code>
+                      </th>
                       <td><code>input</code>: string<br><code>options</code>: IndicScriptConversionOptions?</td>
                       <td><code>string</code></td>
-                      <td><strong>Canonical Conversion:</strong> Maps Gujarati code points directly to Devanagari equivalents, ignoring metadata trailers.</td>
+                      <td><strong>Canonical Conversion:</strong> Maps Gujarati code points directly to Devanagari
+                        equivalents, ignoring metadata trailers.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>toExactDevanagariFromGujarati(input)</code><br><code>to_exact_devanagari_from_gujarati()</code></th>
+                      <th scope="row">
+                        <code>toExactDevanagariFromGujarati(input)</code><br><code>to_exact_devanagari_from_gujarati()</code>
+                      </th>
                       <td><code>input</code>: string</td>
                       <td><code>string</code></td>
-                      <td><strong>Strict Exact Recovery:</strong> Decodes exact Devanagari source trailer (<code>DEV1</code>). Returns exact original Devanagari text. Throws/raises an error if trailer is missing or invalid.</td>
+                      <td><strong>Strict Exact Recovery:</strong> Decodes exact Devanagari source trailer
+                        (<code>DEV1</code>). Returns exact original Devanagari text. Throws/raises an error if trailer
+                        is missing or invalid.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>hasExactDevanagariSourceMetadata(input)</code><br><code>has_exact_devanagari_source_metadata()</code></th>
+                      <th scope="row">
+                        <code>hasExactDevanagariSourceMetadata(input)</code><br><code>has_exact_devanagari_source_metadata()</code>
+                      </th>
                       <td><code>input</code>: string</td>
                       <td><code>bool</code></td>
-                      <td>Returns <code>true</code> if the input text contains a valid direct Devanagari exact-source metadata trailer (<code>DEV1</code>).</td>
+                      <td>Returns <code>true</code> if the input text contains a valid direct Devanagari exact-source
+                        metadata trailer (<code>DEV1</code>).</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>visibleWithoutExactSourceMetadata(input)</code><br><code>visible_without_exact_source_metadata()</code></th>
+                      <th scope="row">
+                        <code>visibleWithoutExactSourceMetadata(input)</code><br><code>visible_without_exact_source_metadata()</code>
+                      </th>
                       <td><code>input</code>: string</td>
                       <td><code>string</code></td>
-                      <td>Strips any embedded metadata trailer (whether Latin <code>LIT1</code>, Devanagari <code>DEV1</code>, or Gujarati <code>GUJ1</code>) and returns clean visible script text.</td>
+                      <td>Strips any embedded metadata trailer (whether Latin <code>LIT1</code>, Devanagari
+                        <code>DEV1</code>, or Gujarati <code>GUJ1</code>) and returns clean visible script text.
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -884,8 +1219,10 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
 
             <section class="doc-section" id="metadata" aria-labelledby="metadata-heading">
               <h2 id="metadata-heading">11. Metadata &amp; Unicode helpers</h2>
-              <p class="section-lead">Low-level functions for manually manipulating embedded Unicode tag trailers, decoding checksummed metadata payloads, and performing Unicode 17.0.0 normalization and mark classification.</p>
-              
+              <p class="section-lead">Low-level functions for manually manipulating embedded Unicode tag trailers,
+                decoding checksummed metadata payloads, and performing Unicode 17.0.0 normalization and mark
+                classification.</p>
+
               <div class="table-wrap" role="region" aria-labelledby="cap-metadata" tabindex="0">
                 <table>
                   <caption id="cap-metadata">Shared metadata &amp; Unicode utility functions</caption>
@@ -899,52 +1236,76 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                   </thead>
                   <tbody>
                     <tr>
-                      <th scope="row"><code>embedExactSourceMetadata(rendered, originalSource)</code><br><code>embed_exact_source_metadata()</code></th>
+                      <th scope="row">
+                        <code>embedExactSourceMetadata(rendered, originalSource)</code><br><code>embed_exact_source_metadata()</code>
+                      </th>
                       <td><code>rendered</code>: string<br><code>originalSource</code>: string</td>
                       <td><code>string</code></td>
-                      <td>Manually attaches an invisible Unicode tag trailer encoding <code>originalSource</code> onto the end of <code>rendered</code> visible script string.</td>
+                      <td>Manually attaches an invisible Unicode tag trailer encoding <code>originalSource</code> onto
+                        the end of <code>rendered</code> visible script string.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>tryDecodeExactSourceMetadata(text)</code><br><code>try_decode_exact_source_metadata()</code></th>
+                      <th scope="row">
+                        <code>tryDecodeExactSourceMetadata(text)</code><br><code>try_decode_exact_source_metadata()</code>
+                      </th>
                       <td><code>text</code>: string</td>
                       <td><code>EmbeddedExactSource | null</code></td>
-                      <td>Parses and verifies checksums of any embedded metadata trailer. Returns an <code>EmbeddedExactSource</code> object if valid, or <code>null</code> if missing/corrupted.</td>
+                      <td>Parses and verifies checksums of any embedded metadata trailer. Returns an
+                        <code>EmbeddedExactSource</code> object if valid, or <code>null</code> if missing/corrupted.
+                      </td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>stripExactSourceMetadata(text)</code><br><code>strip_exact_source_metadata()</code></th>
+                      <th scope="row">
+                        <code>stripExactSourceMetadata(text)</code><br><code>strip_exact_source_metadata()</code>
+                      </th>
                       <td><code>text</code>: string</td>
                       <td><code>string</code></td>
-                      <td>Strips any trailing invisible Unicode tag metadata sequence from <code>text</code>, returning pure display-only visible script string.</td>
+                      <td>Strips any trailing invisible Unicode tag metadata sequence from <code>text</code>, returning
+                        pure display-only visible script string.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>recoverEmbeddedExactSource(text)</code><br><code>recover_embedded_exact_source()</code></th>
+                      <th scope="row">
+                        <code>recoverEmbeddedExactSource(text)</code><br><code>recover_embedded_exact_source()</code>
+                      </th>
                       <td><code>text</code>: string</td>
                       <td><code>string</code></td>
-                      <td>Decodes embedded metadata trailer and returns original source text. Throws/raises an exception if metadata is missing or invalid.</td>
+                      <td>Decodes embedded metadata trailer and returns original source text. Throws/raises an exception
+                        if metadata is missing or invalid.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>hasEmbeddedExactSource(text)</code><br><code>has_embedded_exact_source()</code></th>
+                      <th scope="row">
+                        <code>hasEmbeddedExactSource(text)</code><br><code>has_embedded_exact_source()</code>
+                      </th>
                       <td><code>text</code>: string</td>
                       <td><code>bool</code></td>
-                      <td>Returns <code>true</code> if <code>text</code> ends with a valid, checksum-verified embedded exact-source metadata trailer.</td>
+                      <td>Returns <code>true</code> if <code>text</code> ends with a valid, checksum-verified embedded
+                        exact-source metadata trailer.</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>normalizeUnicode(input, form)</code><br><code>normalize_unicode()</code></th>
+                      <th scope="row"><code>normalizeUnicode(input, form)</code><br><code>normalize_unicode()</code>
+                      </th>
                       <td><code>input</code>: string<br><code>form</code>: UnicodeNormalizationForm</td>
                       <td><code>string</code></td>
-                      <td>Performs canonical Unicode normalization (<code>NFC</code>, <code>NFD</code>, <code>NFKC</code>, or <code>NFKD</code>) using Unicode 17.0.0 rules.</td>
+                      <td>Performs canonical Unicode normalization (<code>NFC</code>, <code>NFD</code>,
+                        <code>NFKC</code>, or <code>NFKD</code>) using Unicode 17.0.0 rules.
+                      </td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>isUnicodeCombiningMark(value)</code><br><code>is_unicode_combining_mark()</code></th>
+                      <th scope="row">
+                        <code>isUnicodeCombiningMark(value)</code><br><code>is_unicode_combining_mark()</code>
+                      </th>
                       <td><code>value</code>: string | int (char/code point)</td>
                       <td><code>bool</code></td>
-                      <td>Returns <code>true</code> if the specified character or code point is classified as a Unicode combining mark (Mn, Mc, or Me).</td>
+                      <td>Returns <code>true</code> if the specified character or code point is classified as a Unicode
+                        combining mark (Mn, Mc, or Me).</td>
                     </tr>
                     <tr>
-                      <th scope="row"><code>isEncodedVedicMark(value)</code><br><code>is_encoded_vedic_mark()</code></th>
+                      <th scope="row"><code>isEncodedVedicMark(value)</code><br><code>is_encoded_vedic_mark()</code>
+                      </th>
                       <td><code>value</code>: string | int (char/code point)</td>
                       <td><code>bool</code></td>
-                      <td>Returns <code>true</code> if the specified character or code point is a recognized Vedic accent mark (e.g., svara, anudātta, svarita).</td>
+                      <td>Returns <code>true</code> if the specified character or code point is a recognized Vedic
+                        accent mark (e.g., svara, anudātta, svarita).</td>
                     </tr>
                   </tbody>
                 </table>
@@ -959,27 +1320,79 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                 <table>
                   <caption id="cap-result-fields">Envelope fields and methods</caption>
                   <thead>
-                    <tr><th scope="col">Field / method</th><th scope="col">Type</th><th scope="col">Description</th></tr>
+                    <tr>
+                      <th scope="col">Field / method</th>
+                      <th scope="col">Type</th>
+                      <th scope="col">Description</th>
+                    </tr>
                   </thead>
                   <tbody>
-                    <tr><th scope="row"><code>original</code></th><td>string</td><td>Exact source string from caller</td></tr>
-                    <tr><th scope="row"><code>normalizedInput</code></th><td>string</td><td>Source after input normalization</td></tr>
-                    <tr><th scope="row"><code>rendered</code></th><td>string</td><td>Converted view (may include trailer)</td></tr>
-                    <tr><th scope="row"><code>profile</code></th><td>TransliterationProfile</td><td>Profile used for this conversion</td></tr>
-                    <tr><th scope="row"><code>inputNormalization</code> / <code>outputNormalization</code></th><td>UnicodeNormalizationForm</td><td>Forms applied</td></tr>
-                    <tr><th scope="row"><code>renderingIsInjective</code></th><td>bool</td><td>Always false for these views</td></tr>
-                    <tr><th scope="row"><code>issues</code></th><td>list of TransliterationIssue</td><td>Diagnostics</td></tr>
-                    <tr><th scope="row"><code>originalCodePoints</code></th><td>list&lt;int&gt;</td><td>Integrity codes of original</td></tr>
-                    <tr><th scope="row"><code>restoreOriginal()</code></th><td>string</td><td>Returns <code>original</code></td></tr>
-                    <tr><th scope="row"><code>hasErrors</code></th><td>bool</td><td>Any issue with severity error</td></tr>
-                    <tr><th scope="row"><code>toJson()</code> / <code>fromJson</code></th><td>object / factory</td><td>Serialize / rebuild with integrity check</td></tr>
-                    <tr><th scope="row"><code>toJsonText</code> / <code>fromJsonText</code></th><td>string / factory</td><td>JSON text form</td></tr>
+                    <tr>
+                      <th scope="row"><code>original</code></th>
+                      <td>string</td>
+                      <td>Exact source string from caller</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>normalizedInput</code></th>
+                      <td>string</td>
+                      <td>Source after input normalization</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>rendered</code></th>
+                      <td>string</td>
+                      <td>Converted view (may include trailer)</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>profile</code></th>
+                      <td>TransliterationProfile</td>
+                      <td>Profile used for this conversion</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>inputNormalization</code> / <code>outputNormalization</code></th>
+                      <td>UnicodeNormalizationForm</td>
+                      <td>Forms applied</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>renderingIsInjective</code></th>
+                      <td>bool</td>
+                      <td>Always false for these views</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>issues</code></th>
+                      <td>list of TransliterationIssue</td>
+                      <td>Diagnostics</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>originalCodePoints</code></th>
+                      <td>list&lt;int&gt;</td>
+                      <td>Integrity codes of original</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>restoreOriginal()</code></th>
+                      <td>string</td>
+                      <td>Returns <code>original</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>hasErrors</code></th>
+                      <td>bool</td>
+                      <td>Any issue with severity error</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>toJson()</code> / <code>fromJson</code></th>
+                      <td>object / factory</td>
+                      <td>Serialize / rebuild with integrity check</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><code>toJsonText</code> / <code>fromJsonText</code></th>
+                      <td>string / factory</td>
+                      <td>JSON text form</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
 
               <h3 id="json-envelope">JSON envelope shape</h3>
-<pre data-lang="JSON"><code class="language-json">{
+              <pre data-lang="JSON"><code class="language-json">{
   "schema": "indic-script-converter/1" | "exact round-trip-indic-transliteration/1",
   "original": "Kṛṣṇa",
   "originalCodePoints": [75, 7771, 7779, 7751, 97],
@@ -999,13 +1412,33 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                 <table>
                   <caption id="cap-issue">Issue object fields</caption>
                   <thead>
-                    <tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Default</th></tr>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Type</th>
+                      <th scope="col">Default</th>
+                    </tr>
                   </thead>
                   <tbody>
-                    <tr><th scope="row">code</th><td>string</td><td>required</td></tr>
-                    <tr><th scope="row">message</th><td>string</td><td>required</td></tr>
-                    <tr><th scope="row">severity</th><td>info | warning | error</td><td>warning</td></tr>
-                    <tr><th scope="row">sourceRuneOffset</th><td>int | null</td><td>null</td></tr>
+                    <tr>
+                      <th scope="row">code</th>
+                      <td>string</td>
+                      <td>required</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">message</th>
+                      <td>string</td>
+                      <td>required</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">severity</th>
+                      <td>info | warning | error</td>
+                      <td>warning</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">sourceRuneOffset</th>
+                      <td>int | null</td>
+                      <td>null</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -1021,22 +1454,92 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                 <table>
                   <caption id="cap-forward-opts">Forward conversion option fields</caption>
                   <thead>
-                    <tr><th scope="col">Field</th><th scope="col">Values</th><th scope="col">Default</th><th scope="col">Effect</th></tr>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Values</th>
+                      <th scope="col">Default</th>
+                      <th scope="col">Effect</th>
+                    </tr>
                   </thead>
                   <tbody>
-                    <tr><th scope="row">profile</th><td>strictIast | iso15919Core | extendedIndic</td><td>extendedIndic</td><td>Accepted Latin inventory</td></tr>
-                    <tr><th scope="row">unknownLatinPolicy</th><td>passThrough | bracket | throwError</td><td>passThrough</td><td>Unknown Latin handling</td></tr>
-                    <tr><th scope="row">digitPolicy</th><td>preserveAscii | convertToScript</td><td>preserveAscii</td><td>ASCII vs script digits</td></tr>
-                    <tr><th scope="row">punctuationPolicy</th><td>preserve | indicDanda</td><td>preserve</td><td>Period → danda</td></tr>
-                    <tr><th scope="row">omPolicy</th><td>transliterateLetters | useOmSign</td><td>transliterateLetters</td><td>oṃ → letters vs ॐ/ૐ</td></tr>
-                    <tr><th scope="row">ambiguousLPolicy</th><td>context | preferVocalic | preferConsonant</td><td>context</td><td>Resolve ḷ</td></tr>
-                    <tr><th scope="row">acceptAsciiLongVowels</th><td>bool</td><td>false</td><td>Allow aa/ii/uu</td></tr>
-                    <tr><th scope="row">acceptPlainSh</th><td>bool</td><td>true</td><td>Plain <code>sh</code></td></tr>
-                    <tr><th scope="row">acceptPlainXAsKha</th><td>bool</td><td>true</td><td>Compatibility for <code>x</code></td></tr>
-                    <tr><th scope="row">acceptWAsVa</th><td>bool</td><td>true</td><td>Treat <code>w</code> as <code>v</code></td></tr>
-                    <tr><th scope="row">preserveVedicAccentMarks</th><td>bool</td><td>true</td><td>Keep svara marks</td></tr>
-                    <tr><th scope="row">collapseWhitespace</th><td>bool</td><td>false</td><td>Collapse whitespace runs</td></tr>
-                    <tr><th scope="row">embedExactSourceMetadata</th><td>bool</td><td>false</td><td>Append exact-source trailer</td></tr>
+                    <tr>
+                      <th scope="row">profile</th>
+                      <td>strictIast | iso15919Core | extendedIndic</td>
+                      <td>extendedIndic</td>
+                      <td>Accepted Latin inventory</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">unknownLatinPolicy</th>
+                      <td>passThrough | bracket | throwError</td>
+                      <td>passThrough</td>
+                      <td>Unknown Latin handling</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">digitPolicy</th>
+                      <td>preserveAscii | convertToScript</td>
+                      <td>preserveAscii</td>
+                      <td>ASCII vs script digits</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">punctuationPolicy</th>
+                      <td>preserve | indicDanda</td>
+                      <td>preserve</td>
+                      <td>Period → danda</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">omPolicy</th>
+                      <td>transliterateLetters | useOmSign</td>
+                      <td>transliterateLetters</td>
+                      <td>oṃ → letters vs ॐ/ૐ</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">ambiguousLPolicy</th>
+                      <td>context | preferVocalic | preferConsonant</td>
+                      <td>context</td>
+                      <td>Resolve ḷ</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">acceptAsciiLongVowels</th>
+                      <td>bool</td>
+                      <td>false</td>
+                      <td>Allow aa/ii/uu</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">acceptPlainSh</th>
+                      <td>bool</td>
+                      <td>true</td>
+                      <td>Plain <code>sh</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">acceptPlainXAsKha</th>
+                      <td>bool</td>
+                      <td>true</td>
+                      <td>Compatibility for <code>x</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">acceptWAsVa</th>
+                      <td>bool</td>
+                      <td>true</td>
+                      <td>Treat <code>w</code> as <code>v</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">preserveVedicAccentMarks</th>
+                      <td>bool</td>
+                      <td>true</td>
+                      <td>Keep svara marks</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">collapseWhitespace</th>
+                      <td>bool</td>
+                      <td>false</td>
+                      <td>Collapse whitespace runs</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">embedExactSourceMetadata</th>
+                      <td>bool</td>
+                      <td>false</td>
+                      <td>Append exact-source trailer</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -1050,22 +1553,92 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                 <table>
                   <caption id="cap-plain-opts">Plain-English / Hunterian option fields</caption>
                   <thead>
-                    <tr><th scope="col">Field</th><th scope="col">Values</th><th scope="col">Default</th><th scope="col">Effect</th></tr>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Values</th>
+                      <th scope="col">Default</th>
+                      <th scope="col">Effect</th>
+                    </tr>
                   </thead>
                   <tbody>
-                    <tr><th scope="row">finalA</th><td>keep | drop | smart</td><td>smart</td><td>Trailing inherent a</td></tr>
-                    <tr><th scope="row">jna</th><td>gya | jnya | jna</td><td>gya</td><td>jñ conjunct</td></tr>
-                    <tr><th scope="row">nya</th><td>na | nya | gna</td><td>na</td><td>Standalone ñ</td></tr>
-                    <tr><th scope="row">profile</th><td>strictIast | extendedIndic | hunterian</td><td>extendedIndic</td><td>Input inventory / style</td></tr>
-                    <tr><th scope="row">glottalStop</th><td>remove | apostrophe</td><td>remove</td><td>ʔ handling</td></tr>
-                    <tr><th scope="row">convertCToCh</th><td>bool</td><td>true</td><td>c → ch style</td></tr>
-                    <tr><th scope="row">assimilateAnusvara</th><td>bool</td><td>true</td><td>Anusvara assimilation</td></tr>
-                    <tr><th scope="row">removeAvagraha</th><td>bool</td><td>true</td><td>Strip avagraha-like marks</td></tr>
-                    <tr><th scope="row">collapseWhitespace</th><td>bool</td><td>false</td><td>Whitespace collapse</td></tr>
-                    <tr><th scope="row">enableInternalSchwaSyncope</th><td>bool</td><td>false</td><td>Hunterian schwa drop</td></tr>
-                    <tr><th scope="row">useWForVAfterConsonants</th><td>bool</td><td>false</td><td>Hunterian v/w</td></tr>
-                    <tr><th scope="row">preserveVedicAccentMarks</th><td>bool</td><td>false</td><td>Usually stripped</td></tr>
-                    <tr><th scope="row">keepFinalAForWords</th><td>set/list</td><td>empty</td><td>Force keep final a</td></tr>
+                    <tr>
+                      <th scope="row">finalA</th>
+                      <td>keep | drop | smart</td>
+                      <td>smart</td>
+                      <td>Trailing inherent a</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">jna</th>
+                      <td>gya | jnya | jna</td>
+                      <td>gya</td>
+                      <td>jñ conjunct</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">nya</th>
+                      <td>na | nya | gna</td>
+                      <td>na</td>
+                      <td>Standalone ñ</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">profile</th>
+                      <td>strictIast | extendedIndic | hunterian</td>
+                      <td>extendedIndic</td>
+                      <td>Input inventory / style</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">glottalStop</th>
+                      <td>remove | apostrophe</td>
+                      <td>remove</td>
+                      <td>ʔ handling</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">convertCToCh</th>
+                      <td>bool</td>
+                      <td>true</td>
+                      <td>c → ch style</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">assimilateAnusvara</th>
+                      <td>bool</td>
+                      <td>true</td>
+                      <td>Anusvara assimilation</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">removeAvagraha</th>
+                      <td>bool</td>
+                      <td>true</td>
+                      <td>Strip avagraha-like marks</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">collapseWhitespace</th>
+                      <td>bool</td>
+                      <td>false</td>
+                      <td>Whitespace collapse</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">enableInternalSchwaSyncope</th>
+                      <td>bool</td>
+                      <td>false</td>
+                      <td>Hunterian schwa drop</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">useWForVAfterConsonants</th>
+                      <td>bool</td>
+                      <td>false</td>
+                      <td>Hunterian v/w</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">preserveVedicAccentMarks</th>
+                      <td>bool</td>
+                      <td>false</td>
+                      <td>Usually stripped</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">keepFinalAForWords</th>
+                      <td>set/list</td>
+                      <td>empty</td>
+                      <td>Force keep final a</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -1074,7 +1647,8 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
             <section class="doc-section" id="opts-reverse" aria-labelledby="opts-reverse-heading">
               <h2 id="opts-reverse-heading">15. Reverse options</h2>
               <h3 id="script-to-iast-options-detail">ScriptToIastOptions</h3>
-              <p class="section-lead">Options class controlling Brahmic → IAST reverse transliteration (Devanagari → IAST and Gujarati → IAST).</p>
+              <p class="section-lead">Options class controlling Brahmic → IAST reverse transliteration (Devanagari →
+                IAST and Gujarati → IAST).</p>
 
               <div class="table-wrap" role="region" aria-labelledby="cap-reverse-opts-detail" tabindex="0">
                 <table>
@@ -1090,45 +1664,57 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                   <tbody>
                     <tr>
                       <th scope="row"><code>targetProfile</code></th>
-                      <td><code>TransliterationProfile</code><br>(<code>strictIast</code> | <code>extendedIndic</code>)</td>
+                      <td><code>TransliterationProfile</code><br>(<code>strictIast</code> | <code>extendedIndic</code>)
+                      </td>
                       <td><code>strictIast</code></td>
-                      <td>Target character inventory profile for visible reverse mapping. <code>strictIast</code> uses standard academic IAST diacritics.</td>
+                      <td>Target character inventory profile for visible reverse mapping. <code>strictIast</code> uses
+                        standard academic IAST diacritics.</td>
                     </tr>
                     <tr>
                       <th scope="row"><code>preserveVedicAccents</code></th>
                       <td><code>bool</code></td>
                       <td><code>true</code></td>
-                      <td>When <code>true</code>, preserves Vedic accent marks (svara, anudātta, svarita) in the reversed IAST output.</td>
+                      <td>When <code>true</code>, preserves Vedic accent marks (svara, anudātta, svarita) in the
+                        reversed IAST output.</td>
                     </tr>
                     <tr>
                       <th scope="row"><code>unknownPolicy</code></th>
                       <td><code>passThrough</code> | <code>bracket</code> | <code>throwError</code></td>
                       <td><code>passThrough</code></td>
-                      <td>Policy for unmapped input characters. <code>passThrough</code> keeps them as-is; <code>bracket</code> wraps them in <code>[...]</code>; <code>throwError</code> raises an exception.</td>
+                      <td>Policy for unmapped input characters. <code>passThrough</code> keeps them as-is;
+                        <code>bracket</code> wraps them in <code>[...]</code>; <code>throwError</code> raises an
+                        exception.
+                      </td>
                     </tr>
                     <tr>
                       <th scope="row"><code>digitPolicy</code></th>
                       <td><code>preserveScriptDigits</code> | <code>convertToAsciiDigits</code></td>
                       <td><code>preserveScriptDigits</code></td>
-                      <td>Determines whether Indic script digits (e.g. <code>०-९</code> or <code>૦-૯</code>) are converted to ASCII digits (<code>0-9</code>) or preserved.</td>
+                      <td>Determines whether Indic script digits (e.g. <code>०-९</code> or <code>૦-૯</code>) are
+                        converted to ASCII digits (<code>0-9</code>) or preserved.</td>
                     </tr>
                     <tr>
                       <th scope="row"><code>punctuationPolicy</code></th>
                       <td><code>preserveDanda</code> | <code>convertToPeriod</code></td>
                       <td><code>preserveDanda</code></td>
-                      <td>Determines whether Indic dandas (<code>।</code>, <code>॥</code>) are converted to standard periods (<code>.</code>) or preserved.</td>
+                      <td>Determines whether Indic dandas (<code>।</code>, <code>॥</code>) are converted to standard
+                        periods (<code>.</code>) or preserved.</td>
                     </tr>
                     <tr>
                       <th scope="row"><code>collapseWhitespace</code></th>
                       <td><code>bool</code></td>
                       <td><code>false</code></td>
-                      <td>When <code>true</code>, collapses multiple consecutive whitespace characters into a single space.</td>
+                      <td>When <code>true</code>, collapses multiple consecutive whitespace characters into a single
+                        space.</td>
                     </tr>
                     <tr>
                       <th scope="row"><code>ignoreEmbeddedMetadata</code></th>
                       <td><code>bool</code></td>
                       <td><code>false</code></td>
-                      <td>When <code>true</code>, forces <code>toIastFromDevanagari()</code> / <code>toIastFromGujarati()</code> to ignore any embedded metadata trailer and execute canonical visible reverse.</td>
+                      <td>When <code>true</code>, forces <code>toIastFromDevanagari()</code> /
+                        <code>toIastFromGujarati()</code> to ignore any embedded metadata trailer and execute canonical
+                        visible reverse.
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -1142,15 +1728,50 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                 <table>
                   <caption id="cap-direct-opts">Direct Devanagari ↔ Gujarati options</caption>
                   <thead>
-                    <tr><th scope="col">Field</th><th scope="col">Values</th><th scope="col">Default</th><th scope="col">Effect</th></tr>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Values</th>
+                      <th scope="col">Default</th>
+                      <th scope="col">Effect</th>
+                    </tr>
                   </thead>
                   <tbody>
-                    <tr><th scope="row">inputNormalization</th><td>preserve | nfc | nfd</td><td>nfd</td><td>Input normalize</td></tr>
-                    <tr><th scope="row">outputNormalization</th><td>preserve | nfc | nfd</td><td>nfc</td><td>Output normalize</td></tr>
-                    <tr><th scope="row">unknownPolicy</th><td>preserve | throwError</td><td>preserve</td><td>Unmapped chars</td></tr>
-                    <tr><th scope="row">digitPolicy</th><td>convertToTarget | preserveSource</td><td>convertToTarget</td><td>Digit block conversion</td></tr>
-                    <tr><th scope="row">collapseWhitespace</th><td>bool</td><td>false</td><td>Whitespace collapse</td></tr>
-                    <tr><th scope="row">embedExactSourceMetadata</th><td>bool</td><td>false</td><td>Typed exact source trailer</td></tr>
+                    <tr>
+                      <th scope="row">inputNormalization</th>
+                      <td>preserve | nfc | nfd</td>
+                      <td>nfd</td>
+                      <td>Input normalize</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">outputNormalization</th>
+                      <td>preserve | nfc | nfd</td>
+                      <td>nfc</td>
+                      <td>Output normalize</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">unknownPolicy</th>
+                      <td>preserve | throwError</td>
+                      <td>preserve</td>
+                      <td>Unmapped chars</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">digitPolicy</th>
+                      <td>convertToTarget | preserveSource</td>
+                      <td>convertToTarget</td>
+                      <td>Digit block conversion</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">collapseWhitespace</th>
+                      <td>bool</td>
+                      <td>false</td>
+                      <td>Whitespace collapse</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">embedExactSourceMetadata</th>
+                      <td>bool</td>
+                      <td>false</td>
+                      <td>Typed exact source trailer</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -1158,14 +1779,25 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
 
             <section class="doc-section" id="lang-dart" aria-labelledby="lang-dart-heading">
               <h2 id="lang-dart-heading">17. Dart-specific notes</h2>
-              <p class="section-lead">The Dart implementation (<code>package:lipimala</code>) targets Dart 3.0+ and Flutter. It exposes both functional APIs and natural <strong>extensions on String</strong>.</p>
-              
+              <p class="section-lead">The Dart implementation (<code>package:lipimala</code>) targets Dart 3.0+ and
+                Flutter. It exposes both functional APIs and natural <strong>extensions on String</strong>.</p>
+
               <ul>
-                <li><strong>Primary Barrel Import:</strong> <code>import 'package:lipimala/lipimala.dart';</code> (exports all converters, options, enums, and result models).</li>
-                <li><strong>String Extension APIs:</strong> Call <code>'Kṛṣṇa'.toDevanagari()</code>, <code>'Kṛṣṇa'.toGujarati()</code>, <code>'Kṛṣṇa'.toPlainEnglish()</code> directly on String instances.</li>
-                <li><strong>String Subclass Returns:</strong> Forward string converters return <code>IastToDevanagariString</code>, <code>IastToGujaratiString</code>, and <code>IastToPlainEnglish</code> subclasses which provide <code>.toExactIast()</code> and <code>.restoreOriginal()</code> helper methods.</li>
-                <li><strong>Option Constructors:</strong> Options use named parameters with defaults: <code>IastToDevanagariOptions(profile: DevanagariRomanizationProfile.extendedIndic, embedExactSourceMetadata: true)</code>.</li>
-                <li><strong>Error Handling:</strong> Throws <code>ArgumentError</code> on invalid options or corrupted metadata trailers.</li>
+                <li><strong>Primary Barrel Import:</strong> <code>import 'package:lipimala/lipimala.dart';</code>
+                  (exports all converters, options, enums, and result models).</li>
+                <li><strong>String Extension APIs:</strong> Call <code>'Kṛṣṇa'.toDevanagari()</code>,
+                  <code>'Kṛṣṇa'.toGujarati()</code>, <code>'Kṛṣṇa'.toPlainEnglish()</code> directly on String instances.
+                </li>
+                <li><strong>String Subclass Returns:</strong> Forward string converters return
+                  <code>IastToDevanagariString</code>, <code>IastToGujaratiString</code>, and
+                  <code>IastToPlainEnglish</code> subclasses which provide <code>.toExactIast()</code> and
+                  <code>.restoreOriginal()</code> helper methods.
+                </li>
+                <li><strong>Option Constructors:</strong> Options use named parameters with defaults:
+                  <code>IastToDevanagariOptions(profile: DevanagariRomanizationProfile.extendedIndic, embedExactSourceMetadata: true)</code>.
+                </li>
+                <li><strong>Error Handling:</strong> Throws <code>ArgumentError</code> on invalid options or corrupted
+                  metadata trailers.</li>
               </ul>
 
               <h3 id="dart-runnable-example">Complete Runnable Dart Example</h3>
@@ -1196,14 +1828,27 @@ void main() {
 
             <section class="doc-section" id="lang-js" aria-labelledby="lang-js-heading">
               <h2 id="lang-js-heading">18. JavaScript-specific notes</h2>
-              <p class="section-lead">The JavaScript implementation supports Node.js ≥ 20 and modern browsers via ES Modules (ESM) and CommonJS (CJS).</p>
-              
+              <p class="section-lead">The JavaScript implementation supports Node.js ≥ 20 and modern browsers via ES
+                Modules (ESM) and CommonJS (CJS).</p>
+
               <ul>
-                <li><strong>Module Imports:</strong> ESM: <code>import { toDevanagari, toDevanagariFromIast } from 'lipimala';</code><br>CommonJS: <code>const { toDevanagari, toDevanagariFromIast } = require('lipimala');</code></li>
-                <li><strong>Dual Export Naming:</strong> Exports both camelCase (<code>toDevanagariFromIast</code>) and snake_case (<code>to_devanagari_from_iast</code>) aliases for all functions.</li>
-                <li><strong>Flexible Options:</strong> Option parameters accept instantiated class objects (<code>new IastToDevanagariOptions({...})</code>) or plain JS objects (<code>{ embedExactSourceMetadata: true }</code>). Both camelCase and snake_case keys are supported.</li>
-                <li><strong>String Subclasses:</strong> String converters return instances of <code>IastToDevanagariString</code>, <code>IastToGujaratiString</code>, or <code>IastToPlainEnglish</code> extending native <code>String</code>, offering <code>.toExactIast()</code>.</li>
-                <li><strong>Error Handling:</strong> Throws standard <code>TypeError</code> or <code>Error</code> on bad arguments or metadata decoding failures.</li>
+                <li><strong>Module Imports:</strong> ESM:
+                  <code>import { toDevanagari, toDevanagariFromIast } from 'lipimala';</code><br>CommonJS:
+                  <code>const { toDevanagari, toDevanagariFromIast } = require('lipimala');</code>
+                </li>
+                <li><strong>Dual Export Naming:</strong> Exports both camelCase (<code>toDevanagariFromIast</code>) and
+                  snake_case (<code>to_devanagari_from_iast</code>) aliases for all functions.</li>
+                <li><strong>Flexible Options:</strong> Option parameters accept instantiated class objects
+                  (<code>new IastToDevanagariOptions({...})</code>) or plain JS objects
+                  (<code>{ embedExactSourceMetadata: true }</code>). Both camelCase and snake_case keys are supported.
+                </li>
+                <li><strong>String Subclasses:</strong> String converters return instances of
+                  <code>IastToDevanagariString</code>, <code>IastToGujaratiString</code>, or
+                  <code>IastToPlainEnglish</code> extending native <code>String</code>, offering
+                  <code>.toExactIast()</code>.
+                </li>
+                <li><strong>Error Handling:</strong> Throws standard <code>TypeError</code> or <code>Error</code> on bad
+                  arguments or metadata decoding failures.</li>
               </ul>
 
               <h3 id="js-runnable-example">Complete Runnable JavaScript Example</h3>
@@ -1232,14 +1877,24 @@ console.assert(exactDeva === result.rendered);</code></pre>
 
             <section class="doc-section" id="lang-py" aria-labelledby="lang-py-heading">
               <h2 id="lang-py-heading">19. Python-specific notes</h2>
-              <p class="section-lead">The Python package (<code>pip install lipimala</code>) requires Python ≥ 3.12, utilizing modern type hints and dataclasses.</p>
-              
+              <p class="section-lead">The Python package (<code>pip install lipimala</code>) requires Python ≥ 3.12,
+                utilizing modern type hints and dataclasses.</p>
+
               <ul>
-                <li><strong>Imports:</strong> Main &amp; direct script converters: <code>from lipimala import to_devanagari, to_devanagari_from_iast, to_devanagari_from_gujarati</code></li>
-                <li><strong>Function &amp; Enum Aliases:</strong> Supports standard Python PEP 8 <code>snake_case</code> functions and camelCase aliases for cross-language parity. Enums inherit <code>(str, Enum)</code> and support both <code>EXTENDED_INDIC</code> and <code>extendedIndic</code> member access.</li>
-                <li><strong>Dataclass Options:</strong> Options are Python <code>@dataclass</code> objects instantiated with keyword arguments: <code>IastToDevanagariOptions(embed_exact_source_metadata=True)</code>.</li>
-                <li><strong>String Subclass Returns:</strong> Returns <code>IastToDevanagariString</code>, <code>IastToGujaratiString</code>, <code>IastToPlainEnglish</code> subclasses of <code>str</code> with <code>.to_exact_iast()</code> / <code>.restore_original()</code>.</li>
-                <li><strong>Error Handling:</strong> Raises <code>ValueError</code> on invalid option configurations or corrupted metadata.</li>
+                <li><strong>Imports:</strong> Main &amp; direct script converters:
+                  <code>from lipimala import to_devanagari, to_devanagari_from_iast, to_devanagari_from_gujarati</code>
+                </li>
+                <li><strong>Function &amp; Enum Aliases:</strong> Supports standard Python PEP 8 <code>snake_case</code>
+                  functions and camelCase aliases for cross-language parity. Enums inherit <code>(str, Enum)</code> and
+                  support both <code>EXTENDED_INDIC</code> and <code>extendedIndic</code> member access.</li>
+                <li><strong>Dataclass Options:</strong> Options are Python <code>@dataclass</code> objects instantiated
+                  with keyword arguments: <code>IastToDevanagariOptions(embed_exact_source_metadata=True)</code>.</li>
+                <li><strong>String Subclass Returns:</strong> Returns <code>IastToDevanagariString</code>,
+                  <code>IastToGujaratiString</code>, <code>IastToPlainEnglish</code> subclasses of <code>str</code> with
+                  <code>.to_exact_iast()</code> / <code>.restore_original()</code>.
+                </li>
+                <li><strong>Error Handling:</strong> Raises <code>ValueError</code> on invalid option configurations or
+                  corrupted metadata.</li>
               </ul>
 
               <h3 id="python-runnable-example">Complete Runnable Python Example</h3>
@@ -1272,14 +1927,24 @@ assert exact_deva == result.rendered</code></pre>
 
             <section class="doc-section" id="lang-php" aria-labelledby="lang-php-heading">
               <h2 id="lang-php-heading">20. PHP-specific notes</h2>
-              <p class="section-lead">The PHP port (<code>composer require jayeshmepani/lipimala</code>) requires PHP ≥ 8.3 with strict typing throughout.</p>
-              
+              <p class="section-lead">The PHP port (<code>composer require jayeshmepani/lipimala</code>) requires PHP ≥
+                8.3 with strict typing throughout.</p>
+
               <ul>
-                <li><strong>Namespace &amp; Autoload:</strong> Namespace <code>Lipimala</code>. Import functions with <code>use function Lipimala\toDevanagariFromIast;</code>.</li>
-                <li><strong>Dual Function Aliases:</strong> Supports both <code>toDevanagariFromIast()</code> and <code>to_devanagari_from_iast()</code> namespaced functions.</li>
-                <li><strong>Final Readonly Options:</strong> Options are <code>final readonly class</code> instances with promoted constructor properties and default values. Options parameters are nullable (pass <code>null</code> for defaults).</li>
-                <li><strong>Zero Runtime Dependencies:</strong> Pure PHP code with bundled Unicode 17.0.0 data tables; does not require <code>mbstring</code> or <code>intl</code> extensions.</li>
-                <li><strong>Error Handling:</strong> Throws <code>InvalidArgumentException</code> on invalid parameters or failed metadata verification.</li>
+                <li><strong>Namespace &amp; Autoload:</strong> Namespace <code>Lipimala</code>. Import functions with
+                  <code>use function Lipimala\toDevanagariFromIast;</code>.
+                </li>
+                <li><strong>Dual Function Aliases:</strong> Supports both <code>toDevanagariFromIast()</code> and
+                  <code>to_devanagari_from_iast()</code> namespaced functions.
+                </li>
+                <li><strong>Final Readonly Options:</strong> Options are <code>final readonly class</code> instances
+                  with promoted constructor properties and default values. Options parameters are nullable (pass
+                  <code>null</code> for defaults).
+                </li>
+                <li><strong>Zero Runtime Dependencies:</strong> Pure PHP code with bundled Unicode 17.0.0 data tables;
+                  does not require <code>mbstring</code> or <code>intl</code> extensions.</li>
+                <li><strong>Error Handling:</strong> Throws <code>InvalidArgumentException</code> on invalid parameters
+                  or failed metadata verification.</li>
               </ul>
 
               <h3 id="php-runnable-example">Complete Runnable PHP Example</h3>
@@ -1319,12 +1984,17 @@ assert($exactDeva === $result-&gt;rendered);</code></pre>
 
             <section class="doc-section" id="examples" aria-labelledby="examples-heading">
               <h2 id="examples-heading">21. Example files</h2>
-              <p class="section-lead">Each runtime has a comprehensive example that exercises public APIs with option permutations.</p>
+              <p class="section-lead">Each runtime has a comprehensive example that exercises public APIs with option
+                permutations.</p>
               <div class="table-wrap" role="region" aria-labelledby="cap-examples" tabindex="0">
                 <table>
                   <caption id="cap-examples">Runnable public-API example entry points</caption>
                   <thead>
-                    <tr><th scope="col">Language</th><th scope="col">Path</th><th scope="col">Run</th></tr>
+                    <tr>
+                      <th scope="col">Language</th>
+                      <th scope="col">Path</th>
+                      <th scope="col">Run</th>
+                    </tr>
                   </thead>
                   <tbody>
                     <tr>
@@ -1370,20 +2040,45 @@ assert($exactDeva === $result-&gt;rendered);</code></pre>
                 <table>
                   <caption id="cap-errors">Common failure modes and outcomes</caption>
                   <thead>
-                    <tr><th scope="col">Situation</th><th scope="col">Typical outcome</th></tr>
+                    <tr>
+                      <th scope="col">Situation</th>
+                      <th scope="col">Typical outcome</th>
+                    </tr>
                   </thead>
                   <tbody>
-                    <tr><th scope="row">unknownLatinPolicy = throwError</th><td>Throws / raises on unmapped Latin</td></tr>
-                    <tr><th scope="row">unknownPolicy = throwError (direct)</th><td>Throws / raises on unmapped script chars</td></tr>
-                    <tr><th scope="row">toExact* without trailer</th><td>FormatException / TypeError / ValueError / InvalidArgumentException</td></tr>
-                    <tr><th scope="row">toExact* with empty string</th><td>Returns empty string</td></tr>
-                    <tr><th scope="row">fromJson integrity failure</th><td>Throws; schema or code-point mismatch</td></tr>
-                    <tr><th scope="row">Tampered metadata trailer</th><td>Checksum fails; treated as no exact source</td></tr>
+                    <tr>
+                      <th scope="row">unknownLatinPolicy = throwError</th>
+                      <td>Throws / raises on unmapped Latin</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">unknownPolicy = throwError (direct)</th>
+                      <td>Throws / raises on unmapped script chars</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">toExact* without trailer</th>
+                      <td>FormatException / TypeError / ValueError / InvalidArgumentException</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">toExact* with empty string</th>
+                      <td>Returns empty string</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">fromJson integrity failure</th>
+                      <td>Throws; schema or code-point mismatch</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Tampered metadata trailer</th>
+                      <td>Checksum fails; treated as no exact source</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
               <aside class="callout callout-info">
-                <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 8v4M12 16h.01" />
+                </svg>
                 <p>
                   <strong>Recommended production pattern:</strong> display with string converters;
                   round-trip user edits with <code>TransliterationResult</code> (or its JSON);
@@ -1406,4 +2101,5 @@ assert($exactDeva === $result-&gt;rendered);</code></pre>
 
   <p class="toast" id="toast" role="status" aria-live="polite"></p>
 </body>
+
 </html>
