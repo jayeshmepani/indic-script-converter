@@ -29,35 +29,39 @@
   <meta property="og:title" content="lipimala API Reference">
   <meta property="og:description"
     content="Exact round-trip Indic transliteration across Dart, JavaScript, Python, and PHP — conversion tables, options, result envelopes, and metadata trailers.">
+  <meta property="og:url" content="https://jayeshmepani.github.io/indic-script-converter/">
   <meta property="og:locale" content="en_US">
-  <meta property="og:image" content="https://jayeshmepani.github.io/indic-script-converter/social-preview.png">
+  <meta property="og:image" content="https://jayeshmepani.github.io/indic-script-converter/social-image.png">
+  <meta property="og:image:alt" content="lipimala — exact round-trip Indic transliteration for Dart, JavaScript, Python, and PHP">
+  <meta property="og:image:type" content="image/png">
+
 
   <!-- Favicon (embedded SVG) -->
   <link rel="icon"
     href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="12" fill="%23a94e1d"/%3E%3Ctext x="32" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-size="30" font-weight="700" fill="white"%3EL%3C/text%3E%3C/svg%3E'>
 
-  <!-- Styles -->
-  <link rel="preload" href="style.css" as="style">
+  <!-- Styles (critical path; no unused preload of same resource) -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- Fonts (with minimal blocking) -->
+  <!-- Fonts: preconnect + non-blocking stylesheet; display=swap in URL -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload"
+  <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-    as="style" onload="this.onload=null;this.rel='stylesheet'">
+    media="print" onload="this.media='all'">
   <noscript>
     <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap">
   </noscript>
 
-  <!-- Structured data (JSON-LD) -->
+  <!-- Structured data (JSON-LD) — matches visible page content -->
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@graph": [
         {
           "@type": "SoftwareSourceCode",
+          "@id": "https://jayeshmepani.github.io/indic-script-converter/#software",
           "name": "lipimala",
           "codeRepository": "https://github.com/jayeshmepani/indic-script-converter",
           "url": "https://jayeshmepani.github.io/indic-script-converter/",
@@ -72,52 +76,27 @@
             "sameAs": ["https://github.com/jayeshmepani", "https://www.linkedin.com/in/jayeshmepani/"]
           },
           "applicationCategory": "DeveloperApplication",
-          "functionalities": [
-            "IAST to Devanagari transliteration",
-            "Devanagari to IAST reverse transliteration",
-            "Gujarati to Devanagari conversion",
-            "Unicode normalization handling",
-            "Exact source provenance recovery",
-            "Vedic accent preservation"
-          ],
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
-          },
-          "distribution": [
-            {
-              "@type": "SoftwareApplication",
-              "name": "lipimala (npm)",
-              "url": "https://www.npmjs.com/package/lipimala"
-            },
-            {
-              "@type": "SoftwareApplication",
-              "name": "lipimala (PyPI)",
-              "url": "https://pypi.org/project/lipimala/"
-            },
-            {
-              "@type": "SoftwareApplication",
-              "name": "lipimala (pub.dev)",
-              "url": "https://pub.dev/packages/lipimala/"
-            },
-            {
-              "@type": "SoftwareApplication",
-              "name": "lipimala (Packagist)",
-              "url": "https://packagist.org/packages/jayeshmepani/lipimala"
-            }
-          ],
-          "keywords": "transliteration, IAST, Devanagari, Gujarati, Hunterian, Unicode normalization, Vedic, Sanskrit, Dart, JavaScript, Python, PHP"
+          "keywords": [
+            "transliteration",
+            "IAST",
+            "Devanagari",
+            "Gujarati",
+            "Hunterian",
+            "Unicode",
+            "Vedic",
+            "Sanskrit"
+          ]
         },
         {
           "@type": "TechArticle",
+          "@id": "https://jayeshmepani.github.io/indic-script-converter/#article",
           "name": "lipimala API Reference",
           "headline": "lipimala Technical API Reference and Documentation",
           "url": "https://jayeshmepani.github.io/indic-script-converter/",
           "description": "Exact round-trip Indic transliteration technical reference. Covers conversion directions, option enums, result envelopes, exact-source metadata trailers, and multi-runtime implementation details.",
           "inLanguage": "en",
-          "proficiencyLevel": "Expert",
-          "about": { "@id": "#lipimala" },
+          "image": "https://jayeshmepani.github.io/indic-script-converter/social-image.png",
+          "about": { "@id": "https://jayeshmepani.github.io/indic-script-converter/#software" },
           "isPartOf": {
             "@type": "WebSite",
             "name": "lipimala Documentation",
@@ -128,6 +107,22 @@
             "name": "Jayesh Mepani",
             "url": "https://jayeshmepani.site"
           }
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://jayeshmepani.github.io/indic-script-converter/#webpage",
+          "url": "https://jayeshmepani.github.io/indic-script-converter/",
+          "name": "lipimala API Reference — Exact Round-Trip Indic Transliteration",
+          "isPartOf": {
+            "@type": "WebSite",
+            "name": "lipimala Documentation",
+            "url": "https://jayeshmepani.github.io/indic-script-converter/"
+          },
+          "primaryImageOfPage": {
+            "@type": "ImageObject",
+            "url": "https://jayeshmepani.github.io/indic-script-converter/social-image.png"
+          },
+          "inLanguage": "en"
         }
       ]
     }
@@ -156,7 +151,8 @@
 
   <div class="app">
     <header class="site-header">
-      <button type="button" class="icon-btn menu-btn" id="menu-btn" aria-controls="sidebar" aria-expanded="false">
+      <button type="button" class="icon-btn menu-btn" id="menu-btn" aria-controls="sidebar"
+        aria-expanded="false" aria-labelledby="menu-btn-label" title="Open navigation">
         <svg class="icon icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" aria-hidden="true" focusable="false">
           <path d="M4 7h16M4 12h16M4 17h16" />
@@ -165,7 +161,7 @@
           stroke-linecap="round" aria-hidden="true" focusable="false">
           <path d="M6 6l12 12M18 6 6 18" />
         </svg>
-        <span class="sr-only" id="menu-btn-label">Navigation</span>
+        <span class="sr-only" id="menu-btn-label">Open navigation</span>
       </button>
 
       <a class="brand" href="#overview">
@@ -177,7 +173,8 @@
       </a>
 
       <div class="header-actions">
-        <button type="button" class="icon-btn theme-btn" id="theme-btn" aria-pressed="false">
+        <button type="button" class="icon-btn theme-btn" id="theme-btn" aria-pressed="false"
+          aria-labelledby="theme-btn-label" title="Switch to dark theme">
           <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" aria-hidden="true" focusable="false">
             <circle cx="12" cy="12" r="4" />
@@ -188,7 +185,7 @@
             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
             <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5z" />
           </svg>
-          <span class="sr-only" id="theme-btn-label">Dark theme</span>
+          <span class="sr-only" id="theme-btn-label">Toggle color theme</span>
         </button>
       </div>
     </header>
@@ -204,7 +201,7 @@
           <p class="sr-only" id="nav-search-hint">Filters the section list below as you type. Press Escape to clear.</p>
         </div>
 
-        <p class="nav-empty" id="nav-empty" role="status">No matching topics.</p>
+        <p class="nav-empty" id="nav-empty" role="status" aria-live="polite" aria-atomic="true">No matching topics.</p>
 
         <div class="nav-group">
           <p class="nav-group-title" id="nav-group-overview">Overview</p>
@@ -254,15 +251,15 @@
       </nav>
 
       <div class="content-col">
-        <main class="content" id="main">
+        <main class="content" id="main" tabindex="-1">
           <div class="content-inner">
 
-            <header class="hero" id="overview">
+            <header class="hero" id="overview" aria-labelledby="page-title">
               <span class="hero-watermark" aria-hidden="true">ॐ</span>
               <div class="hero-grid">
                 <div class="hero-copy">
                   <p class="hero-eyebrow"><span class="live-dot" aria-hidden="true"></span>lipimala · v1.0.0</p>
-                  <h1>Technical <span class="text-gradient">API Reference</span></h1>
+                  <h1 id="page-title">Technical <span class="text-gradient">API Reference</span></h1>
                   <p class="hero-lede">
                     Exact round-trip Indic transliteration across <strong>Dart</strong>, <strong>JavaScript</strong>,
                     <strong>Python</strong>, and <strong>PHP</strong>. Same conversion tables, profiles, Vedic handling,
@@ -315,10 +312,10 @@
                       </div>
                     </div>
                     <div class="demo-meta" data-demo-meta>
-                      <label class="demo-switch">
+                      <label class="demo-switch" for="demo-embed">
                         <input type="checkbox" id="demo-embed">
                         <span class="demo-switch-track" aria-hidden="true"></span>
-                        <code>embedExactSourceMetadata</code>
+                        <span><code>embedExactSourceMetadata</code></span>
                       </label>
                       <code class="trailer-chip" id="demo-trailer" hidden></code>
                     </div>
@@ -379,26 +376,26 @@
                   <tbody>
                     <tr>
                       <th scope="row"><a href="https://pypi.org/project/lipimala/" target="_blank"
-                          rel="noopener">Python</a></th>
+                          rel="noopener noreferrer">Python<span class="sr-only"> (opens in new tab)</span></a></th>
                       <td><code>pip install lipimala</code></td>
                       <td><code>from lipimala import to_devanagari, to_devanagari_from_gujarati, ...</code></td>
                     </tr>
                     <tr>
                       <th scope="row"><a href="https://www.npmjs.com/package/lipimala" target="_blank"
-                          rel="noopener">JavaScript</a></th>
+                          rel="noopener noreferrer">JavaScript<span class="sr-only"> (opens in new tab)</span></a></th>
                       <td><code>npm install lipimala</code></td>
                       <td><code>import { toDevanagari, toDevanagariFromGujarati } from 'lipimala'</code></td>
                     </tr>
                     <tr>
                       <th scope="row"><a href="https://pub.dev/packages/lipimala/" target="_blank"
-                          rel="noopener">Dart</a></th>
+                          rel="noopener noreferrer">Dart<span class="sr-only"> (opens in new tab)</span></a></th>
                       <td><code>dart pub add lipimala</code></td>
                       <td><code>import 'package:lipimala/lipimala.dart';</code><br>
                         Extensions on <code>String</code></td>
                     </tr>
                     <tr>
                       <th scope="row"><a href="https://packagist.org/packages/jayeshmepani/lipimala" target="_blank"
-                          rel="noopener">PHP</a></th>
+                          rel="noopener noreferrer">PHP<span class="sr-only"> (opens in new tab)</span></a></th>
                       <td><code>composer require jayeshmepani/lipimala</code></td>
                       <td><code>use function Lipimala\toDevanagari;</code><br>
                         <code>use Lipimala\IastToDevanagariOptions;</code>
@@ -2099,7 +2096,7 @@ assert($exactDeva === $result-&gt;rendered);</code></pre>
     </div>
   </div>
 
-  <p class="toast" id="toast" role="status" aria-live="polite"></p>
+  <p class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></p>
 </body>
 
 </html>

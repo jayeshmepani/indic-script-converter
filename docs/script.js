@@ -47,9 +47,11 @@
 
       if (button) {
         var isDark = theme === 'dark';
-        /* Name stays "Dark theme"; aria-pressed carries the state. */
         button.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-        button.title = isDark ? 'Switch to light theme' : 'Switch to dark theme';
+        var label = isDark ? 'Switch to light theme' : 'Switch to dark theme';
+        button.title = label;
+        var labelNode = document.getElementById('theme-btn-label');
+        if (labelNode) labelNode.textContent = label;
       }
 
       if (persist) writeStore(THEME_KEY, theme);
@@ -102,11 +104,20 @@
       isOpen = open;
       sidebar.classList.toggle('is-open', open);
       document.body.classList.toggle('is-nav-open', open);
-      /* The accessible name stays "Navigation"; aria-expanded carries state. */
       button.setAttribute('aria-expanded', open ? 'true' : 'false');
-      button.title = open ? 'Close navigation' : 'Open navigation';
+      var label = open ? 'Close navigation' : 'Open navigation';
+      button.title = label;
+      var labelNode = document.getElementById('menu-btn-label');
+      if (labelNode) labelNode.textContent = label;
+      /* When the drawer is open it covers the page; hide the backdrop from the
+         a11y tree when closed via the hidden attribute. */
       backdrop.hidden = !open;
       if (content && 'inert' in content) content.inert = open && isDrawerMode();
+      if (open) {
+        sidebar.setAttribute('aria-modal', 'true');
+      } else {
+        sidebar.removeAttribute('aria-modal');
+      }
 
       if (open && search) {
         search.focus({ preventScroll: true });
@@ -466,12 +477,16 @@
 
     function sync(wrap) {
       var scrollable = wrap.scrollWidth - wrap.clientWidth > 1;
+      /* Keep role=region + aria-labelledby from markup when the table scrolls
+         so keyboard users can enter the region; non-scrolling tables rely on
+         the native <caption> alone and should not become extra tab stops. */
       if (scrollable) {
         wrap.setAttribute('tabindex', '0');
-        wrap.setAttribute('role', 'region');
+        if (!wrap.getAttribute('role')) wrap.setAttribute('role', 'region');
       } else {
         wrap.removeAttribute('tabindex');
-        wrap.removeAttribute('role');
+        /* Drop region role only if it was only for keyboard scrolling. */
+        if (wrap.getAttribute('role') === 'region') wrap.removeAttribute('role');
       }
       wrap.classList.toggle('is-scrollable', scrollable);
     }

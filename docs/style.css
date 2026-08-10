@@ -231,10 +231,17 @@
     scroll-margin-block-start: calc(var(--header-h) + var(--space-5))
   }
 
+  /* Keyboard modality focus — never remove without a visible replacement. */
   :focus-visible {
     outline: var(--bw-thick) solid var(--focus);
     outline-offset: 2px;
     border-radius: var(--radius-xs)
+  }
+
+  /* Preserve visible focus for skip-link activation (any modality). */
+  .skip-link:focus:not(:focus-visible) {
+    outline: var(--bw-thick) solid var(--focus);
+    outline-offset: 2px
   }
 
   a {
