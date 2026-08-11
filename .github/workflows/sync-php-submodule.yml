@@ -1,0 +1,73 @@
+# Keeps monorepo php/ submodule pin on the latest main of
+# jayeshmepani/indic-script-converter-php.
+#
+# Triggers:
+#   - repository_dispatch (from the PHP repo after push)  → near-instant
+#   - workflow_dispatch (manual)
+#   - schedule (backup if dispatch secret is missing)
+#
+# Does NOT publish Packagist — that still uses tags on the PHP repository.
+
+name: Sync PHP submodule
+
+on:
+  repository_dispatch:
+    types: [php-submodule-sync]
+  workflow_dispatch:
+  schedule:
+    # Backup every 6 hours if cross-repo dispatch is not configured
+    - cron: "0 */6 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-php-submodule
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    name: Point php/ at latest main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout monorepo
+        uses: actions/checkout@v4
+        with:
+          # Need full history + ability to push a bot commit
+          fetch-depth: 0
+          submodules: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Update php submodule to origin/main
+        run: |
+          set -euo pipefail
+          git submodule sync -- php
+          git submodule update --init --remote -- php
+          # Ensure we land on remote main tip (branch tracking from .gitmodules)
+          git -C php fetch origin main
+          git -C php checkout -B main origin/main
+
+      - name: Commit and push if the pin changed
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- php; then
+            echo "php submodule already points at latest main — nothing to do."
+            git -C php rev-parse --short HEAD
+            exit 0
+          fi
+
+          NEW_SHA="$(git -C php rev-parse HEAD)"
+          SHORT_SHA="$(git -C php rev-parse --short HEAD)"
+          echo "Updating monorepo pin to php @ ${SHORT_SHA}"
+
+          git add php .gitmodules
+          git commit -m "chore: sync php submodule to ${SHORT_SHA}
+
+          Auto-synced from jayeshmepani/indic-script-converter-php@main
+          Full commit: ${NEW_SHA}"
+          git push origin HEAD:main

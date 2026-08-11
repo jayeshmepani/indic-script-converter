@@ -381,14 +381,25 @@ git clone --recurse-submodules https://github.com/jayeshmepani/indic-script-conv
 git submodule update --init --recursive
 ```
 
-### Bump the PHP submodule pointer (after PHP repo changes)
+### Keep the PHP submodule pin up to date
+
+The monorepo stores a **fixed commit** for `php/` (not a live symlink). Refresh options:
+
+1. **Automatic (recommended)**  
+   - Push to `indic-script-converter-php` `main` → GitHub Action notifies the monorepo → monorepo Action updates the pin and commits.  
+   - Requires secret `MONOREPO_SYNC_TOKEN` on the **PHP** repo (PAT that can dispatch workflows on the monorepo).  
+   - Backup: monorepo also syncs on a **6-hour schedule** and via **Actions → Sync PHP submodule → Run workflow**.
+
+2. **Manual**
 
 ```bash
 cd php && git pull origin main && cd ..
 git add php
 git commit -m "chore: bump php submodule"
+git push origin main
 ```
 
+Packagist releases still use **tags on the PHP repository** only; submodule sync does not publish packages.
 ---
 
 ## Development & parity testing

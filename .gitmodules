@@ -1,3 +1,4 @@
 [submodule "php"]
 	path = php
 	url = https://github.com/jayeshmepani/indic-script-converter-php.git
+	branch = main
