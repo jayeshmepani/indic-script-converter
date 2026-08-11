@@ -93,44 +93,8 @@ jobs:
         run: dart pub publish --force
         working-directory: dart
 
-  publish-php-mirror:
-    name: Sync PHP distribution mirror
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up git config
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Split and push PHP mirror
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.PHP_MIRROR_DEPLOY_KEY }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-
-          # Extract only the php/ history into a standalone branch
-          git subtree split --prefix=php -b php-release
-
-          # Push the split branch to the PHP mirror repository
-          git push -f git@github.com:jayeshmepani/indic-script-converter-php.git php-release:main
-
-      - name: Push release tag to PHP mirror
-        if: github.event_name == 'release'
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.PHP_MIRROR_DEPLOY_KEY }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-
-          # Push the release tag so Packagist picks it up
-          git push -f git@github.com:jayeshmepani/indic-script-converter-php.git php-release:refs/tags/${{ github.ref_name }}
+  # PHP (jayeshmepani/lipimala) is published from the standalone repo, not this monorepo:
+  # https://github.com/jayeshmepani/indic-script-converter-php
+  # Packagist versions come from tags on that repository.
+  # The monorepo `php/` path is a git submodule pointing at that repo.
 

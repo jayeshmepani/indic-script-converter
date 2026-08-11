@@ -22,9 +22,13 @@ It supports Latin/IAST-style input, Devanagari, Gujarati, canonical reverse conv
 | Dart 3.4+ | [`dart/`](./dart) | [pub.dev](https://pub.dev/packages/lipimala/) | `dart pub add lipimala` | `import 'package:lipimala/lipimala.dart';` |
 | Node.js 20+ / ES2023+ | [`javascript/`](./javascript) | [npm](https://www.npmjs.com/package/lipimala) | `npm install lipimala` | `import { toDevanagari } from 'lipimala';` |
 | Python 3.12+ | [`python/`](./python) | [PyPI](https://pypi.org/project/lipimala/) | `pip install lipimala` | `from lipimala import to_devanagari` |
-| PHP 8.3+ | [`php/`](./php) | [Packagist](https://packagist.org/packages/jayeshmepani/lipimala) | `composer require jayeshmepani/lipimala` | `use function Lipimala\\toDevanagari;` |
+| PHP 8.3+ | [`php/`](./php) ([submodule](https://github.com/jayeshmepani/indic-script-converter-php)) | [Packagist](https://packagist.org/packages/jayeshmepani/lipimala) | `composer require jayeshmepani/lipimala` | `use function Lipimala\\toDevanagari;` |
 
 The repository is a **feature-parity monorepo**. Each runtime has its own native implementation, package manifest, tests, examples, and quality tooling.
+
+> **PHP source of truth:** [`jayeshmepani/indic-script-converter-php`](https://github.com/jayeshmepani/indic-script-converter-php).  
+> The monorepo `php/` path is a **git submodule** that links to that repository (clicking it on GitHub opens the PHP-only repo).  
+> Packagist versions/tags are managed on the PHP repository, not via monorepo subtree sync.
 
 ---
 
@@ -358,9 +362,10 @@ lipimala/
 ├── dart/
 ├── javascript/
 ├── python/
-├── php/
+├── php/                 # git submodule → indic-script-converter-php
 ├── shared/
 │   └── verification-output/
+├── .gitmodules
 ├── README.md
 ├── CHANGELOG.md
 └── LICENSE
@@ -368,7 +373,21 @@ lipimala/
 
 Each runtime directory is independently packageable and contains its own implementation, examples, tests, and quality configuration.
 
-The PHP package may also be synchronized to a PHP-only distribution mirror for Packagist while this monorepo remains the canonical source.
+### Clone with the PHP submodule
+
+```bash
+git clone --recurse-submodules https://github.com/jayeshmepani/indic-script-converter.git
+# or after a normal clone:
+git submodule update --init --recursive
+```
+
+### Bump the PHP submodule pointer (after PHP repo changes)
+
+```bash
+cd php && git pull origin main && cd ..
+git add php
+git commit -m "chore: bump php submodule"
+```
 
 ---
 
@@ -380,12 +399,12 @@ Each implementation has its own quality command:
 Dart        cd dart       && make quality
 JavaScript  cd javascript && npm run quality
 Python      cd python     && make quality
-PHP         cd php        && composer quality
+PHP         cd php        && composer quality   # requires submodule checked out
 ```
 
 The runtime suites validate behavior against the shared verification corpus and golden outputs.
 
-When changing conversion behavior, update and verify **all four runtimes** so that a conversion performed by one implementation remains behaviorally aligned with the others.
+When changing conversion behavior, update and verify **all four runtimes** so that a conversion performed by one implementation remains behaviorally aligned with the others. Prefer editing PHP sources in the standalone PHP repository, then bump the submodule here.
 
 ---
 

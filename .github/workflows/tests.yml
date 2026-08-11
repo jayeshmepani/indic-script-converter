@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
         with:
@@ -82,7 +82,10 @@ jobs:
       matrix:
         php-version: ["8.3", "8.4", "8.5"]
     steps:
+      # php/ is a git submodule → indic-script-converter-php
       - uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - name: Setup PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
