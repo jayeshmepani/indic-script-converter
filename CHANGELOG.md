@@ -1,20 +1,62 @@
 # Changelog
 
+All notable changes to the **lipimala** monorepo (Dart, JavaScript, Python, PHP) are documented here.  
+Package versions are synchronized across runtimes unless noted.
+
+---
+
+## 1.0.2
+
+**lipimala v1.0.2 — Complete bulk transliteration API & 160/160 pub points**
+
+- Added **bulk string list/array transliteration** across all conversion directions, with full options/profile support:
+  - Latin/IAST → Devanagari / Gujarati / plain English  
+    (`toDevanagariFromIastList`, `toGujaratiFromIastList`, `toPlainEnglishFromIastList`, and snake_case / Dart extension equivalents)
+  - Brahmic → Latin/IAST  
+    (`toCanonicalIastFromDevanagariList`, `toCanonicalIastFromGujaratiList`, `toIastFromDevanagariList`, `toIastFromGujaratiList`, …)
+  - Direct Devanagari ↔ Gujarati  
+    (`toCanonicalGujaratiFromDevanagariList`, `toCanonicalDevanagariFromGujaratiList`, exact and smart list variants, …)
+  - Envelope results  
+    (`toDevanagariList`, `toGujaratiList`, `toPlainEnglishList`, …)
+- **Dart / pub.dev:** primary examples (`example/example.dart`, `example/lipimala_example.dart`) and expanded dartdoc for **160/160** pub points; removed obsolete Flutter badge/references.
+- **JavaScript:** list converters export path; fixed ES module star-export collision in brahmic reverse module.
+- **Python:** standardized runtime docs/targets to **Python 3.12+** (removed legacy 3.8 references).
+- Synchronized version **1.0.2** across Dart, JavaScript, Python, PHP manifests, package changelogs, and docs.
+
+---
+
+## 1.0.1
+
+**lipimala v1.0.1 — Module root exports & complete API coverage**
+
+- Re-exported **direct Devanagari ↔ Gujarati** converters, options, and related helpers from each package **root** (no deep-import required for primary script-to-script APIs).
+- Disambiguated metadata helper names for IAST-source trailers vs direct script-to-script trailers  
+  (e.g. `hasExactDevanagariIastSourceMetadata` vs `hasExactDevanagariSourceMetadata` and runtime equivalents).
+- Added exhaustive **public API example** runners for all four runtimes (options, enums, metadata, Unicode helpers).
+- Updated HTML API reference and package READMEs.
+- Synchronized package version **1.0.1** across all four ecosystems.
+
+---
+
 ## 1.0.0
 
-- Added canonical Devanagari/Gujarati script-to-script conversion options and policies.
-- Preserved Vedic mark reattachment on canonical script transliterations.
-- Standardized package manifests, author details, and release actions across all runtimes.
-- Added the complete Node.js 20+/ES2023 port.
-- Preserved `extendedIndic` as the default profile.
-- Ported Devanagari and Gujarati forward conversion mappings and policies.
-- Ported plain-English and Hunterian transcription policies.
-- Ported canonical Devanagari/Gujarati reverse conversion.
-- Ported Vedic accent handling and accent reattachment.
-- Ported Unicode normalization controls.
-- Ported the exact round-trip result envelope and JSON schema.
-- Ported the invisible exact-source Unicode Tag trailer byte-for-byte.
-- Added all 497 index-aligned corpus cases in five conversion directions.
-- Added all 22 Vedic fixtures.
-- Added five CLI-compatible output generators.
-- Added Node built-in test-runner coverage with no runtime dependencies.
+**lipimala v1.0.0 — Initial synchronized multi-runtime release**
+
+- First stable release of feature-parity implementations for **Dart**, **JavaScript/Node.js**, **Python**, and **PHP**.
+- Latin/IAST / extended Indic → Devanagari and Gujarati with profiles (`strictIast`, `iso15919Core`, `extendedIndic`).
+- Canonical reverse conversion (Devanagari/Gujarati → IAST) and smart/exact recovery modes.
+- Direct Devanagari ↔ Gujarati conversion with policies.
+- Plain English and Hunterian transcription.
+- Exact source recovery via checksummed Unicode Tag trailer; lossless round-trip result envelope.
+- NFC/NFD controls, combining-mark and Vedic accent handling.
+- Shared verification corpus: **497** cases + **22** Vedic fixtures; CLI-style output generators.
+- Standardized package manifests, author metadata, and publish/test GitHub Actions across runtimes.
+- Default forward profile: **`extendedIndic`**.
+
+---
+
+## Links
+
+- Releases: https://github.com/jayeshmepani/indic-script-converter/releases  
+- PHP package repo (submodule / Packagist source): https://github.com/jayeshmepani/indic-script-converter-php  
+- Docs: https://jayeshmepani.github.io/indic-script-converter/
