@@ -18,9 +18,9 @@
 
   <!-- SEO -->
   <meta name="robots" content="index,follow">
-  <title>lipimala API Reference — Exact Round-Trip Indic Transliteration</title>
+  <title>lipimalaAPI Reference — Exact &amp; Natural Indic Transliteration</title>
   <meta name="description"
-    content="Technical API reference for lipimala — exact round-trip Indic transliteration across Dart, JavaScript, Python, and PHP. Conversion tables, options, result envelopes, and metadata trailers.">
+    content="Technical API reference for lipimala — exact-source Indic transliteration plus source-aware Devanagari/Gujarati Plain-English and Hunterian conversion across Dart, JavaScript, Python, and PHP.">
   <link rel="canonical" href="https://jayeshmepani.github.io/indic-script-converter/">
 
   <!-- Open Graph -->
@@ -28,12 +28,14 @@
   <meta property="og:site_name" content="lipimala">
   <meta property="og:title" content="lipimala API Reference">
   <meta property="og:description"
-    content="Exact round-trip Indic transliteration across Dart, JavaScript, Python, and PHP — conversion tables, options, result envelopes, and metadata trailers.">
+    content="lipimala 1.1.0: exact-source Indic transliteration plus natural Devanagari/Gujarati Plain-English and Hunterian conversion across Dart, JavaScript, Python, and PHP.">
   <meta property="og:url" content="https://jayeshmepani.github.io/indic-script-converter/">
   <meta property="og:locale" content="en_US">
   <meta property="og:image" content="https://jayeshmepani.github.io/indic-script-converter/social-image.png">
-  <meta property="og:image:alt" content="lipimala — exact round-trip Indic transliteration for Dart, JavaScript, Python, and PHP">
+  <meta property="og:image:alt" content="lipimala — exact-source transliteration plus Devanagari/Gujarati Plain-English and Hunterian conversion across Dart, JavaScript, Python, and PHP">
   <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1731">
+  <meta property="og:image:height" content="909">
 
 
   <!-- Favicon (embedded SVG) -->
@@ -67,6 +69,7 @@
           "url": "https://jayeshmepani.github.io/indic-script-converter/",
           "description": "Deterministic Indic transliteration library for IAST/extended Indic, Devanagari, Gujarati, and Plain English/Hunterian with exact Unicode source recovery.",
           "runtimePlatform": ["Dart 3.0+", "Node.js 20+", "Python 3.12+", "PHP 8.3+"],
+          "softwareVersion": "1.1.0",
           "programmingLanguage": ["Dart", "JavaScript", "Python", "PHP"],
           "license": "https://opensource.org/licenses/MIT",
           "author": {
@@ -112,7 +115,7 @@
           "@type": "WebPage",
           "@id": "https://jayeshmepani.github.io/indic-script-converter/#webpage",
           "url": "https://jayeshmepani.github.io/indic-script-converter/",
-          "name": "lipimala API Reference — Exact Round-Trip Indic Transliteration",
+          "name": "lipimala API Reference — Exact & Natural Indic Transliteration",
           "isPartOf": {
             "@type": "WebSite",
             "name": "lipimala Documentation",
@@ -219,7 +222,7 @@
             <li><a href="#envelope" data-nav>Envelope APIs</a></li>
             <li><a href="#forward-deva" data-nav>IAST → Devanagari</a></li>
             <li><a href="#forward-gujr" data-nav>IAST → Gujarati</a></li>
-            <li><a href="#plain" data-nav>IAST → Plain English</a></li>
+            <li><a href="#plain" data-nav>IAST / Brahmic → Plain English</a></li>
             <li><a href="#reverse" data-nav>Brahmic → IAST</a></li>
             <li><a href="#direct" data-nav>Deva ↔ Gujarati</a></li>
             <li><a href="#metadata" data-nav>Metadata helpers</a></li>
@@ -245,6 +248,7 @@
             <li><a href="#lang-py" data-nav>Python</a></li>
             <li><a href="#lang-php" data-nav>PHP</a></li>
             <li><a href="#examples" data-nav>Example files</a></li>
+            <li><a href="#verification" data-nav>1.1.0 verification</a></li>
             <li><a href="#errors" data-nav>Errors &amp; recovery</a></li>
           </ul>
         </div>
@@ -258,7 +262,7 @@
               <span class="hero-watermark" aria-hidden="true">ॐ</span>
               <div class="hero-grid">
                 <div class="hero-copy">
-                  <p class="hero-eyebrow"><span class="live-dot" aria-hidden="true"></span>lipimala · v1.0.0</p>
+                  <p class="hero-eyebrow"><span class="live-dot" aria-hidden="true"></span>lipimala · v1.1.0</p>
                   <h1 id="page-title">Technical <span class="text-gradient">API Reference</span></h1>
                   <p class="hero-lede">
                     Exact round-trip Indic transliteration across <strong>Dart</strong>, <strong>JavaScript</strong>,
@@ -336,6 +340,16 @@
                 and plain-English / Hunterian views. Visible Brahmic rendering is many-to-one—case, aliases, and
                 normalization collapse—so exact recovery uses an envelope or an invisible metadata trailer.
               </p>
+              <aside class="callout callout-success">
+                <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                <p><strong>1.1.0:</strong> first-class Devanagari/Gujarati → Plain-English/Hunterian APIs, source-aware
+                  inherent-schwa naturalization, and explicit handling for the supported Unicode 18 script repertoire,
+                  relevant Vedic/extended ranges, historic forms, Gujarati Arabic-transliteration marks, and format controls.
+                  Existing IAST → Plain-English/Hunterian behavior remains backward-compatible.</p>
+              </aside>
               <div class="grid-2">
                 <article class="card" aria-labelledby="card-directions">
                   <h3 class="card-title" id="card-directions">Supported directions</h3>
@@ -343,6 +357,7 @@
                     <li>Latin/IAST → Devanagari</li>
                     <li>Latin/IAST → Gujarati</li>
                     <li>Latin/IAST → plain English / Hunterian</li>
+                    <li>Devanagari / Gujarati → natural plain English / Hunterian</li>
                     <li>Devanagari → IAST (canonical / smart / exact)</li>
                     <li>Gujarati → IAST (canonical / smart / exact)</li>
                     <li>Devanagari ↔ Gujarati (canonical / smart / exact)</li>
@@ -495,7 +510,7 @@
                       <th scope="col">Dart (<code>package:lipimala/lipimala.dart</code>)</th>
                       <th scope="col">JavaScript (<code>lipimala</code>)</th>
                       <th scope="col">Python (<code>lipimala</code>)</th>
-                      <th scope="col">PHP (<code>IndicScriptConverter\*</code>)</th>
+                      <th scope="col">PHP (<code>Lipimala\*</code>)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -540,6 +555,20 @@
                       <td><code>toPlainEnglishFromIast()</code><br><code>to_plain_english_from_iast()</code></td>
                       <td><code>to_plain_english_from_iast()</code><br><code>toPlainEnglishFromIast()</code></td>
                       <td><code>toPlainEnglishFromIast()</code><br><code>to_plain_english_from_iast()</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Devanagari → Plain / Hunterian</th>
+                      <td><code>text.toPlainEnglishFromDevanagari()</code><br><code>text.toHunterianFromDevanagari()</code></td>
+                      <td><code>toPlainEnglishFromDevanagari()</code><br><code>toHunterianFromDevanagari()</code></td>
+                      <td><code>to_plain_english_from_devanagari()</code><br><code>to_hunterian_from_devanagari()</code></td>
+                      <td><code>toPlainEnglishFromDevanagari()</code><br><code>toHunterianFromDevanagari()</code></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Gujarati → Plain / Hunterian</th>
+                      <td><code>text.toPlainEnglishFromGujarati()</code><br><code>text.toHunterianFromGujarati()</code></td>
+                      <td><code>toPlainEnglishFromGujarati()</code><br><code>toHunterianFromGujarati()</code></td>
+                      <td><code>to_plain_english_from_gujarati()</code><br><code>to_hunterian_from_gujarati()</code></td>
+                      <td><code>toPlainEnglishFromGujarati()</code><br><code>toHunterianFromGujarati()</code></td>
                     </tr>
                     <tr>
                       <th scope="row">Bulk Array / List Transliteration</th>
@@ -942,7 +971,7 @@ echo $r->restoreOriginal(), PHP_EOL;</code></pre>
             </section>
 
             <section class="doc-section" id="plain" aria-labelledby="plain-heading">
-              <h2 id="plain-heading">8. IAST → plain English / Hunterian</h2>
+              <h2 id="plain-heading">8. IAST / Brahmic → plain English / Hunterian</h2>
               <article class="api-block" aria-labelledby="api-to-plain-english-from-iast">
                 <h3 class="api-head" id="api-to-plain-english-from-iast">
                   <code>toPlainEnglishFromIast / to_plain_english_from_iast</code>
@@ -952,8 +981,17 @@ echo $r->restoreOriginal(), PHP_EOL;</code></pre>
                     <li class="tag tag-ret">string</li>
                     <li class="tag tag-warn">intrinsically lossy</li>
                   </ul>
-                  <p>ASCII-friendly transcription. Keep the envelope for exact Latin recovery. Options control final-a,
-                    jñ, ñ, glottal stop, Hunterian features — see <a href="#opts-plain">§14</a>.</p>
+                  <p>ASCII-friendly transcription. Keep the envelope for exact source recovery. IAST input uses the legacy
+                    Plain-English/Hunterian policies; direct Devanagari/Gujarati input additionally tracks inherent schwas
+                    before applying language-aware Gujarati/Hindi deletion rules, with a Sanskrit no-deletion mode.</p>
+                  <p>Direct APIs: <code>toPlainEnglishFromDevanagari</code>, <code>toHunterianFromDevanagari</code>,
+                    <code>toPlainEnglishFromGujarati</code>, and <code>toHunterianFromGujarati</code>, with matching list APIs
+                    and loss-aware result-envelope APIs such as <code>toPlainEnglishFromGujaratiResult</code>.</p>
+                  <p><code>BrahmicPlainEnglishOptions</code> controls language, schwa deletion, vowel length, terminal anusvara,
+                    Gujarati <code>ʿayn</code> rendering, jñ/ñ/glottal handling, Vedic-mark preservation, whitespace, and
+                    contextual v/w behavior. Historic prishthamatra and short-AI forms, Vedic nasal/visarga signs, OM,
+                    Sindhi implosives, Konkani <code>च़</code>, Gujarati Sukūn/Shadda/Maddah and special nuktas are interpreted
+                    semantically instead of leaking raw source-script marks into ordinary readable output.</p>
                 </div>
               </article>
             </section>
@@ -975,6 +1013,10 @@ echo $r->restoreOriginal(), PHP_EOL;</code></pre>
                     <li><strong>Brahmic (Devanagari / Gujarati) → Latin IAST:</strong>
                       <code>toCanonicalIastFromDevanagariList()</code>, <code>toCanonicalIastFromGujaratiList()</code>,
                       <code>toIastFromDevanagariList()</code>, <code>toIastFromGujaratiList()</code>
+                    </li>
+                    <li><strong>Brahmic → natural Plain English / Hunterian:</strong>
+                      <code>toPlainEnglishFromDevanagariList()</code>, <code>toHunterianFromDevanagariList()</code>,
+                      <code>toPlainEnglishFromGujaratiList()</code>, <code>toHunterianFromGujaratiList()</code>
                     </li>
                     <li><strong>Direct Devanagari ↔ Gujarati:</strong>
                       <code>toCanonicalGujaratiFromDevanagariList()</code>,
@@ -1108,7 +1150,7 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
 
               <p class="section-lead">Direct script conversion maps characters natively between Devanagari and Gujarati.
                 Because the two scripts have unequal Unicode repertoires, Lipimala supports direct-script metadata
-                trailers (using markers <code>DEV1</code> and <code>GUJ1</code>) for 100% exact round-trip source script
+                trailers (using typed prefixes <code>ISC:D:</code> and <code>ISC:G:</code>) for 100% exact round-trip source script
                 recovery.</p>
 
               <div class="table-wrap" role="region" aria-labelledby="cap-direct-fns" tabindex="0">
@@ -1130,7 +1172,7 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                       <td><code>input</code>: string<br><code>options</code>: IndicScriptConversionOptions?</td>
                       <td><code>string</code></td>
                       <td><strong>Smart Direct Conversion:</strong> Converts Devanagari to Gujarati. If an exact
-                        Gujarati source trailer (<code>GUJ1</code>) is present, recovers original Gujarati; otherwise
+                        Gujarati source trailer (<code>ISC:G:</code>) is present, recovers original Gujarati; otherwise
                         performs canonical conversion.</td>
                     </tr>
                     <tr>
@@ -1149,7 +1191,7 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                       <td><code>input</code>: string</td>
                       <td><code>string</code></td>
                       <td><strong>Strict Exact Recovery:</strong> Decodes exact Gujarati source trailer
-                        (<code>GUJ1</code>). Returns exact original Gujarati input text. Throws/raises an error if
+                        (<code>ISC:G:</code>). Returns exact original Gujarati input text. Throws/raises an error if
                         trailer is missing or invalid.</td>
                     </tr>
                     <tr>
@@ -1159,7 +1201,7 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                       <td><code>input</code>: string</td>
                       <td><code>bool</code></td>
                       <td>Returns <code>true</code> if the input text contains a valid direct Gujarati exact-source
-                        metadata trailer (<code>GUJ1</code>).</td>
+                        metadata trailer (<code>ISC:G:</code>).</td>
                     </tr>
                     <tr>
                       <th scope="row">
@@ -1168,7 +1210,7 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                       <td><code>input</code>: string<br><code>options</code>: IndicScriptConversionOptions?</td>
                       <td><code>string</code></td>
                       <td><strong>Smart Direct Conversion:</strong> Converts Gujarati to Devanagari. Recovers exact
-                        Devanagari if a <code>DEV1</code> trailer is present; otherwise performs canonical conversion.
+                        Devanagari if a <code>ISC:D:</code> trailer is present; otherwise performs canonical conversion.
                       </td>
                     </tr>
                     <tr>
@@ -1187,7 +1229,7 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                       <td><code>input</code>: string</td>
                       <td><code>string</code></td>
                       <td><strong>Strict Exact Recovery:</strong> Decodes exact Devanagari source trailer
-                        (<code>DEV1</code>). Returns exact original Devanagari text. Throws/raises an error if trailer
+                        (<code>ISC:D:</code>). Returns exact original Devanagari text. Throws/raises an error if trailer
                         is missing or invalid.</td>
                     </tr>
                     <tr>
@@ -1197,7 +1239,7 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                       <td><code>input</code>: string</td>
                       <td><code>bool</code></td>
                       <td>Returns <code>true</code> if the input text contains a valid direct Devanagari exact-source
-                        metadata trailer (<code>DEV1</code>).</td>
+                        metadata trailer (<code>ISC:D:</code>).</td>
                     </tr>
                     <tr>
                       <th scope="row">
@@ -1206,7 +1248,7 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                       <td><code>input</code>: string</td>
                       <td><code>string</code></td>
                       <td>Strips any embedded metadata trailer (whether Latin <code>LIT1</code>, Devanagari
-                        <code>DEV1</code>, or Gujarati <code>GUJ1</code>) and returns clean visible script text.
+                        <code>ISC:D:</code>, or Gujarati <code>ISC:G:</code>) and returns clean visible script text.
                       </td>
                     </tr>
                   </tbody>
@@ -1639,6 +1681,38 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                   </tbody>
                 </table>
               </div>
+
+              <h3 id="brahmic-plain-english-options">BrahmicPlainEnglishOptions <span class="tag tag-ret">1.1.0</span></h3>
+              <p class="section-lead">Used only by direct Devanagari/Gujarati → readable Latin APIs. These options are
+                separate from <code>IastPlainEnglishOptions</code>, preserving the pre-1.1.0 IAST API contract.</p>
+              <div class="table-wrap" role="region" aria-labelledby="cap-brahmic-plain-opts" tabindex="0">
+                <table>
+                  <caption id="cap-brahmic-plain-opts">Direct Brahmic → Plain-English / Hunterian option fields</caption>
+                  <thead><tr><th scope="col">Field</th><th scope="col">Values</th><th scope="col">Default</th><th scope="col">Effect</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row">language</th><td>auto | hindi | gujarati | sanskrit</td><td>auto</td><td>Resolves language-aware schwa and v/w behavior.</td></tr>
+                    <tr><th scope="row">schwaDeletion</th><td>none | finalOnly | language</td><td>language</td><td>Deletes only internally marked inherent schwas; explicit written vowels are not removed.</td></tr>
+                    <tr><th scope="row">vowelLength</th><td>collapse | doubled</td><td>doubled</td><td>Readable long-vowel style; Hunterian helpers default to collapsed length.</td></tr>
+                    <tr><th scope="row">terminalAnusvara</th><td>n | m | drop</td><td>n</td><td>Readable terminal anusvara/candrabindu fallback.</td></tr>
+                    <tr><th scope="row">ayn</th><td>apostrophe | drop | preserve</td><td>apostrophe</td><td>Gujarati Arabic-transliteration <code>ʿayn</code> rendering.</td></tr>
+                    <tr><th scope="row">jna / nya</th><td>same policies as IAST plain-English options</td><td>gya / na</td><td>jñ and ñ readability.</td></tr>
+                    <tr><th scope="row">glottalStop</th><td>remove | apostrophe</td><td>remove</td><td>Readable glottal-stop treatment.</td></tr>
+                    <tr><th scope="row">convertCToCh</th><td>bool</td><td>true</td><td><code>c</code> → <code>ch</code> readability style.</td></tr>
+                    <tr><th scope="row">assimilateAnusvara</th><td>bool</td><td>true</td><td>Contextual nasal assimilation.</td></tr>
+                    <tr><th scope="row">removeAvagraha</th><td>bool</td><td>true</td><td>Remove avagraha-like marks in readable output.</td></tr>
+                    <tr><th scope="row">collapseWhitespace</th><td>bool</td><td>false</td><td>Collapse whitespace runs.</td></tr>
+                    <tr><th scope="row">preserveVedicAccentMarks</th><td>bool</td><td>false</td><td>Keep pronunciation-neutral Vedic accent/cantillation marks when requested.</td></tr>
+                    <tr><th scope="row">useWForVAfterConsonants</th><td>bool? / nullable</td><td>auto</td><td>Override resolved-language contextual v/w behavior.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <aside class="callout callout-info">
+                <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                <p><strong>Supported Brahmic scope:</strong> direct readable-Latin naturalization currently means
+                  Devanagari + Gujarati, including their relevant Unicode 18 extended/Vedic ranges and controls. It does
+                  not claim language-perfect naturalization for every language or every Brahmi-derived script.</p>
+              </aside>
             </section>
 
             <section class="doc-section" id="opts-reverse" aria-labelledby="opts-reverse-heading">
@@ -1776,8 +1850,7 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
 
             <section class="doc-section" id="lang-dart" aria-labelledby="lang-dart-heading">
               <h2 id="lang-dart-heading">17. Dart-specific notes</h2>
-              <p class="section-lead">The Dart implementation (<code>package:lipimala</code>) targets Dart 3.0+ and
-                Flutter. It exposes both functional APIs and natural <strong>extensions on String</strong>.</p>
+              <p class="section-lead">The Dart implementation (<code>package:lipimala</code>) targets Dart 3.0+. It is usable in Dart applications and Flutter projects. It exposes both functional APIs and natural <strong>extensions on String</strong>.</p>
 
               <ul>
                 <li><strong>Primary Barrel Import:</strong> <code>import 'package:lipimala/lipimala.dart';</code>
@@ -1785,10 +1858,9 @@ $deva = toDevanagariFromIastList(['Kṛṣṇa', 'Rāma', 'jñāna']);</code></p
                 <li><strong>String Extension APIs:</strong> Call <code>'Kṛṣṇa'.toDevanagari()</code>,
                   <code>'Kṛṣṇa'.toGujarati()</code>, <code>'Kṛṣṇa'.toPlainEnglish()</code> directly on String instances.
                 </li>
-                <li><strong>String Subclass Returns:</strong> Forward string converters return
-                  <code>IastToDevanagariString</code>, <code>IastToGujaratiString</code>, and
-                  <code>IastToPlainEnglish</code> subclasses which provide <code>.toExactIast()</code> and
-                  <code>.restoreOriginal()</code> helper methods.
+                <li><strong>String Extension APIs:</strong> Dart uses extensions on <code>String</code> rather than
+                  wrapper/subclass return types. Envelope APIs return <code>TransliterationResult</code>; exact recovery is
+                  available through the result object or the metadata-aware reverse helpers.
                 </li>
                 <li><strong>Option Constructors:</strong> Options use named parameters with defaults:
                   <code>IastToDevanagariOptions(profile: DevanagariRomanizationProfile.extendedIndic, embedExactSourceMetadata: true)</code>.
@@ -1825,13 +1897,11 @@ void main() {
 
             <section class="doc-section" id="lang-js" aria-labelledby="lang-js-heading">
               <h2 id="lang-js-heading">18. JavaScript-specific notes</h2>
-              <p class="section-lead">The JavaScript implementation supports Node.js ≥ 20 and modern browsers via ES
-                Modules (ESM) and CommonJS (CJS).</p>
+              <p class="section-lead">The JavaScript implementation targets Node.js ≥ 20 and modern JavaScript environments using ES modules (ESM).</p>
 
               <ul>
                 <li><strong>Module Imports:</strong> ESM:
-                  <code>import { toDevanagari, toDevanagariFromIast } from 'lipimala';</code><br>CommonJS:
-                  <code>const { toDevanagari, toDevanagariFromIast } = require('lipimala');</code>
+                  <code>import { toDevanagari, toDevanagariFromIast } from 'lipimala';</code>
                 </li>
                 <li><strong>Dual Export Naming:</strong> Exports both camelCase (<code>toDevanagariFromIast</code>) and
                   snake_case (<code>to_devanagari_from_iast</code>) aliases for all functions.</li>
@@ -1951,11 +2021,11 @@ declare(strict_types=1);
 
 require __DIR__ . '/vendor/autoload.php';
 
-use IndicScriptConverter\IastToDevanagariOptions;
-use IndicScriptConverter\IndicScriptConversionOptions;
-use function IndicScriptConverter\toDevanagari;
-use function IndicScriptConverter\toGujaratiFromDevanagari;
-use function IndicScriptConverter\toExactDevanagariFromGujarati;
+use Lipimala\IastToDevanagariOptions;
+use Lipimala\IndicScriptConversionOptions;
+use function Lipimala\toDevanagari;
+use function Lipimala\toGujaratiFromDevanagari;
+use function Lipimala\toExactDevanagariFromGujarati;
 
 $input = 'Kṛṣṇa / Kr̥ṣṇa / ḫāna';
 
@@ -2031,6 +2101,44 @@ assert($exactDeva === $result-&gt;rendered);</code></pre>
               </article>
             </section>
 
+            <section class="doc-section" id="verification" aria-labelledby="verification-heading">
+              <h2 id="verification-heading">22. 1.1.0 verification &amp; Unicode scope</h2>
+              <p class="section-lead">Release-hardening results from the prepared 1.1.0 source bundle.</p>
+              <div class="grid-2">
+                <article class="card">
+                  <h3 class="card-title">Executed verification</h3>
+                  <ul>
+                    <li>JavaScript: <strong>75/75</strong> tests; Prettier + ESLint + quality gate passed.</li>
+                    <li>Python: <strong>74/74</strong> tests and compileall passed.</li>
+                    <li>PHP: <strong>41 tests / 7,752 assertions</strong>; syntax, oracle runner, Rector dry-run passed.</li>
+                    <li>Targeted JS/Python/PHP parity: <strong>391/391</strong>.</li>
+                    <li>Generated sequence/fuzz parity: <strong>2,597/2,597</strong>.</li>
+                  </ul>
+                </article>
+                <article class="card">
+                  <h3 class="card-title">Unicode repertoire handled by 1.1.0</h3>
+                  <ul>
+                    <li>Devanagari U+0900–U+097F</li>
+                    <li>Gujarati U+0A80–U+0AFF</li>
+                    <li>Common Indic Number Forms U+A830–U+A839</li>
+                    <li>Devanagari Extended U+A8E0–U+A8FF</li>
+                    <li>Applicable Vedic Extensions U+1CD0–U+1CFA</li>
+                    <li>Devanagari Extended-A U+11B00–U+11B0A</li>
+                    <li>ZWJ/ZWNJ/CGJ and dotted-circle handling</li>
+                  </ul>
+                </article>
+              </div>
+              <aside class="callout callout-warn">
+                <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 9v4M12 17h.01"/><path d="M10.3 2.9 1.8 17.5A2 2 0 0 0 3.5 20h17a2 2 0 0 0 1.7-2.5L13.7 2.9a2 2 0 0 0-3.4 0Z"/></svg>
+                <p>Dart source/tests were mirrored for the same behavior, but the verification container had no Dart SDK;
+                  it therefore did not claim executed Dart format/analyze/test results. Ruff and Pint also had environment
+                  limitations documented in the release verification report.</p>
+              </aside>
+              <p><strong>Unicode-version distinction:</strong> transliteration tables explicitly handle the Unicode 18
+                Devanagari/Gujarati repertoire targeted by this release. PHP's dependency-free normalization/case/mark
+                database remains Unicode 17.0.0 and is intentionally labelled as such.</p>
+            </section>
+
             <section class="doc-section" id="errors" aria-labelledby="errors-heading">
               <h2 id="errors-heading">22. Errors &amp; recovery matrix</h2>
               <div class="table-wrap" role="region" aria-labelledby="cap-errors" tabindex="0">
@@ -2089,7 +2197,7 @@ assert($exactDeva === $result-&gt;rendered);</code></pre>
 
         <footer class="site-footer">
           <div class="content-inner">
-            <p>lipimala monorepo · Dart · JavaScript · Python · PHP · MIT License</p>
+            <p>lipimala 1.1.0 · Dart · JavaScript · Python · PHP · MIT License</p>
           </div>
         </footer>
       </div>

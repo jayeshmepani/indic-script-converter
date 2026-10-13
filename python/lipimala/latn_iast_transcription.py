@@ -129,9 +129,6 @@ class _IastPlainEnglish:
         r"([A-Za-z\u00C0-\u00FF\u0100-\u024F\u0250-\u02FF\u1E00-\u1EFF])'(?=[A-Za-z\u00C0-\u00FF\u0100-\u024F\u0250-\u02FF\u1E00-\u1EFF])"
     )
     _vowels = {'a', 'e', 'i', 'o', 'u'}
-    _ph_chh = '\ue010'
-    _ph_chh_cap = '\ue011'
-    _ph_chh_all = '\ue012'
 
     @classmethod
     def convert(cls, input_text: str, options: IastPlainEnglishOptions) -> str:
@@ -145,7 +142,7 @@ class _IastPlainEnglish:
         i = 0
         while i < len(text):
             ch = text[i]
-            if not options.preserve_vedic_accent_marks and is_encoded_vedic_mark(ch):
+            if not options.preserve_vedic_accent_marks and cls._is_vedic_accent_rune(ord(ch)):
                 i += 1
                 continue
             if cls._is_latin_char(ch):
@@ -237,7 +234,9 @@ class _IastPlainEnglish:
     @classmethod
     def _apply_profile(cls, word: str, profile: PlainEnglishRomanizationProfile) -> str:
         word = (
-            word.replace('x', 'kh')
+            word.replace('c\u0307', 'ts')
+            .replace('C\u0307', 'Ts')
+            .replace('x', 'kh')
             .replace('X', 'Kh')
             .replace('h\u032e', 'kh')
             .replace('H\u032e', 'Kh')
@@ -298,7 +297,25 @@ class _IastPlainEnglish:
 
     @staticmethod
     def _is_iast_vowel_char(ch: str) -> bool:
-        return ch.lower() in {'a', 'ā', 'i', 'ī', 'u', 'ū', 'e', 'o', 'ṛ', 'ṝ', 'ḷ', 'ḹ', 'æ', 'œ'}
+        return ch.lower() in {
+            'a',
+            'ā',
+            'i',
+            'ī',
+            'ĭ',
+            'u',
+            'ū',
+            'e',
+            'ē',
+            'o',
+            'ō',
+            'ṛ',
+            'ṝ',
+            'ḷ',
+            'ḹ',
+            'æ',
+            'œ',
+        }
 
     @staticmethod
     def _is_short_a_schwa(text: str) -> bool:
@@ -389,17 +406,29 @@ class _IastPlainEnglish:
 
     @classmethod
     def _expand_c(cls, word: str) -> str:
-        w = (
-            word.replace('ch', cls._ph_chh)
-            .replace('Ch', cls._ph_chh_cap)
-            .replace('CH', cls._ph_chh_all)
-        )
-        w = re.sub('[cC]', lambda m: 'Ch' if m.group(0) == 'C' else 'ch', w)
-        return (
-            w.replace(cls._ph_chh, 'chh')
-            .replace(cls._ph_chh_cap, 'Chh')
-            .replace(cls._ph_chh_all, 'CHH')
-        )
+        chars = list(word)
+        out: list[str] = []
+        i = 0
+        while i < len(chars):
+            current = chars[i]
+            if current not in {'c', 'C'}:
+                out.append(current)
+                i += 1
+                continue
+            next_char = chars[i + 1] if i + 1 < len(chars) else None
+            if current == 'c' and next_char == 'h':
+                out.append('chh')
+                i += 2
+            elif current == 'C' and next_char == 'h':
+                out.append('Chh')
+                i += 2
+            elif current == 'C' and next_char == 'H':
+                out.append('CHH')
+                i += 2
+            else:
+                out.append('Ch' if current == 'C' else 'ch')
+                i += 1
+        return ''.join(out)
 
     @staticmethod
     def _is_english_vowel(ch: str | None) -> bool:
@@ -553,9 +582,9 @@ class _IastPlainEnglish:
             return 'a'
         if ch == 'Ā':
             return 'A'
-        if ch == 'ī':
+        if ch == 'ī' or ch == 'ĭ':
             return 'i'
-        if ch == 'Ī':
+        if ch == 'Ī' or ch == 'Ĭ':
             return 'I'
         if ch == 'ū':
             return 'u'
@@ -598,6 +627,8 @@ class _IastPlainEnglish:
             'ṙ': 'r',
             'Ṙ': 'R',
             'ç': 'c',
+            'ċ': 'ts',
+            'Ċ': 'Ts',
             'Ç': 'C',
             'ł': 'l',
             'Ł': 'L',
@@ -642,6 +673,8 @@ class _IastPlainEnglish:
             'ǧ': 'g',
             'Ġ': 'G',
             'Ǧ': 'G',
+            'ɠ': 'g',
+            'ʄ': 'j',
             'ɓ': 'b',
             'Ɓ': 'B',
             'ɗ': 'd',

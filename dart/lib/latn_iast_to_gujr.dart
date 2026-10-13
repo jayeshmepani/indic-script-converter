@@ -1056,6 +1056,8 @@ class _IastToGujaratiConverter {
       take('ṣ', [0x0323]);
     } else if (lower == 's' && hasAcute) {
       take('ś', [0x0301]);
+    } else if (lower == 'c' && hasDotAbove) {
+      take('ċ', [0x0307]);
     } else if (lower == 's' && hasDotAbove) {
       take('ṡ', [0x0307]);
     } else if (lower == 's' && hasLineBelow) {

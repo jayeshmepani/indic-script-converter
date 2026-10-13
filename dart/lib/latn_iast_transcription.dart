@@ -212,12 +212,6 @@ class _IastPlainEnglish {
 
   static const Set<String> _vowels = {'a', 'e', 'i', 'o', 'u'};
 
-  /// Private-use placeholders used to keep the "ch → chh" / "c → ch"
-  /// expansion from re-matching its own output.
-  static const String _phChh = '\uE010';
-  static const String _phChhCap = '\uE011';
-  static const String _phChhAll = '\uE012';
-
   static String convert(String input, IastPlainEnglishOptions options) {
     if (input.isEmpty) return input;
 
@@ -233,7 +227,7 @@ class _IastPlainEnglish {
     var i = 0;
     while (i < runes.length) {
       final rune = runes[i];
-      if (!options.preserveVedicAccentMarks && isEncodedVedicMark(rune)) {
+      if (!options.preserveVedicAccentMarks && _isVedicAccentRune(rune)) {
         i += 1;
         continue;
       }
@@ -405,6 +399,8 @@ class _IastPlainEnglish {
     PlainEnglishRomanizationProfile profile,
   ) {
     word = word
+        .replaceAll('c\u0307', 'ts')
+        .replaceAll('C\u0307', 'Ts')
         // Default practical policy: x is treated as the kh sound in
         // plain-English output. q is preserved as q.
         .replaceAllMapped(RegExp('x'), (_) => 'kh')
@@ -527,10 +523,13 @@ class _IastPlainEnglish {
       'ā',
       'i',
       'ī',
+      'ĭ',
       'u',
       'ū',
       'e',
+      'ē',
       'o',
+      'ō',
       'ṛ',
       'ṝ',
       'ḷ',
@@ -671,20 +670,38 @@ class _IastPlainEnglish {
   // ---------------------------------------------------------------------
 
   static String _expandC(String word) {
-    var w = word;
-    // Protect existing "ch"/"Ch"/"CH" so it isn't re-matched below.
-    w = w
-        .replaceAll('ch', _phChh)
-        .replaceAll('Ch', _phChhCap)
-        .replaceAll('CH', _phChhAll);
-    // Plain IAST "c" sounds like English "ch".
-    w = w.replaceAllMapped(RegExp('[cC]'), (m) => m[0] == 'C' ? 'Ch' : 'ch');
-    // Restore the protected aspirated form as "chh".
-    w = w
-        .replaceAll(_phChh, 'chh')
-        .replaceAll(_phChhCap, 'Chh')
-        .replaceAll(_phChhAll, 'CHH');
-    return w;
+    final chars = word.runes.toList(growable: false);
+    final out = StringBuffer();
+    var i = 0;
+    while (i < chars.length) {
+      final current = String.fromCharCode(chars[i]);
+      if (current != 'c' && current != 'C') {
+        out.write(current);
+        i += 1;
+        continue;
+      }
+      if (i + 1 < chars.length) {
+        final next = String.fromCharCode(chars[i + 1]);
+        if (current == 'c' && next == 'h') {
+          out.write('chh');
+          i += 2;
+          continue;
+        }
+        if (current == 'C' && next == 'h') {
+          out.write('Chh');
+          i += 2;
+          continue;
+        }
+        if (current == 'C' && next == 'H') {
+          out.write('CHH');
+          i += 2;
+          continue;
+        }
+      }
+      out.write(current == 'C' ? 'Ch' : 'ch');
+      i += 1;
+    }
+    return out.toString();
   }
 
   // ---------------------------------------------------------------------
@@ -901,6 +918,11 @@ class _IastPlainEnglish {
         return 'u';
       case 'Ū':
         return 'U';
+      // Historic short-I component used in U+A8FE/U+A8FF AY sequences.
+      case 'ĭ':
+        return 'i';
+      case 'Ĭ':
+        return 'I';
       case 'Ă':
       case 'À':
       case 'Á':
@@ -981,6 +1003,12 @@ class _IastPlainEnglish {
       case 'û':
       case 'ü':
         return 'u';
+      case 'ɠ':
+        return 'g';
+      case 'Ɠ':
+        return 'G';
+      case 'ʄ':
+        return 'j';
 
       case 'ṛ':
       case 'ṝ':
@@ -1027,6 +1055,10 @@ class _IastPlainEnglish {
         return 'R';
       case 'ç':
         return 'c';
+      case 'ċ':
+        return 'ts';
+      case 'Ċ':
+        return 'Ts';
       case 'Ç':
         return 'C';
       case 'ł':

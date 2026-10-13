@@ -23,6 +23,12 @@ import {
     PlainEnglishRomanizationProfile,
     toPlainEnglishFromIast,
 } from './latn-iast-transcription.js';
+import {
+    toHunterianFromDevanagari,
+    toHunterianFromGujarati,
+    toPlainEnglishFromDevanagari,
+    toPlainEnglishFromGujarati,
+} from './brahmic-to-latn-iast.js';
 
 function devanagariProfile(profile) {
     if (profile === DevanagariRomanizationProfile.STRICT_IAST) {
@@ -173,3 +179,83 @@ export function toPlainEnglish(
     });
 }
 export const to_plain_english = toPlainEnglish;
+
+function brahmicPlainEnglishResult(
+    text,
+    renderer,
+    profile,
+    {
+        options,
+        inputNormalization = UnicodeNormalizationForm.NFD,
+        input_normalization = inputNormalization,
+        outputNormalization = UnicodeNormalizationForm.NFC,
+        output_normalization = outputNormalization,
+    } = {},
+) {
+    const source = String(text);
+    const normalizedInput = normalizeUnicode(source, input_normalization);
+    const rendered = normalizeUnicode(
+        options === undefined ? renderer(normalizedInput) : renderer(normalizedInput, options),
+        output_normalization,
+    );
+    const isHunterian = profile === TransliterationProfile.HUNTERIAN;
+    return new TransliterationResult({
+        original: source,
+        normalizedInput,
+        rendered,
+        profile,
+        inputNormalization: input_normalization,
+        outputNormalization: output_normalization,
+        renderingIsInjective: false,
+        issues: [
+            new TransliterationIssue({
+                code: isHunterian
+                    ? 'BRAHMIC_HUNTERIAN_VIEW_IS_INTRINSICALLY_LOSSY'
+                    : 'BRAHMIC_PLAIN_ENGLISH_VIEW_IS_INTRINSICALLY_LOSSY',
+                message:
+                    'The rendered Latin view is pronunciation-oriented and lossy; the result envelope retains the exact Brahmic source.',
+                severity: TransliterationIssueSeverity.INFO,
+            }),
+        ],
+    });
+}
+
+export function toPlainEnglishFromDevanagariResult(text, config = {}) {
+    return brahmicPlainEnglishResult(
+        text,
+        toPlainEnglishFromDevanagari,
+        TransliterationProfile.PLAIN_ENGLISH,
+        config,
+    );
+}
+export const to_plain_english_from_devanagari_result = toPlainEnglishFromDevanagariResult;
+
+export function toHunterianFromDevanagariResult(text, config = {}) {
+    return brahmicPlainEnglishResult(
+        text,
+        toHunterianFromDevanagari,
+        TransliterationProfile.HUNTERIAN,
+        config,
+    );
+}
+export const to_hunterian_from_devanagari_result = toHunterianFromDevanagariResult;
+
+export function toPlainEnglishFromGujaratiResult(text, config = {}) {
+    return brahmicPlainEnglishResult(
+        text,
+        toPlainEnglishFromGujarati,
+        TransliterationProfile.PLAIN_ENGLISH,
+        config,
+    );
+}
+export const to_plain_english_from_gujarati_result = toPlainEnglishFromGujaratiResult;
+
+export function toHunterianFromGujaratiResult(text, config = {}) {
+    return brahmicPlainEnglishResult(
+        text,
+        toHunterianFromGujarati,
+        TransliterationProfile.HUNTERIAN,
+        config,
+    );
+}
+export const to_hunterian_from_gujarati_result = toHunterianFromGujaratiResult;

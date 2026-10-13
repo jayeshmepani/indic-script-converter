@@ -218,10 +218,91 @@ isUnicodeCombiningMark = is_unicode_combining_mark
 
 def is_encoded_vedic_mark(value: int | str) -> bool:
     cp = ord(value) if isinstance(value, str) else value
-    return cp in {0x0951, 0x0952} or 0x1CD0 <= cp <= 0x1CFF or 0xA8E0 <= cp <= 0xA8FF
+    return cp in {0x0951, 0x0952, 0x20F0} or 0x1CD0 <= cp <= 0x1CFA
 
 
 isEncodedVedicMark = is_encoded_vedic_mark
+
+
+def is_vedic_tone_cantillation_mark(value: int | str) -> bool:
+    cp = ord(value) if isinstance(value, str) else value
+    return (
+        0x1CD0 <= cp <= 0x1CE1
+        or cp == 0x1CF4
+        or cp == 0x1CF7
+        or cp == 0x1CF8
+        or cp == 0x1CF9
+        or cp == 0x20F0
+    )
+
+
+def is_vedic_visarga_mark(value: int | str) -> bool:
+    cp = ord(value) if isinstance(value, str) else value
+    return 0x1CE2 <= cp <= 0x1CE8
+
+
+def is_vedic_nasal_mark(value: int | str) -> bool:
+    cp = ord(value) if isinstance(value, str) else value
+    return 0x1CE9 <= cp <= 0x1CF1 or cp == 0x1CFA
+
+
+def is_vedic_segmental_sign(value: int | str) -> bool:
+    cp = ord(value) if isinstance(value, str) else value
+    return cp == 0x1CF2 or cp == 0x1CF3 or cp == 0x1CF5 or cp == 0x1CF6
+
+
+def is_samaveda_cantillation_mark(value: int | str) -> bool:
+    cp = ord(value) if isinstance(value, str) else value
+    return 0xA8E0 <= cp <= 0xA8F1
+
+
+def is_devanagari_nasalization_sign(value: int | str) -> bool:
+    cp = ord(value) if isinstance(value, str) else value
+    return 0xA8F2 <= cp <= 0xA8F7
+
+
+def is_devanagari_editorial_mark(value: int | str) -> bool:
+    cp = ord(value) if isinstance(value, str) else value
+    return 0xA8F8 <= cp <= 0xA8FB or 0x11B00 <= cp <= 0x11B09
+
+
+def is_devanagari_extended_vowel(value: int | str) -> bool:
+    cp = ord(value) if isinstance(value, str) else value
+    return cp == 0xA8FE or cp == 0xA8FF
+
+
+def is_gujarati_transliteration_mark(value: int | str) -> bool:
+    cp = ord(value) if isinstance(value, str) else value
+    return 0x0AFA <= cp <= 0x0AFF
+
+
+def is_gujarati_consonant_nukta(value: int | str) -> bool:
+    cp = ord(value) if isinstance(value, str) else value
+    return 0x0AFD <= cp <= 0x0AFF
+
+
+def is_common_indic_number_form(value: int | str) -> bool:
+    cp = ord(value) if isinstance(value, str) else value
+    return 0xA830 <= cp <= 0xA839
+
+
+def is_brahmic_format_control(value: int | str) -> bool:
+    cp = ord(value) if isinstance(value, str) else value
+    return cp == 0x200C or cp == 0x200D or cp == 0x034F
+
+
+isVedicToneCantillationMark = is_vedic_tone_cantillation_mark
+isVedicVisargaMark = is_vedic_visarga_mark
+isVedicNasalMark = is_vedic_nasal_mark
+isVedicSegmentalSign = is_vedic_segmental_sign
+isSamavedaCantillationMark = is_samaveda_cantillation_mark
+isDevanagariNasalizationSign = is_devanagari_nasalization_sign
+isDevanagariEditorialMark = is_devanagari_editorial_mark
+isDevanagariExtendedVowel = is_devanagari_extended_vowel
+isGujaratiTransliterationMark = is_gujarati_transliteration_mark
+isGujaratiConsonantNukta = is_gujarati_consonant_nukta
+isCommonIndicNumberForm = is_common_indic_number_form
+isBrahmicFormatControl = is_brahmic_format_control
 
 
 @dataclass(frozen=True, slots=True)
@@ -375,10 +456,34 @@ __all__ = [
     'embed_exact_source_metadata',
     'hasEmbeddedExactSource',
     'has_embedded_exact_source',
+    'isBrahmicFormatControl',
+    'isCommonIndicNumberForm',
+    'isDevanagariEditorialMark',
+    'isDevanagariExtendedVowel',
+    'isDevanagariNasalizationSign',
     'isEncodedVedicMark',
+    'isGujaratiConsonantNukta',
+    'isGujaratiTransliterationMark',
+    'isSamavedaCantillationMark',
     'isUnicodeCombiningMark',
+    'isVedicNasalMark',
+    'isVedicSegmentalSign',
+    'isVedicToneCantillationMark',
+    'isVedicVisargaMark',
+    'is_brahmic_format_control',
+    'is_common_indic_number_form',
+    'is_devanagari_editorial_mark',
+    'is_devanagari_extended_vowel',
+    'is_devanagari_nasalization_sign',
     'is_encoded_vedic_mark',
+    'is_gujarati_consonant_nukta',
+    'is_gujarati_transliteration_mark',
+    'is_samaveda_cantillation_mark',
     'is_unicode_combining_mark',
+    'is_vedic_nasal_mark',
+    'is_vedic_segmental_sign',
+    'is_vedic_tone_cantillation_mark',
+    'is_vedic_visarga_mark',
     'normalizeUnicode',
     'normalize_unicode',
     'recoverEmbeddedExactSource',

@@ -127,7 +127,111 @@ def to_plain_english(
     )
 
 
+def _brahmic_plain_english_result(
+    text: str,
+    renderer,
+    profile: TransliterationProfile,
+    options: BrahmicPlainEnglishOptions | None = None,
+    input_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFD,
+    output_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFC,
+) -> TransliterationResult:
+    normalized_input = normalize_unicode(text, input_normalization)
+    rendered = normalize_unicode(
+        renderer(normalized_input) if options is None else renderer(normalized_input, options),
+        output_normalization,
+    )
+    return TransliterationResult(
+        original=text,
+        normalized_input=normalized_input,
+        rendered=rendered,
+        profile=profile,
+        input_normalization=input_normalization,
+        output_normalization=output_normalization,
+        rendering_is_injective=False,
+        issues=(
+            TransliterationIssue(
+                code=(
+                    'BRAHMIC_HUNTERIAN_VIEW_IS_INTRINSICALLY_LOSSY'
+                    if profile is TransliterationProfile.HUNTERIAN
+                    else 'BRAHMIC_PLAIN_ENGLISH_VIEW_IS_INTRINSICALLY_LOSSY'
+                ),
+                message='The rendered Latin view is pronunciation-oriented and lossy; the result envelope retains the exact Brahmic source.',
+                severity=TransliterationIssueSeverity.INFO,
+            ),
+        ),
+    )
+
+
+def to_plain_english_from_devanagari_result(
+    text: str,
+    options: BrahmicPlainEnglishOptions | None = None,
+    input_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFD,
+    output_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFC,
+) -> TransliterationResult:
+    return _brahmic_plain_english_result(
+        text,
+        to_plain_english_from_devanagari,
+        TransliterationProfile.PLAIN_ENGLISH,
+        options,
+        input_normalization,
+        output_normalization,
+    )
+
+
+def to_hunterian_from_devanagari_result(
+    text: str,
+    options: BrahmicPlainEnglishOptions | None = None,
+    input_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFD,
+    output_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFC,
+) -> TransliterationResult:
+    return _brahmic_plain_english_result(
+        text,
+        to_hunterian_from_devanagari,
+        TransliterationProfile.HUNTERIAN,
+        options,
+        input_normalization,
+        output_normalization,
+    )
+
+
+def to_plain_english_from_gujarati_result(
+    text: str,
+    options: BrahmicPlainEnglishOptions | None = None,
+    input_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFD,
+    output_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFC,
+) -> TransliterationResult:
+    return _brahmic_plain_english_result(
+        text,
+        to_plain_english_from_gujarati,
+        TransliterationProfile.PLAIN_ENGLISH,
+        options,
+        input_normalization,
+        output_normalization,
+    )
+
+
+def to_hunterian_from_gujarati_result(
+    text: str,
+    options: BrahmicPlainEnglishOptions | None = None,
+    input_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFD,
+    output_normalization: UnicodeNormalizationForm = UnicodeNormalizationForm.NFC,
+) -> TransliterationResult:
+    return _brahmic_plain_english_result(
+        text,
+        to_hunterian_from_gujarati,
+        TransliterationProfile.HUNTERIAN,
+        options,
+        input_normalization,
+        output_normalization,
+    )
+
+
 # Dart-style aliases
+toPlainEnglishFromDevanagariResult = to_plain_english_from_devanagari_result
+toHunterianFromDevanagariResult = to_hunterian_from_devanagari_result
+toPlainEnglishFromGujaratiResult = to_plain_english_from_gujarati_result
+toHunterianFromGujaratiResult = to_hunterian_from_gujarati_result
+
 toDevanagari = to_devanagari
 toGujarati = to_gujarati
 toPlainEnglish = to_plain_english

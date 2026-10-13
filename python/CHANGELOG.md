@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.1.0
+
+- Added direct Devanagari/Gujarati → Plain-English and Hunterian APIs, bulk sequence helpers, and result-envelope variants.
+- Added source-aware inherent-schwa tracking with Gujarati/Hindi/Sanskrit policies.
+- Added direct-transcription controls for vowel length and terminal anusvara.
+- Kept legacy IAST → Plain-English/Hunterian behavior backward-compatible.
+- Added Brahmic naturalization regression tests.
+- Hardened Unicode 18 Devanagari/Gujarati reverse coverage for historic prishthamatra sequences, short-AI AY, Devanagari Extended/Extended-A, Vedic segmental/nasal signs, and Common Indic number forms.
+- Added semantic Gujarati Arabic-transliteration handling for sukun, shadda, maddah, special nuktas, and configurable `ʿayn` rendering.
+- Corrected Sindhi implosive identities (`ɠ`, `ʄ`, `ɗ`, `ɓ`) and added canonical forward aliases where applicable.
+- Plain-English/Hunterian now renders semantic OM as `om` and no longer leaks specialized Vedic/Devanagari nasal marks by default.
+- Fixed historic long-E/OOE readable rendering (`ॕ → ee`, `ऻ/ॴ → ooe`) consistently across runtimes.
+- Preserved pre-existing Latin/IAST text, Unicode diacritics, and smart apostrophes/quotes exactly in direct Brahmic → Plain-English/Hunterian mixed-script input.
+- Added Konkani `च़ → ċ → tsa`, audible candrabindu handling, dangling-modifier cleanup, and Gujarati Hunterian visarga handling without rewriting original Latin `w`.
+
 ## 1.0.2
 
 - Added bulk sequence transliteration functions (`to_devanagari_from_iast_list`, `to_gujarati_from_iast_list`, `to_plain_english_from_iast_list`, `to_canonical_gujarati_from_devanagari_list`, `to_canonical_devanagari_from_gujarati_list`, `to_exact_devanagari_from_gujarati_list`, `to_exact_gujarati_from_devanagari_list`, `to_devanagari_list`, `to_gujarati_list`, `to_plain_english_list`).

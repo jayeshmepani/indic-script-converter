@@ -7,8 +7,12 @@ from .brahmic_to_latn_iast import (
     to_canonical_iast_from_gujarati,
     to_exact_iast_from_devanagari,
     to_exact_iast_from_gujarati,
+    to_hunterian_from_devanagari,
+    to_hunterian_from_gujarati,
     to_iast_from_devanagari,
     to_iast_from_gujarati,
+    to_plain_english_from_devanagari,
+    to_plain_english_from_gujarati,
 )
 from .deva_gujr_converter import (
     to_canonical_devanagari_from_gujarati,
@@ -42,6 +46,22 @@ def to_gujarati_from_iast_list(items: Iterable[str], options=None) -> list[str]:
 def to_plain_english_from_iast_list(items: Iterable[str], options=None) -> list[str]:
     """Bulk converts a sequence of IAST strings to Plain English strings."""
     return [to_plain_english_from_iast(item, options=options) for item in items]
+
+
+def to_plain_english_from_devanagari_list(items: Iterable[str], options=None) -> list[str]:
+    return [to_plain_english_from_devanagari(item, options=options) for item in items]
+
+
+def to_hunterian_from_devanagari_list(items: Iterable[str], options=None) -> list[str]:
+    return [to_hunterian_from_devanagari(item, options=options) for item in items]
+
+
+def to_plain_english_from_gujarati_list(items: Iterable[str], options=None) -> list[str]:
+    return [to_plain_english_from_gujarati(item, options=options) for item in items]
+
+
+def to_hunterian_from_gujarati_list(items: Iterable[str], options=None) -> list[str]:
+    return [to_hunterian_from_gujarati(item, options=options) for item in items]
 
 
 def to_iast_from_devanagari_list(items: Iterable[str], options=None) -> list[str]:
@@ -117,3 +137,10 @@ def to_gujarati_list(items: Iterable[str], options=None) -> list[Transliteration
 def to_plain_english_list(items: Iterable[str], options=None) -> list[TransliterationResult]:
     """Bulk converts a sequence of IAST strings returning a list of Plain English TransliterationResult envelopes."""
     return [to_plain_english(item, options=options) for item in items]
+
+
+# Dart/JavaScript-style aliases for cross-runtime parity
+toPlainEnglishFromDevanagariList = to_plain_english_from_devanagari_list
+toHunterianFromDevanagariList = to_hunterian_from_devanagari_list
+toPlainEnglishFromGujaratiList = to_plain_english_from_gujarati_list
+toHunterianFromGujaratiList = to_hunterian_from_gujarati_list

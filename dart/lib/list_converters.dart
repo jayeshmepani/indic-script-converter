@@ -39,6 +39,34 @@ extension IndicScriptListConversion on Iterable<String> {
   }) =>
       map((s) => s.toPlainEnglishFromIast(options: options)).toList();
 
+  /// Directly converts Devanagari to natural Plain English.
+  List<String> toPlainEnglishFromDevanagari({
+    BrahmicPlainEnglishOptions options = const BrahmicPlainEnglishOptions(),
+  }) =>
+      map((s) => s.toPlainEnglishFromDevanagari(options: options)).toList();
+
+  /// Directly converts Devanagari to Hunterian.
+  List<String> toHunterianFromDevanagari({
+    BrahmicPlainEnglishOptions options = const BrahmicPlainEnglishOptions(
+      vowelLength: BrahmicVowelLengthPolicy.collapse,
+    ),
+  }) =>
+      map((s) => s.toHunterianFromDevanagari(options: options)).toList();
+
+  /// Directly converts Gujarati to natural Plain English.
+  List<String> toPlainEnglishFromGujarati({
+    BrahmicPlainEnglishOptions options = const BrahmicPlainEnglishOptions(),
+  }) =>
+      map((s) => s.toPlainEnglishFromGujarati(options: options)).toList();
+
+  /// Directly converts Gujarati to Hunterian.
+  List<String> toHunterianFromGujarati({
+    BrahmicPlainEnglishOptions options = const BrahmicPlainEnglishOptions(
+      vowelLength: BrahmicVowelLengthPolicy.collapse,
+    ),
+  }) =>
+      map((s) => s.toHunterianFromGujarati(options: options)).toList();
+
   /// Smart converts each Devanagari string in the collection back to IAST (recovers exact source if embedded metadata exists).
   List<String> toIastFromDevanagari({
     ScriptToIastOptions options = const ScriptToIastOptions(),
@@ -126,6 +154,34 @@ List<String> toPlainEnglishFromIastList(
   IastPlainEnglishOptions options = const IastPlainEnglishOptions(),
 }) =>
     items.toPlainEnglishFromIast(options: options);
+
+List<String> toPlainEnglishFromDevanagariList(
+  Iterable<String> items, {
+  BrahmicPlainEnglishOptions options = const BrahmicPlainEnglishOptions(),
+}) =>
+    items.toPlainEnglishFromDevanagari(options: options);
+
+List<String> toHunterianFromDevanagariList(
+  Iterable<String> items, {
+  BrahmicPlainEnglishOptions options = const BrahmicPlainEnglishOptions(
+    vowelLength: BrahmicVowelLengthPolicy.collapse,
+  ),
+}) =>
+    items.toHunterianFromDevanagari(options: options);
+
+List<String> toPlainEnglishFromGujaratiList(
+  Iterable<String> items, {
+  BrahmicPlainEnglishOptions options = const BrahmicPlainEnglishOptions(),
+}) =>
+    items.toPlainEnglishFromGujarati(options: options);
+
+List<String> toHunterianFromGujaratiList(
+  Iterable<String> items, {
+  BrahmicPlainEnglishOptions options = const BrahmicPlainEnglishOptions(
+    vowelLength: BrahmicVowelLengthPolicy.collapse,
+  ),
+}) =>
+    items.toHunterianFromGujarati(options: options);
 
 /// Converts a list of Devanagari strings back to IAST (recovers exact source if metadata present).
 List<String> toIastFromDevanagariList(

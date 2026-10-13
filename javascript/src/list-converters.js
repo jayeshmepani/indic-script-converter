@@ -8,6 +8,10 @@ import {
     toCanonicalIastFromGujarati,
     toExactIastFromDevanagari,
     toExactIastFromGujarati,
+    toPlainEnglishFromDevanagari,
+    toHunterianFromDevanagari,
+    toPlainEnglishFromGujarati,
+    toHunterianFromGujarati,
 } from './brahmic-to-latn-iast.js';
 import {
     toDevanagariFromGujarati,
@@ -58,6 +62,26 @@ export function toPlainEnglishFromIastList(items, options) {
  * @param {object} [options] Conversion options.
  * @returns {Array<string>} Array of IAST strings.
  */
+export function toPlainEnglishFromDevanagariList(items, options) {
+    if (!Array.isArray(items)) throw new TypeError('Expected an array of strings.');
+    return items.map((item) => toPlainEnglishFromDevanagari(item, options));
+}
+
+export function toHunterianFromDevanagariList(items, options) {
+    if (!Array.isArray(items)) throw new TypeError('Expected an array of strings.');
+    return items.map((item) => toHunterianFromDevanagari(item, options));
+}
+
+export function toPlainEnglishFromGujaratiList(items, options) {
+    if (!Array.isArray(items)) throw new TypeError('Expected an array of strings.');
+    return items.map((item) => toPlainEnglishFromGujarati(item, options));
+}
+
+export function toHunterianFromGujaratiList(items, options) {
+    if (!Array.isArray(items)) throw new TypeError('Expected an array of strings.');
+    return items.map((item) => toHunterianFromGujarati(item, options));
+}
+
 export function toIastFromDevanagariList(items, options) {
     if (!Array.isArray(items)) throw new TypeError('Expected an array of strings.');
     return items.map((item) => toIastFromDevanagari(item, options));

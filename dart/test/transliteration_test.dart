@@ -173,7 +173,8 @@ void main() {
       );
 
       expect(rendered.runes, isNot(contains(0x0951)));
-      expect(rendered.runes, isNot(contains(0xA8E0)));
+      // U+A8E0 is Samaveda cantillation, not an optional accent: it survives.
+      expect(rendered.runes, contains(0xA8E0));
       expect(rendered.runes, isNot(contains(0x1CD0)));
     });
 
@@ -181,8 +182,7 @@ void main() {
       final vedicRunes = <int>[
         0x0951,
         0x0952,
-        for (var rune = 0xA8E0; rune <= 0xA8FF; rune++) rune,
-        for (var rune = 0x1CD0; rune <= 0x1CFF; rune++) rune,
+        for (var rune = 0x1CD0; rune <= 0x1CFA; rune++) rune,
       ];
 
       for (final rune in vedicRunes) {
@@ -202,6 +202,32 @@ void main() {
         expect(
           removed.runes,
           isNot(contains(rune)),
+          reason: 'U+${rune.toRadixString(16)}',
+        );
+      }
+    });
+
+    test(
+        'Devanagari Extended and unassigned Vedic code points are not '
+        'treated as strippable accents', () {
+      // U+A8E0..U+A8FF mixes cantillation, nasalization, editorial and
+      // sacred signs plus two real vowels; U+1CFB..U+1CFF are unassigned.
+      // None of them may be stripped as Vedic decorations.
+      final retainedRunes = <int>[
+        for (var rune = 0xA8E0; rune <= 0xA8FF; rune++) rune,
+        for (var rune = 0x1CFB; rune <= 0x1CFF; rune++) rune,
+      ];
+
+      for (final rune in retainedRunes) {
+        final source = 'a${String.fromCharCode(rune)}';
+        final rendered = source.toDevanagariFromIast(
+          options: const IastToDevanagariOptions(
+            preserveVedicAccentMarks: false,
+          ),
+        );
+        expect(
+          rendered.runes,
+          contains(rune),
           reason: 'U+${rune.toRadixString(16)}',
         );
       }

@@ -1,6 +1,7 @@
 (function () {
   'use strict';
 
+  // Documentation UI companion for lipimala 1.1.0.
   var THEME_KEY = 'lipimala-docs-theme';
   var LANG_KEY = 'lipimala-docs-code-language';
   var DRAWER_QUERY = '(max-width: 60rem)';

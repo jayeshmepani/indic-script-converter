@@ -131,6 +131,7 @@ class _IastToDevanagariConverter {
     'ḹ': 'ॡ',
     'e': 'ए',
     'ē': 'ए',
+    'aĭ': 'ꣾ',
     'ai': 'ऐ',
     'o': 'ओ',
     'ō': 'ओ',
@@ -164,6 +165,7 @@ class _IastToDevanagariConverter {
     'ḹ': 'ॣ',
     'e': 'े',
     'ē': 'े',
+    'aĭ': 'ꣿ',
     'ai': 'ै',
     'o': 'ो',
     'ō': 'ो',
@@ -256,10 +258,13 @@ class _IastToDevanagariConverter {
     'zh': 'ॹ',
     // ǧ: Sindhi-style GGA when available.
     'ǧ': 'ॻ',
+    'ɠ': 'ॻ',
+    'ċ': 'च़',
     // Full-letter aliases without an embedded inherent "a" (that "a" is a
     // syllable vowel, not part of the consonant token).
     'gg': 'ॻ',
     'jj': 'ॼ',
+    'ʄ': 'ॼ',
     'ddd': 'ॾ',
     'ɗ': 'ॾ',
     'bb': 'ॿ',
@@ -1079,6 +1084,8 @@ class _IastToDevanagariConverter {
       take('ṣ', [0x0323]);
     } else if (lower == 's' && hasAcute) {
       take('ś', [0x0301]);
+    } else if (lower == 'c' && hasDotAbove) {
+      take('ċ', [0x0307]);
     } else if (lower == 's' && hasDotAbove) {
       take('ṡ', [0x0307]);
     } else if (lower == 's' && hasLineBelow) {

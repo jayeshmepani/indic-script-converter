@@ -172,12 +172,87 @@ bool isUnicodeCombiningMark(int rune) =>
     unicode.isSpacingMark(rune) ||
     unicode.isEnclosingMark(rune);
 
-/// All Unicode blocks used for encoded Vedic tone/sign data.
+/// Encoded Vedic tone/sign data (Unicode 18.0).
+///
+/// This deliberately covers only U+0951, U+0952, the assigned Vedic
+/// Extensions range U+1CD0..U+1CFA, and U+20F0 COMBINING ASTERISK ABOVE. It does NOT cover U+A8E0..U+A8FF: that
+/// block mixes Samaveda cantillation digits/letters, specialized nasalization
+/// signs, manuscript/editorial signs, sacred signs and two real vowels
+/// (U+A8FE/A8FF AY), which must not be treated as optional decorations.
+/// U+1CFB..U+1CFF are unassigned and are not treated as known characters.
 bool isEncodedVedicMark(int rune) =>
     rune == 0x0951 ||
     rune == 0x0952 ||
-    (rune >= 0x1CD0 && rune <= 0x1CFF) ||
-    (rune >= 0xA8E0 && rune <= 0xA8FF);
+    (rune >= 0x1CD0 && rune <= 0x1CFA) ||
+    rune == 0x20F0;
+
+/// Vedic pitch/cantillation marks: no segmental pronunciation of their own.
+/// Canonical output preserves them as annotations; Plain/Hunterian views omit
+/// them by default.
+bool isVedicToneCantillationMark(int rune) =>
+    (rune >= 0x1CD0 && rune <= 0x1CE1) ||
+    rune == 0x1CF4 ||
+    rune == 0x1CF7 ||
+    rune == 0x1CF8 ||
+    rune == 0x1CF9 ||
+    rune == 0x20F0;
+
+/// Vedic visarga modifiers: keep the segmental visarga (`h`) contribution in
+/// every profile and drop only the tonal decoration.
+bool isVedicVisargaMark(int rune) => rune >= 0x1CE2 && rune <= 0x1CE8;
+
+/// Vedic nasal/anusvara signs: genuine nasal pronunciation, never silently
+/// dropped by Plain/Hunterian views.
+bool isVedicNasalMark(int rune) =>
+    (rune >= 0x1CE9 && rune <= 0x1CF1) || rune == 0x1CFA;
+
+/// Vedic segmental signs with consonant-like pronunciation: ardhavisarga
+/// (U+1CF2/1CF3), jihvamuliya (U+1CF5, velar fricative) and upadhmāniya
+/// (U+1CF6, bilabial fricative). Unicode notes ardhavisarga is not limited
+/// to Vedic usage.
+bool isVedicSegmentalSign(int rune) =>
+    rune == 0x1CF2 || rune == 0x1CF3 || rune == 0x1CF5 || rune == 0x1CF6;
+
+/// Samaveda combining cantillation digits/letters/avagraha (U+A8E0..U+A8F1).
+/// Canonical output preserves them as annotations; Plain/Hunterian views omit
+/// them by default. Never map them to ordinary digits/letters.
+bool isSamavedaCantillationMark(int rune) => rune >= 0xA8E0 && rune <= 0xA8F1;
+
+/// Specialized Devanagari nasalization signs (U+A8F2..U+A8F7). These carry
+/// nasal pronunciation and enter nasal handling, not generic pass-through.
+bool isDevanagariNasalizationSign(int rune) => rune >= 0xA8F2 && rune <= 0xA8F7;
+
+/// Devanagari manuscript/editorial signs with no pronunciation
+/// (U+A8F8..U+A8FB) plus Devanagari Extended-A head/auspicious signs
+/// (U+11B00..U+11B09). Canonical output preserves them exactly; they must
+/// never participate in inherent-schwa parsing.
+bool isDevanagariEditorialMark(int rune) =>
+    (rune >= 0xA8F8 && rune <= 0xA8FB) || (rune >= 0x11B00 && rune <= 0x11B09);
+
+/// Devanagari Extended real vowels (U+A8FE independent AY, U+A8FF vowel-sign
+/// AY: the short-AI pair). Phonemic characters, never Vedic decorations.
+bool isDevanagariExtendedVowel(int rune) => rune == 0xA8FE || rune == 0xA8FF;
+
+/// Gujarati Arabic-transliteration marks (U+0AFA sukun, U+0AFB shadda,
+/// U+0AFC maddah, U+0AFD..U+0AFF consonant-modifying nuktas), used by Ismaili
+/// Khoja communities. They drive pronunciation and need cluster mappings.
+bool isGujaratiTransliterationMark(int rune) =>
+    rune >= 0x0AFA && rune <= 0x0AFF;
+
+/// Consonant-modifying Gujarati nuktas (U+0AFD..U+0AFF): they change the
+/// consonant itself and need cluster mappings, not silent dropping.
+bool isGujaratiConsonantNukta(int rune) => rune >= 0x0AFD && rune <= 0x0AFF;
+
+/// Common Indic Number Forms (U+A830..U+A839): historic fractions and marks
+/// for currency/weights/measures. No phonology; canonical output preserves
+/// them and Plain/Hunterian views carry them through untouched.
+bool isCommonIndicNumberForm(int rune) => rune >= 0xA830 && rune <= 0xA839;
+
+/// Formatting characters tolerated explicitly by the Brahmic parser: ZWJ,
+/// ZWNJ (zero phonetic output, never create/delete an inherent schwa) and
+/// CGJ (ordering semantics only, no readable output).
+bool isBrahmicFormatControl(int rune) =>
+    rune == 0x200C || rune == 0x200D || rune == 0x034F;
 
 /// Invisible, self-validating exact-source metadata embedded at the end of a
 /// rendered Brahmic string.

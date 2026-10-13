@@ -255,15 +255,77 @@ export const is_unicode_combining_mark = isUnicodeCombiningMark;
 
 export function isEncodedVedicMark(value) {
     const cp = typeof value === 'number' ? value : String(value).codePointAt(0);
-    return (
-        cp === 0x0951 ||
-        cp === 0x0952 ||
-        (cp >= 0x1cd0 && cp <= 0x1cff) ||
-        (cp >= 0xa8e0 && cp <= 0xa8ff)
-    );
+    return cp === 0x0951 || cp === 0x0952 || (cp >= 0x1cd0 && cp <= 0x1cfa) || cp === 0x20f0;
 }
 
 export const is_encoded_vedic_mark = isEncodedVedicMark;
+
+export function isVedicToneCantillationMark(value) {
+    const cp = typeof value === 'number' ? value : String(value).codePointAt(0);
+    return (
+        (cp >= 0x1cd0 && cp <= 0x1ce1) ||
+        cp === 0x1cf4 ||
+        cp === 0x1cf7 ||
+        cp === 0x1cf8 ||
+        cp === 0x1cf9 ||
+        cp === 0x20f0
+    );
+}
+
+export function isVedicVisargaMark(value) {
+    const cp = typeof value === 'number' ? value : String(value).codePointAt(0);
+    return cp >= 0x1ce2 && cp <= 0x1ce8;
+}
+
+export function isVedicNasalMark(value) {
+    const cp = typeof value === 'number' ? value : String(value).codePointAt(0);
+    return (cp >= 0x1ce9 && cp <= 0x1cf1) || cp === 0x1cfa;
+}
+
+export function isVedicSegmentalSign(value) {
+    const cp = typeof value === 'number' ? value : String(value).codePointAt(0);
+    return cp === 0x1cf2 || cp === 0x1cf3 || cp === 0x1cf5 || cp === 0x1cf6;
+}
+
+export function isSamavedaCantillationMark(value) {
+    const cp = typeof value === 'number' ? value : String(value).codePointAt(0);
+    return cp >= 0xa8e0 && cp <= 0xa8f1;
+}
+
+export function isDevanagariNasalizationSign(value) {
+    const cp = typeof value === 'number' ? value : String(value).codePointAt(0);
+    return cp >= 0xa8f2 && cp <= 0xa8f7;
+}
+
+export function isDevanagariEditorialMark(value) {
+    const cp = typeof value === 'number' ? value : String(value).codePointAt(0);
+    return (cp >= 0xa8f8 && cp <= 0xa8fb) || (cp >= 0x11b00 && cp <= 0x11b09);
+}
+
+export function isDevanagariExtendedVowel(value) {
+    const cp = typeof value === 'number' ? value : String(value).codePointAt(0);
+    return cp === 0xa8fe || cp === 0xa8ff;
+}
+
+export function isGujaratiTransliterationMark(value) {
+    const cp = typeof value === 'number' ? value : String(value).codePointAt(0);
+    return cp >= 0x0afa && cp <= 0x0aff;
+}
+
+export function isGujaratiConsonantNukta(value) {
+    const cp = typeof value === 'number' ? value : String(value).codePointAt(0);
+    return cp >= 0x0afd && cp <= 0x0aff;
+}
+
+export function isCommonIndicNumberForm(value) {
+    const cp = typeof value === 'number' ? value : String(value).codePointAt(0);
+    return cp >= 0xa830 && cp <= 0xa839;
+}
+
+export function isBrahmicFormatControl(value) {
+    const cp = typeof value === 'number' ? value : String(value).codePointAt(0);
+    return cp === 0x200c || cp === 0x200d || cp === 0x034f;
+}
 
 export class EmbeddedExactSource {
     constructor({

@@ -679,6 +679,8 @@ export class ForwardConverter {
             take('ṣ', [0x0323]);
         } else if (lower === 's' && hasAcute) {
             take('ś', [0x0301]);
+        } else if (lower === 'c' && hasDotAbove) {
+            take('ċ', [0x0307]);
         } else if (lower === 's' && hasDotAbove) {
             take('ṡ', [0x0307]);
         } else if (lower === 's' && hasLineBelow) {
@@ -730,7 +732,7 @@ export class ForwardConverter {
             const token = { a: 'ā', i: 'ī', u: 'ū', e: 'ē', o: 'ō' }[lower];
             if (token) take(token, [0x0304]);
         } else if (marks.includes(0x0306)) {
-            const token = { a: 'ă', e: 'ĕ', o: 'ŏ' }[lower];
+            const token = { a: 'ă', e: 'ĕ', i: 'ĭ', o: 'ŏ' }[lower];
             if (token) take(token, [0x0306]);
         } else if (marks.includes(0x0302)) {
             const token = { e: 'ê', o: 'ô' }[lower];

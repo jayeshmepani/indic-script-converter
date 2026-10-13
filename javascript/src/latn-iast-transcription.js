@@ -91,9 +91,6 @@ class IastPlainEnglish {
     static innerApostrophe =
         /([A-Za-z\u00C0-\u00FF\u0100-\u024F\u0250-\u02FF\u1E00-\u1EFF])'(?=[A-Za-z\u00C0-\u00FF\u0100-\u024F\u0250-\u02FF\u1E00-\u1EFF])/gu;
     static vowels = new Set(['a', 'e', 'i', 'o', 'u']);
-    static phChh = '\uE010';
-    static phChhCap = '\uE011';
-    static phChhAll = '\uE012';
 
     static convert(inputText, options) {
         const input = String(inputText);
@@ -108,7 +105,10 @@ class IastPlainEnglish {
         let i = 0;
         while (i < chars.length) {
             const ch = chars[i];
-            if (!options.preserveVedicAccentMarks && isEncodedVedicMark(ch)) {
+            if (
+                !options.preserveVedicAccentMarks &&
+                IastPlainEnglish.isVedicAccentRune(ch.codePointAt(0))
+            ) {
                 i += 1;
                 continue;
             }
@@ -213,6 +213,8 @@ class IastPlainEnglish {
 
     static applyProfile(word, profile) {
         let result = word
+            .replaceAll('c\u0307', 'ts')
+            .replaceAll('C\u0307', 'Ts')
             .replaceAll('x', 'kh')
             .replaceAll('X', 'Kh')
             .replaceAll('h\u032E', 'kh')
@@ -290,9 +292,25 @@ class IastPlainEnglish {
     }
 
     static isIastVowelChar(ch) {
-        return new Set(['a', 'ā', 'i', 'ī', 'u', 'ū', 'e', 'o', 'ṛ', 'ṝ', 'ḷ', 'ḹ', 'æ', 'œ']).has(
-            ch.toLowerCase(),
-        );
+        return new Set([
+            'a',
+            'ā',
+            'i',
+            'ī',
+            'ĭ',
+            'u',
+            'ū',
+            'e',
+            'ē',
+            'o',
+            'ō',
+            'ṛ',
+            'ṝ',
+            'ḷ',
+            'ḹ',
+            'æ',
+            'œ',
+        ]).has(ch.toLowerCase());
     }
 
     static isShortASchwa(text) {
@@ -381,15 +399,29 @@ class IastPlainEnglish {
     }
 
     static expandC(word) {
-        let w = word
-            .replaceAll('ch', IastPlainEnglish.phChh)
-            .replaceAll('Ch', IastPlainEnglish.phChhCap)
-            .replaceAll('CH', IastPlainEnglish.phChhAll);
-        w = w.replace(/[cC]/gu, (m) => (m === 'C' ? 'Ch' : 'ch'));
-        return w
-            .replaceAll(IastPlainEnglish.phChh, 'chh')
-            .replaceAll(IastPlainEnglish.phChhCap, 'Chh')
-            .replaceAll(IastPlainEnglish.phChhAll, 'CHH');
+        const chars = Array.from(word);
+        const out = [];
+        for (let i = 0; i < chars.length; i += 1) {
+            const current = chars[i];
+            if (current !== 'c' && current !== 'C') {
+                out.push(current);
+                continue;
+            }
+            const next = chars[i + 1];
+            if (current === 'c' && next === 'h') {
+                out.push('chh');
+                i += 1;
+            } else if (current === 'C' && next === 'h') {
+                out.push('Chh');
+                i += 1;
+            } else if (current === 'C' && next === 'H') {
+                out.push('CHH');
+                i += 1;
+            } else {
+                out.push(current === 'C' ? 'Ch' : 'ch');
+            }
+        }
+        return out.join('');
     }
 
     static isEnglishVowel(ch) {
@@ -425,7 +457,7 @@ class IastPlainEnglish {
             if (preserveVedic && IastPlainEnglish.isVowelOutput(folded)) {
                 folded += marks
                     .filter((cp) => IastPlainEnglish.isVedicAccentRune(cp))
-                    .map(String.fromCodePoint)
+                    .map((cp) => String.fromCodePoint(cp))
                     .join('');
             }
             out.push(folded);
@@ -527,8 +559,8 @@ class IastPlainEnglish {
     static foldPrecomposed(ch, glottal, nya, nextBase = null, prev = null) {
         if (ch === 'ā') return 'a';
         if (ch === 'Ā') return 'A';
-        if (ch === 'ī') return 'i';
-        if (ch === 'Ī') return 'I';
+        if (ch === 'ī' || ch === 'ĭ') return 'i';
+        if (ch === 'Ī' || ch === 'Ĭ') return 'I';
         if (ch === 'ū') return 'u';
         if (ch === 'Ū') return 'U';
         const groups = {
@@ -571,6 +603,8 @@ class IastPlainEnglish {
             ṙ: 'r',
             Ṙ: 'R',
             ç: 'c',
+            ċ: 'ts',
+            Ċ: 'Ts',
             Ç: 'C',
             ł: 'l',
             Ł: 'L',
@@ -615,6 +649,8 @@ class IastPlainEnglish {
             ǧ: 'g',
             Ġ: 'G',
             Ǧ: 'G',
+            ɠ: 'g',
+            ʄ: 'j',
             ɓ: 'b',
             Ɓ: 'B',
             ɗ: 'd',

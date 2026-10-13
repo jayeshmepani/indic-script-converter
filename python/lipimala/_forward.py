@@ -599,6 +599,8 @@ class ForwardConverter:
             take('ṣ', [0x0323])
         elif lower == 's' and has_acute:
             take('ś', [0x0301])
+        elif lower == 'c' and has_dot_above:
+            take('ċ', [0x0307])
         elif lower == 's' and has_dot_above:
             take('ṡ', [0x0307])
         elif lower == 's' and has_line_below:
@@ -648,7 +650,7 @@ class ForwardConverter:
             if token:
                 take(token, [0x0304])
         elif 0x0306 in marks:
-            token = {'a': 'ă', 'e': 'ĕ', 'o': 'ŏ'}.get(lower)
+            token = {'a': 'ă', 'e': 'ĕ', 'i': 'ĭ', 'o': 'ŏ'}.get(lower)
             if token:
                 take(token, [0x0306])
         elif 0x0302 in marks:
