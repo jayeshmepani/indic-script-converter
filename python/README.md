@@ -47,7 +47,7 @@ The rendered script may not encode the original Latin spelling, capitalization, 
 from lipimala import to_devanagari
 
 result = to_devanagari('Kṛṣṇa')
-print(result.rendered)          # कृष्ण
+print(result.rendered)  # कृष्ण
 print(result.restore_original())  # Kṛṣṇa
 ```
 

@@ -7,7 +7,7 @@ Package versions are synchronized across runtimes unless noted.
 
 ## 1.1.0
 
-**lipimala v1.1.0 — Natural Brahmic → Plain-English / Hunterian**
+**lipimala v1.1.0 — Brahmic transcription and Unicode 18 coverage**
 
 - Added first-class **Devanagari/Gujarati → Plain-English and Hunterian** string APIs in Dart, JavaScript, Python, and PHP, plus bulk/list helpers.
 - Added source-aware inherent-schwa tracking so pronunciation rules delete only implicit Brahmic schwas rather than explicit written vowels.
@@ -15,6 +15,9 @@ Package versions are synchronized across runtimes unless noted.
 - Added readable vowel-length and terminal-anusvara policies for direct Brahmic transcription.
 - Prevented Gujarati Hunterian from inheriting Hindi-oriented automatic `v` → `w` behavior.
 - Added direct Brahmic result-envelope APIs that retain the exact source while exposing a deliberately lossy readable Latin view.
+- Expanded Devanagari and Gujarati handling across their assigned Unicode 18 repertoires, applicable Vedic signs, Devanagari Extended and Extended-A, and Common Indic Number Forms.
+- Added semantic handling for Gujarati Arabic-transliteration signs, historic vowels, Vedic nasal and visarga signs, sacred signs, and pronunciation-neutral editorial marks.
+- Added ZWJ, ZWNJ, combining grapheme joiner, and dotted-circle handling in Brahmic parsing and transcription.
 - Preserved canonical Brahmic → IAST and legacy IAST → Plain-English/Hunterian behavior for backward compatibility.
 - Added regression coverage for natural Gujarati/Hindi outputs, including cases such as `નટવર → natvar`, `સમાચાર → samaachaar`, `ધર્મકુમાર → dharmakumaar`, `કાનપુર → kaanpur`, and `सरकार → sarkaar`.
 
