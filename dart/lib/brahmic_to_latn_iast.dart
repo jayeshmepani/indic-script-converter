@@ -154,13 +154,17 @@ extension GujaratiToIast on String {
 }
 
 const _inherentSchwa = '\uE100';
+// Medial schwa deleted by natural mode. Stays inside the word until vowel length.
+const _syllableBreak = '\uE101';
 const _semanticOm = '\uE102';
 
 enum BrahmicLanguage { auto, hindi, gujarati, sanskrit }
 
 enum BrahmicSchwaDeletionPolicy { none, finalOnly, language }
 
-enum BrahmicVowelLengthPolicy { collapse, doubled }
+enum BrahmicVowelLengthPolicy { collapse, doubled, smart }
+
+enum BrahmicReadableStyle { legacy, natural }
 
 enum TerminalAnusvaraPolicy { n, m, drop }
 
@@ -183,6 +187,9 @@ class BrahmicPlainEnglishOptions {
     this.collapseWhitespace = false,
     this.preserveVedicAccentMarks = false,
     this.useWForVAfterConsonants,
+    this.readableStyle = BrahmicReadableStyle.legacy,
+    this.capitalizeSentenceStarts = false,
+    this.readableWordOverrides = const {},
   });
 
   final BrahmicLanguage language;
@@ -199,6 +206,9 @@ class BrahmicPlainEnglishOptions {
   final bool collapseWhitespace;
   final bool preserveVedicAccentMarks;
   final bool? useWForVAfterConsonants;
+  final BrahmicReadableStyle readableStyle;
+  final bool capitalizeSentenceStarts;
+  final Map<String, String> readableWordOverrides;
 }
 
 bool _isSourceLatinBase(String ch) {
@@ -284,6 +294,7 @@ class _NaturalToken {
   String text;
   final bool implicit;
   bool deleted = false;
+  bool boundary = false;
 }
 
 const _iastVowels = <String>{
@@ -326,7 +337,7 @@ const _aspirated = <String>{
 };
 
 bool _isTranscriptionWordChar(String ch) {
-  if (ch == _inherentSchwa) return true;
+  if (ch == _inherentSchwa || ch == _syllableBreak) return true;
   final rune = ch.runes.single;
   return (rune >= 0x41 && rune <= 0x5A) ||
       (rune >= 0x61 && rune <= 0x7A) ||
@@ -336,7 +347,10 @@ bool _isTranscriptionWordChar(String ch) {
       isUnicodeCombiningMark(rune);
 }
 
-List<_NaturalToken> _tokenizeAnnotatedWord(String word) {
+List<_NaturalToken> _tokenizeAnnotatedWord(
+  String word, [
+  bool separateVocalicRh = false,
+]) {
   final chars = word.runes.map(String.fromCharCode).toList();
   final tokens = <_NaturalToken>[];
   var i = 0;
@@ -347,10 +361,24 @@ List<_NaturalToken> _tokenizeAnnotatedWord(String word) {
       i += 1;
       continue;
     }
+    if (ch == _syllableBreak) {
+      tokens.add(_NaturalToken('boundary', ''));
+      i += 1;
+      continue;
+    }
     final pair = i + 1 < chars.length ? '$ch${chars[i + 1]}' : '';
     if (pair == 'ai' || pair == 'au') {
       tokens.add(_NaturalToken('vowel', pair));
       i += 2;
+      continue;
+    }
+    final previous = tokens.isEmpty ? null : tokens.last;
+    if (separateVocalicRh &&
+        pair.toLowerCase() == 'ṛh' &&
+        previous != null &&
+        previous.type == 'consonant') {
+      tokens.add(_NaturalToken('vowel', ch));
+      i += 1;
       continue;
     }
     if (_aspirated.contains(pair.toLowerCase())) {
@@ -396,17 +424,80 @@ String _baseConsonant(_NaturalToken token) {
   return value;
 }
 
+bool _isAspiratedGha(_NaturalToken token) => token.text.toLowerCase() == 'gh';
+
+bool _isAspiratedDental(_NaturalToken token) {
+  final text = token.text.toLowerCase();
+  return text == 'th' || text == 'ṭh';
+}
+
 bool _allowsSchwaCluster(
   _NaturalToken left,
   _NaturalToken right,
-  BrahmicLanguage language,
-) {
+  BrahmicLanguage language, [
+  BrahmicReadableStyle readableStyle = BrahmicReadableStyle.legacy,
+]) {
   final a = _baseConsonant(left);
   final b = _baseConsonant(right);
   if (a.isEmpty || b.isEmpty) return false;
   if (language == BrahmicLanguage.gujarati) {
     if (b == 'v' || b == 'n') return true;
-    return {'b+t', 'r+m', 'ś+m', 'ṣ+m', 's+m', 'ṇ+l', 'n+l'}.contains('$a+$b');
+    final pair = '$a+$b';
+    if ({'b+t', 'r+m', 'ś+m', 'ṣ+m', 's+m', 'ṇ+l', 'n+l'}.contains(pair)) {
+      return true;
+    }
+    if (readableStyle != BrahmicReadableStyle.natural) return false;
+    if ((a == 'n' || a == 'ṇ') && _isAspiratedGha(right)) return true;
+    if (a == 'p' && _isAspiratedDental(right)) return true;
+    return {
+      't+l',
+      'ṭ+l',
+      'ḍ+m',
+      'd+m',
+      'm+m',
+      'm+d',
+      't+d',
+      't+y',
+      'k+l',
+      'k+r',
+      'j+k',
+      'r+d',
+      'l+m',
+      'ḷ+m',
+      'ḻ+m',
+      'l+j',
+      'ḷ+j',
+      'ḻ+j',
+    }.contains(pair);
+  }
+  final pair = '$a+$b';
+  if (readableStyle == BrahmicReadableStyle.natural &&
+      (a == 'n' || a == 'ṇ') &&
+      _isAspiratedGha(right)) {
+    return true;
+  }
+  if (readableStyle == BrahmicReadableStyle.natural &&
+      a == 'p' &&
+      _isAspiratedDental(right)) {
+    return true;
+  }
+  if (readableStyle == BrahmicReadableStyle.natural &&
+      {
+        't+d',
+        't+y',
+        't+n',
+        'k+l',
+        'r+d',
+        'p+n',
+        'd+n',
+        'd+m',
+        'ḍ+n',
+        'ḍ+k',
+        'h+l',
+        'h+n',
+        'c+n',
+      }.contains(pair)) {
+    return true;
   }
   if ({'r', 'y', 'v'}.contains(b)) return true;
   if (a == 'r' &&
@@ -473,6 +564,75 @@ bool _allowsSchwaCluster(
   }.contains('$a+$b');
 }
 
+bool _isImplicitNagarSchwa(
+  _NaturalToken? bearing,
+  _NaturalToken? next,
+  _NaturalToken? following,
+) {
+  if (bearing == null || next == null || following == null) return false;
+  if (bearing.type != 'consonant' || next.type != 'consonant') return false;
+  if (!following.implicit || _isAspiratedGha(next)) return false;
+  if (_baseConsonant(next) != 'g') return false;
+  final left = _baseConsonant(bearing);
+  return left == 'm' || left == 'n' || left == 'ṇ';
+}
+
+bool _isHindiNaSuffix(
+  _NaturalToken? bearing,
+  _NaturalToken? next,
+  _NaturalToken? following,
+) {
+  if (bearing == null || next == null || following == null) return false;
+  if (bearing.type != 'consonant' || next.type != 'consonant') return false;
+  if (following.type != 'vowel' || following.implicit) return false;
+  if (following.text.toLowerCase() != 'ā') return false;
+  final right = _baseConsonant(next);
+  if (right != 'n' && right != 'ṇ') return false;
+  final left = _baseConsonant(bearing);
+  const nasal = {'m', 'n', 'ṇ', 'ñ', 'ṅ'};
+  return !(nasal.contains(left) && nasal.contains(right));
+}
+
+bool _isGujaratiThiSuffix(_NaturalToken? next, _NaturalToken? following) {
+  if (next?.type != 'consonant' || following?.type != 'vowel') return false;
+  final consonant = next!.text.toLowerCase();
+  final vowel = following!.text.toLowerCase();
+  return (consonant == 'th' || consonant == 'ṭh') &&
+      (vowel == 'ī' || vowel == 'i');
+}
+
+bool _isGujaratiMamSuffix(
+  _NaturalToken? next,
+  _NaturalToken? following,
+  List<_NaturalToken> tokens,
+  int vowelIndex,
+) {
+  if (next?.type != 'consonant' || following?.type != 'vowel') return false;
+  if (_baseConsonant(next!) != 'm') return false;
+  final vowel = following!.text.toLowerCase();
+  if (vowel != 'ā' && vowel != 'a') return false;
+  var nasalIndex = vowelIndex + 1;
+  while (nasalIndex < tokens.length && tokens[nasalIndex].deleted) {
+    nasalIndex += 1;
+  }
+  if (nasalIndex >= tokens.length) return false;
+  final nasal = tokens[nasalIndex];
+  return nasal.type == 'sign' && (nasal.text == 'ṃ' || nasal.text == 'ṁ');
+}
+
+bool _hasSchwaLeftVowel(
+  List<_NaturalToken> tokens,
+  int beforeIndex,
+  bool allowCodaSkip,
+) {
+  if (beforeIndex < 0 || beforeIndex >= tokens.length) return false;
+  final before = tokens[beforeIndex];
+  if (before.type == 'vowel') return true;
+  if (!allowCodaSkip || before.type != 'consonant') return false;
+  if (!{'r', 'y', 'l', 'v'}.contains(_baseConsonant(before))) return false;
+  return beforeIndex > 0 && tokens[beforeIndex - 1].type == 'vowel';
+}
+
 bool _shouldKeepFinalSchwa(List<_NaturalToken> tokens, int lastIndex) {
   if (lastIndex < 2) return false;
   final bearing = tokens[lastIndex - 1];
@@ -485,9 +645,13 @@ bool _shouldKeepFinalSchwa(List<_NaturalToken> tokens, int lastIndex) {
 String _naturalizeAnnotatedWord(
   String word,
   BrahmicLanguage language,
-  BrahmicSchwaDeletionPolicy policy,
-) {
-  final tokens = _tokenizeAnnotatedWord(word);
+  BrahmicSchwaDeletionPolicy policy, [
+  BrahmicReadableStyle readableStyle = BrahmicReadableStyle.legacy,
+]) {
+  final tokens = _tokenizeAnnotatedWord(
+    word,
+    readableStyle == BrahmicReadableStyle.natural,
+  );
   if (policy == BrahmicSchwaDeletionPolicy.none ||
       language == BrahmicLanguage.sanskrit) {
     return tokens.map((t) => t.text).join();
@@ -508,6 +672,13 @@ String _naturalizeAnnotatedWord(
     for (var i = tokens.length - 2; i >= 2; i -= 1) {
       final schwa = tokens[i];
       if (!schwa.implicit || schwa.deleted) continue;
+      var beforeIndex = i - 2;
+      if (readableStyle == BrahmicReadableStyle.natural &&
+          language != BrahmicLanguage.sanskrit) {
+        while (beforeIndex >= 0 && tokens[beforeIndex].type == 'sign') {
+          beforeIndex -= 1;
+        }
+      }
       var nextIndex = i + 1;
       while (nextIndex < tokens.length && tokens[nextIndex].deleted) {
         nextIndex += 1;
@@ -516,25 +687,69 @@ String _naturalizeAnnotatedWord(
       while (afterNext < tokens.length && tokens[afterNext].deleted) {
         afterNext += 1;
       }
-      if (tokens[i - 1].type == 'consonant' &&
-          tokens[i - 2].type == 'vowel' &&
+      final next = nextIndex < tokens.length ? tokens[nextIndex] : null;
+      final following = afterNext < tokens.length ? tokens[afterNext] : null;
+      final naturalModern = readableStyle == BrahmicReadableStyle.natural &&
+          language != BrahmicLanguage.sanskrit;
+      final mamSuffix = naturalModern &&
+          language == BrahmicLanguage.gujarati &&
+          _isGujaratiMamSuffix(next, following, tokens, afterNext);
+      final thiSuffix = naturalModern &&
+          language == BrahmicLanguage.gujarati &&
+          _isGujaratiThiSuffix(next, following);
+      final bearing = tokens[i - 1];
+      final naSuffix = naturalModern &&
+          language == BrahmicLanguage.hindi &&
+          _isHindiNaSuffix(bearing, next, following);
+      final keepNagarSchwa = naturalModern &&
+          language == BrahmicLanguage.hindi &&
+          _isImplicitNagarSchwa(bearing, next, following);
+      var rightOnsetHasVowel =
+          afterNext < tokens.length && tokens[afterNext].type == 'vowel';
+      if (!rightOnsetHasVowel &&
+          readableStyle == BrahmicReadableStyle.natural &&
+          language != BrahmicLanguage.sanskrit &&
+          afterNext < tokens.length &&
+          tokens[afterNext].type == 'consonant' &&
+          {'r', 'y', 'v', 'l'}.contains(_baseConsonant(tokens[afterNext]))) {
+        var afterCluster = afterNext + 1;
+        while (afterCluster < tokens.length && tokens[afterCluster].deleted) {
+          afterCluster += 1;
+        }
+        rightOnsetHasVowel = afterCluster < tokens.length &&
+            tokens[afterCluster].type == 'vowel';
+      }
+      if (bearing.type == 'consonant' &&
+          _hasSchwaLeftVowel(tokens, beforeIndex, mamSuffix || thiSuffix) &&
           nextIndex < tokens.length &&
           tokens[nextIndex].type == 'consonant' &&
-          afterNext < tokens.length &&
-          tokens[afterNext].type == 'vowel' &&
-          _allowsSchwaCluster(tokens[i - 1], tokens[nextIndex], language)) {
+          rightOnsetHasVowel &&
+          (thiSuffix ||
+              naSuffix ||
+              (!keepNagarSchwa &&
+                  _allowsSchwaCluster(
+                    bearing,
+                    tokens[nextIndex],
+                    language,
+                    readableStyle,
+                  )))) {
         schwa.deleted = true;
+        if (naturalModern) schwa.boundary = true;
       }
     }
   }
-  return tokens.map((t) => t.deleted ? '' : t.text).join();
+  return tokens.map((t) {
+    if (!t.deleted) return t.text;
+    return t.boundary ? _syllableBreak : '';
+  }).join();
 }
 
 String _naturalizeAnnotatedIast(
   String text,
   BrahmicLanguage language,
-  BrahmicSchwaDeletionPolicy policy,
-) {
+  BrahmicSchwaDeletionPolicy policy, [
+  BrahmicReadableStyle readableStyle = BrahmicReadableStyle.legacy,
+]) {
   final chars = text.runes.map(String.fromCharCode).toList();
   final out = StringBuffer();
   var i = 0;
@@ -548,13 +763,161 @@ String _naturalizeAnnotatedIast(
       i += 1;
     }
     out.write(_naturalizeAnnotatedWord(
-        chars.sublist(start, i).join(), language, policy));
+      chars.sublist(start, i).join(),
+      language,
+      policy,
+      readableStyle,
+    ));
   }
   return out.toString();
 }
 
-String _applyReadableVowelLength(String text, BrahmicVowelLengthPolicy policy) {
-  if (policy != BrahmicVowelLengthPolicy.doubled) return text;
+String _mapTranscriptionWords(
+  String text,
+  String Function(String word) mapper,
+) {
+  final chars = text.runes.map(String.fromCharCode).toList();
+  final out = StringBuffer();
+  var i = 0;
+  while (i < chars.length) {
+    if (!_isTranscriptionWordChar(chars[i])) {
+      out.write(chars[i++]);
+      continue;
+    }
+    final start = i++;
+    while (i < chars.length && _isTranscriptionWordChar(chars[i])) {
+      i += 1;
+    }
+    out.write(mapper(chars.sublist(start, i).join()));
+  }
+  return out.toString();
+}
+
+String _applyNaturalClusterSpellings(
+  String word,
+  BrahmicLanguage language,
+) {
+  if (language == BrahmicLanguage.sanskrit) return word;
+  for (final replacement in <(String, String)>[
+    ('śv', 'św'),
+    ('Śv', 'Św'),
+    ('ṣv', 'ṣw'),
+    ('Ṣv', 'Ṣw'),
+    ('sv', 'sw'),
+    ('Sv', 'Sw'),
+    ('dv', 'dw'),
+    ('Dv', 'Dw'),
+  ]) {
+    word = word.replaceAll(replacement.$1, replacement.$2);
+  }
+  return word;
+}
+
+bool _endsWithClosedResonant(String word) {
+  final chars = word.runes.map(String.fromCharCode).toList();
+  if (chars.length < 2) return false;
+  final last = chars.last.toLowerCase();
+  if (!'ryvw'.contains(last)) return false;
+  final prev = chars[chars.length - 2].toLowerCase();
+  return !'aāiīuūeēoōṛṝḷḹăêĕĭôŏæœ'.contains(prev);
+}
+
+String _applyBrahmicNaturalMorphology(
+  String text,
+  BrahmicLanguage language,
+) =>
+    _mapTranscriptionWords(text, (originalWord) {
+      var word = originalWord;
+
+      if (language == BrahmicLanguage.gujarati) {
+        word = word
+            .replaceFirst(RegExp(r'māṃthī$'), 'mathī')
+            .replaceFirst(RegExp(r'māṃ$'), 'ma');
+        if (RegExp(r'[aāiīuūeēoōṛṝḷḹăêĕĭôŏæœ].*āṃ$').hasMatch(word)) {
+          word = word.replaceFirst(RegExp(r'āṃ$'), 'ā');
+        }
+        word = word.replaceFirst(RegExp(r'uṃ$'), 'u');
+        word = word.replaceAll(RegExp('a[ṃṁ][īi]'), 'ai');
+      }
+
+      word = _applyNaturalClusterSpellings(word, language);
+
+      if (language == BrahmicLanguage.hindi && word.endsWith('ie')) {
+        word = '${word.substring(0, word.length - 2)}iye';
+      } else if (language == BrahmicLanguage.hindi && word.endsWith('IE')) {
+        word = '${word.substring(0, word.length - 2)}IYE';
+      }
+
+      if (language != BrahmicLanguage.sanskrit &&
+          _endsWithClosedResonant(word)) {
+        word = '${word}a';
+      }
+
+      return word;
+    });
+
+Map<String, Map<String, String>>? _naturalReadableOverrides(
+  _ScriptConfig config,
+  BrahmicLanguage language,
+  BrahmicReadableStyle readableStyle,
+) {
+  if (readableStyle != BrahmicReadableStyle.natural) return null;
+
+  final independentVowels = <String, String>{};
+  final consonants = <String, String>{};
+
+  if (language != BrahmicLanguage.sanskrit) {
+    if (config.script == 'devanagari') {
+      consonants['ड़'] = 'ḍ';
+      consonants['ढ़'] = 'ḍh';
+    } else if (config.script == 'gujarati') {
+      consonants['ડ઼'] = 'ḍ';
+      consonants['ઢ઼'] = 'ḍh';
+    }
+  }
+
+  if (config.script == 'gujarati') {
+    consonants['ળ'] = 'ḻ';
+    if (language == BrahmicLanguage.gujarati) {
+      independentVowels['ઋ'] = 'ru';
+    }
+  } else if (config.script == 'devanagari') {
+    consonants['ळ'] = 'ḻ';
+    if (language == BrahmicLanguage.gujarati) {
+      independentVowels['ऋ'] = 'ru';
+    }
+  }
+
+  if (independentVowels.isEmpty && consonants.isEmpty) return null;
+  return {
+    'independentVowels': independentVowels,
+    'consonants': consonants,
+  };
+}
+
+String _collapseReadableVowelLength(String text) {
+  for (final replacement in <(String, String)>[
+    ('ā', 'a'),
+    ('Ā', 'A'),
+    ('ī', 'i'),
+    ('Ī', 'I'),
+    ('ū', 'u'),
+    ('Ū', 'U'),
+    ('ē', 'e'),
+    ('Ē', 'E'),
+    ('ō', 'o'),
+    ('Ō', 'O'),
+    ('ṝ', 'ri'),
+    ('Ṝ', 'Ri'),
+    ('ḹ', 'li'),
+    ('Ḹ', 'Li'),
+  ]) {
+    text = text.replaceAll(replacement.$1, replacement.$2);
+  }
+  return text;
+}
+
+String _doubleReadableVowelLength(String text) {
   for (final replacement in <(String, String)>[
     ('āī', 'aai'),
     ('Āī', 'Aai'),
@@ -580,9 +943,333 @@ String _applyReadableVowelLength(String text, BrahmicVowelLengthPolicy policy) {
   return text;
 }
 
+const _longVowelCollapse = <String, String>{
+  'ā': 'a',
+  'Ā': 'A',
+  'ī': 'i',
+  'Ī': 'I',
+  'ū': 'u',
+  'Ū': 'U',
+  'ē': 'e',
+  'Ē': 'E',
+  'ō': 'o',
+  'Ō': 'O',
+  'ṝ': 'ri',
+  'Ṝ': 'Ri',
+  'ḹ': 'li',
+  'Ḹ': 'Li',
+};
+
+String _collapseVowelToken(String text) {
+  if (text.isEmpty) return text;
+  final base = String.fromCharCode(text.runes.first);
+  final short = _longVowelCollapse[base];
+  if (short == null) return text;
+  final rest = String.fromCharCodes(text.runes.skip(1));
+  return '$short$rest';
+}
+
+bool _isLongVowelToken(String text) {
+  if (text.isEmpty) return false;
+  return _longVowelCollapse.containsKey(String.fromCharCode(text.runes.first));
+}
+
+bool _isCentralLongVowel(String text) {
+  if (text.isEmpty) return false;
+  final base = String.fromCharCode(text.runes.first);
+  return base == 'ā' || base == 'Ā';
+}
+
+bool _isPeripheralLongVowel(String text) =>
+    _isLongVowelToken(text) && !_isCentralLongVowel(text);
+
+bool _isNasalSign(_NaturalToken token) =>
+    token.type == 'sign' && (token.text == 'ṃ' || token.text == 'ṁ');
+
+int? _codaWeight(List<_NaturalToken> tokens) {
+  var weight = 0;
+  for (final token in tokens) {
+    if (token.type == 'consonant' || token.type == 'sign') {
+      weight += 1;
+    } else {
+      return null;
+    }
+  }
+  return weight;
+}
+
+bool _isClusterFormingResonant(_NaturalToken token) {
+  // A liquid or glide across a deleted schwa joins the preceding consonant.
+  final base = _baseConsonant(token);
+  return base == 'r' || base == 'y' || base == 'l' || base == 'v';
+}
+
+bool _isNasalConsonant(_NaturalToken token) {
+  // A final open syllable that begins with a nasal is its own clitic.
+  final base = _baseConsonant(token);
+  return base == 'm' ||
+      base == 'n' ||
+      base == 'ṇ' ||
+      base == 'ñ' ||
+      base == 'ṅ';
+}
+
+bool _codaHasBoundary(List<_NaturalToken> tokens) =>
+    tokens.any((token) => token.type == 'boundary');
+
+bool _hasNasalCodaBeforeNext(
+  List<_NaturalToken> tokens,
+  int vowelIndex,
+  int nextIndex,
+) {
+  // हूँगा writes n+g between ū and the next vowel. The nasal is the coda and
+  // the stop is the next onset. A stop+liquid pair is one onset (રાત્રે).
+  final between = tokens.sublist(vowelIndex + 1, nextIndex);
+  final consonantAt = <int>[];
+  for (var index = 0; index < between.length; index++) {
+    final token = between[index];
+    if (token.type != 'consonant' && token.type != 'sign') return false;
+    if (token.type == 'consonant') consonantAt.add(index);
+  }
+  if (consonantAt.isEmpty) return false;
+  var onset = 1;
+  final lastAt = consonantAt.last;
+  if (consonantAt.length >= 2) {
+    final prevAt = consonantAt[consonantAt.length - 2];
+    if (lastAt == prevAt + 1 && _isClusterFormingResonant(between[lastAt])) {
+      onset = 2;
+    }
+  }
+  if (between.length <= onset) return false;
+  final coda = between.sublist(0, between.length - onset);
+  if (_codaWeight(coda) != 1) return false;
+  return _isNasalConsonant(coda.first) || _isNasalSign(coda.first);
+}
+
+bool _isLightSyllableContact(List<_NaturalToken> contact) {
+  if (contact.length == 1 && contact.first.type == 'consonant') return true;
+  final boundaryAt = <int>[];
+  for (var index = 0; index < contact.length; index++) {
+    if (contact[index].type == 'boundary') boundaryAt.add(index);
+  }
+  if (boundaryAt.length != 1) return false;
+  final at = boundaryAt.first;
+  final left = contact.sublist(0, at);
+  final right = contact.sublist(at + 1);
+  if (_codaWeight(left) != 1 || _codaWeight(right) != 1) return false;
+  for (final token in right) {
+    if (token.type == 'consonant') return !_isClusterFormingResonant(token);
+  }
+  return false;
+}
+
+Set<int> _smartLengthKeepIndexes(List<_NaturalToken> tokens) {
+  final keep = <int>{};
+  if (tokens.isEmpty) return keep;
+  // A word-initial long vowel has no consonant to carry it (āj, āvīne, ūpar).
+  if (tokens.first.type == 'vowel' && _isLongVowelToken(tokens.first.text)) {
+    keep.add(0);
+  }
+
+  final vowelIndexes = <int>[];
+  for (var index = 0; index < tokens.length; index++) {
+    if (tokens[index].type == 'vowel') vowelIndexes.add(index);
+  }
+  if (vowelIndexes.isEmpty) return keep;
+
+  // A nasal coda before the next onset keeps a non-final peripheral vowel.
+  for (var position = 0; position < vowelIndexes.length - 1; position++) {
+    final index = vowelIndexes[position];
+    if (!_isPeripheralLongVowel(tokens[index].text)) continue;
+    if (_hasNasalCodaBeforeNext(tokens, index, vowelIndexes[position + 1])) {
+      keep.add(index);
+    }
+  }
+
+  if (vowelIndexes.length == 1) {
+    final index = vowelIndexes.first;
+    final coda = tokens.sublist(index + 1);
+    // One coda keeps the vowel (cār, rūp, hūn, dūdh). An open syllable and a
+    // true cluster (mārg) both shorten.
+    if (!_codaHasBoundary(coda) &&
+        _isLongVowelToken(tokens[index].text) &&
+        _codaWeight(coda) == 1) {
+      keep.add(index);
+    }
+    return keep;
+  }
+
+  final last = vowelIndexes.last;
+  final previous = vowelIndexes[vowelIndexes.length - 2];
+  final lastCoda = tokens.sublist(last + 1);
+  if (vowelIndexes.length == 2 && _isLongVowelToken(tokens[previous].text)) {
+    final contact = tokens.sublist(previous + 1, last);
+    // Two nuclei and an open second syllable: māre, nīce, cār plus an open syllable.
+    if (_codaWeight(lastCoda) == 0 && _isLightSyllableContact(contact)) {
+      keep.add(previous);
+    }
+  }
+
+  // The last syllable, closed by one consonant. ā shortens. ī/ū/ē/ō stay.
+  if (!_codaHasBoundary(lastCoda) &&
+      _codaWeight(lastCoda) == 1 &&
+      _isLongVowelToken(tokens[last].text) &&
+      !_isCentralLongVowel(tokens[last].text)) {
+    keep.add(last);
+  }
+
+  // A short vowel after one obstruent is a vocalic ending (svarūpe).
+  if (vowelIndexes.length > 2 &&
+      !_isLongVowelToken(tokens[last].text) &&
+      _codaWeight(lastCoda) == 0) {
+    final contact = tokens.sublist(previous + 1, last);
+    if (contact.length == 1 &&
+        contact.first.type == 'consonant' &&
+        !_isClusterFormingResonant(contact.first) &&
+        !_isNasalConsonant(contact.first) &&
+        _isLongVowelToken(tokens[previous].text) &&
+        !_isCentralLongVowel(tokens[previous].text)) {
+      keep.add(previous);
+    }
+  }
+  return keep;
+}
+
+String _withoutSyllableBreaks(String text) =>
+    text.replaceAll(_syllableBreak, '');
+
+({int start, bool finalIsLong})? _finalOpenSyllableSplit(
+  List<_NaturalToken> tokens,
+) {
+  // A schwa boundary keeps the consonant before the break on the stem.
+  final vowelIndexes = <int>[];
+  for (var index = 0; index < tokens.length; index++) {
+    if (tokens[index].type == 'vowel') vowelIndexes.add(index);
+  }
+  if (vowelIndexes.length < 3) return null;
+  final last = vowelIndexes.last;
+  final previous = vowelIndexes[vowelIndexes.length - 2];
+  if (_codaWeight(tokens.sublist(last + 1)) != 0) return null;
+  final contact = tokens.sublist(previous + 1, last);
+  if (!_isLightSyllableContact(contact)) return null;
+  final boundaryAt = contact.indexWhere((token) => token.type == 'boundary');
+  final start = boundaryAt >= 0 ? previous + 1 + boundaryAt : previous + 1;
+  return (start: start, finalIsLong: _isLongVowelToken(tokens[last].text));
+}
+
+bool _peelSavesPeripheral(List<_NaturalToken> tokens, int start) {
+  final full = _smartLengthKeepIndexes(tokens);
+  final stem = _smartLengthKeepIndexes(tokens.sublist(0, start));
+  for (final index in stem) {
+    if (full.contains(index)) continue;
+    if (_isPeripheralLongVowel(tokens[index].text)) return true;
+  }
+  return false;
+}
+
+String _renderSmartLengthTokens(List<_NaturalToken> tokens) {
+  final keep = _smartLengthKeepIndexes(tokens);
+  final buffer = StringBuffer();
+  for (var index = 0; index < tokens.length; index++) {
+    final token = tokens[index];
+    if (token.type == 'boundary') continue;
+    buffer.write(
+      token.type == 'vowel' && !keep.contains(index)
+          ? _collapseVowelToken(token.text)
+          : token.text,
+    );
+  }
+  return buffer.toString();
+}
+
+String _renderCollapsedEnding(List<_NaturalToken> tokens) {
+  final buffer = StringBuffer();
+  for (final token in tokens) {
+    if (token.type == 'boundary') continue;
+    buffer.write(
+      token.type == 'vowel' ? _collapseVowelToken(token.text) : token.text,
+    );
+  }
+  return buffer.toString();
+}
+
+String _smartReadableVowelLengthWord(
+  String originalWord,
+  BrahmicLanguage language,
+) {
+  if (language == BrahmicLanguage.sanskrit) {
+    return _doubleReadableVowelLength(_withoutSyllableBreaks(originalWord));
+  }
+
+  var stem = _tokenizeAnnotatedWord(originalWord);
+  var ending = '';
+  // Long open endings stack. A short ending is removed only once, and only
+  // when that keeps a peripheral vowel on the stem.
+  while (stem.isNotEmpty) {
+    final split = _finalOpenSyllableSplit(stem);
+    if (split == null) break;
+    final shortOk =
+        !split.finalIsLong && _peelSavesPeripheral(stem, split.start);
+    if (!split.finalIsLong && !shortOk) break;
+    ending = _renderCollapsedEnding(stem.sublist(split.start)) + ending;
+    stem = stem.sublist(0, split.start);
+    if (shortOk) break;
+  }
+  return _doubleReadableVowelLength(_renderSmartLengthTokens(stem) + ending);
+}
+
+String _applyReadableVowelLength(
+  String text,
+  BrahmicVowelLengthPolicy policy, [
+  BrahmicLanguage language = BrahmicLanguage.auto,
+  BrahmicReadableStyle readableStyle = BrahmicReadableStyle.legacy,
+]) {
+  if (readableStyle != BrahmicReadableStyle.natural) {
+    return policy == BrahmicVowelLengthPolicy.doubled
+        ? _doubleReadableVowelLength(text)
+        : text;
+  }
+
+  return switch (policy) {
+    BrahmicVowelLengthPolicy.doubled =>
+      _doubleReadableVowelLength(_withoutSyllableBreaks(text)),
+    BrahmicVowelLengthPolicy.collapse =>
+      _collapseReadableVowelLength(_withoutSyllableBreaks(text)),
+    BrahmicVowelLengthPolicy.smart => _mapTranscriptionWords(
+        text,
+        (word) => _smartReadableVowelLengthWord(word, language),
+      ),
+  };
+}
+
 String _applyAynPolicy(String text, AynPolicy policy) {
   if (policy == AynPolicy.preserve) return text;
   return text.replaceAll('ʿ', policy == AynPolicy.drop ? '' : "'");
+}
+
+String _applyReadableWordOverrides(
+  String text,
+  Map<String, String> overrides,
+) {
+  if (overrides.isEmpty) return text;
+  return _mapTranscriptionWords(text, (word) => overrides[word] ?? word);
+}
+
+String _capitalizeReadableSentenceStarts(String text) {
+  var capitalizeNext = true;
+  final out = StringBuffer();
+  for (final rune in text.runes) {
+    final ch = String.fromCharCode(rune);
+    if (capitalizeNext && RegExp(r'^[a-z]$').hasMatch(ch)) {
+      out.write(ch.toUpperCase());
+      capitalizeNext = false;
+      continue;
+    }
+    out.write(ch);
+    if (RegExp(r'^[A-Za-z]$').hasMatch(ch)) capitalizeNext = false;
+    if ('.!?।॥\n\r'.contains(ch)) capitalizeNext = true;
+  }
+  return out.toString();
 }
 
 String _protectSemanticOm(String text) =>
@@ -597,7 +1284,7 @@ String _applyTerminalAnusvara(String text, TerminalAnusvaraPolicy policy) {
     TerminalAnusvaraPolicy.n => 'n',
   };
   return text.replaceAllMapped(
-    RegExp(r'[ṃṁ](?=$|[^A-Za-z\u00C0-\u024F\u1E00-\u1EFF])'),
+    RegExp(r'[ṃṁ](?=$|[^A-Za-z\u00C0-\u024F\u1E00-\u1EFF\uE101])'),
     (_) => replacement,
   );
 }
@@ -638,24 +1325,41 @@ String _toPlainEnglishFromBrahmic(
       preserveEncodedVedicMarks: options.preserveVedicAccentMarks,
     ),
     _inherentSchwa,
+    _naturalReadableOverrides(config, language, options.readableStyle),
   );
   var iast = _stripDanglingBrahmicModifiers(
-    _naturalizeAnnotatedIast(annotated, language, options.schwaDeletion),
+    _naturalizeAnnotatedIast(
+      annotated,
+      language,
+      options.schwaDeletion,
+      options.readableStyle,
+    ),
   );
+  final naturalBrahmic = options.readableStyle == BrahmicReadableStyle.natural;
+  final naturalModernIndoAryan =
+      naturalBrahmic && language != BrahmicLanguage.sanskrit;
+  if (naturalBrahmic) {
+    iast = _applyBrahmicNaturalMorphology(iast, language);
+  }
   iast = _applyReadableCandrabindu(iast, options.terminalAnusvara);
   iast = _applyTerminalAnusvara(iast, options.terminalAnusvara);
-  iast = _applyReadableVowelLength(iast, options.vowelLength);
+  iast = _applyReadableVowelLength(
+    iast,
+    options.vowelLength,
+    language,
+    options.readableStyle,
+  );
   final profile =
       forcedProfile ?? PlainEnglishRomanizationProfile.extendedIndic;
   final useW = options.useWForVAfterConsonants ?? false;
-  final suppressGujaratiHunterianAutoW =
+  final suppressHunterianAutoW =
       profile == PlainEnglishRomanizationProfile.hunterian &&
-          language == BrahmicLanguage.gujarati &&
-          !useW;
-  if (suppressGujaratiHunterianAutoW) {
+          (naturalModernIndoAryan ||
+              (language == BrahmicLanguage.gujarati && !useW));
+  if (suppressHunterianAutoW) {
     iast = _applyHunterianVisargaAbsorption(iast);
   }
-  final engineProfile = suppressGujaratiHunterianAutoW
+  final engineProfile = suppressHunterianAutoW
       ? PlainEnglishRomanizationProfile.extendedIndic
       : profile;
   var result = iast.toPlainEnglishFromIast(
@@ -670,14 +1374,17 @@ String _toPlainEnglishFromBrahmic(
       removeAvagraha: options.removeAvagraha,
       collapseWhitespace: options.collapseWhitespace,
       enableInternalSchwaSyncope: false,
-      useWForVAfterConsonants: useW,
+      useWForVAfterConsonants: !naturalModernIndoAryan && useW,
       preserveVedicAccentMarks: options.preserveVedicAccentMarks,
     ),
   );
   result = _applyAynPolicy(result, options.ayn);
   result = _restoreSemanticOm(result);
-  result = _restoreSourceLatin(result, protectedLatin);
-  return result;
+  result = _applyReadableWordOverrides(result, options.readableWordOverrides);
+  if (options.capitalizeSentenceStarts) {
+    result = _capitalizeReadableSentenceStarts(result);
+  }
+  return _restoreSourceLatin(result, protectedLatin);
 }
 
 String _applyHunterianVisargaAbsorption(String text) => text.replaceAllMapped(
@@ -830,6 +1537,7 @@ class _BrahmicToIast {
     _ScriptConfig config,
     ScriptToIastOptions options, [
     String inherentVowel = 'a',
+    Map<String, Map<String, String>>? readableOverrides,
   ]) {
     final visibleInput = stripExactSourceMetadata(input);
     final normalized =
@@ -843,7 +1551,7 @@ class _BrahmicToIast {
 
       final independent = config.independentVowels[ch];
       if (independent != null) {
-        var latin = independent;
+        var latin = readableOverrides?['independentVowels']?[ch] ?? independent;
         i += 1;
         if (config.script == 'gujarati' &&
             (ch == 'અ' || ch == 'ઇ') &&
@@ -883,7 +1591,8 @@ class _BrahmicToIast {
 
       final consonant = config.consonants[consonantKey];
       if (consonant != null) {
-        var latin = consonant;
+        var latin =
+            readableOverrides?['consonants']?[consonantKey] ?? consonant;
         var cursor = i + consonantWidth;
         var geminated = false;
         var sukun = false;

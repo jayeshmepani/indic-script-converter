@@ -5,6 +5,26 @@ Package versions are synchronized across runtimes unless noted.
 
 ---
 
+## 1.2.0
+
+**lipimala v1.2.0 — natural Brahmic readable Latin**
+
+1.1.0 made Brahmic → readable Latin technically correct and Unicode-aware. 1.2.0 makes that readable Latin linguistically natural. The new layer is opt-in, so an existing 1.1 call keeps its previous output.
+
+- Added `BrahmicReadableStyle` for the currently supported Devanagari and Gujarati scripts. `LEGACY` remains the default. `NATURAL` opts into the morphology and phonology layer.
+- Added `BrahmicVowelLengthPolicy::SMART` beside `COLLAPSE` and `DOUBLE`. `SMART` is syllable spelling for modern Gujarati and Hindi. Closed one-syllable words keep length (`aaj`, `chaar`, `maas`, `naam`, `hoon`, `swaroop`). Open particles and heavy clusters shorten (`ka`, `marg`, `dharan`, `karine`, `ekadashi`). An open ending keeps length the stem already earned (`swaroopama`, `paasethi`, `shwetdweepthi`). A nasal coda keeps a peripheral vowel (`hoonga`). Sanskrit SMART stays conservative because vowel length is phonemic (`shvetadveepa`, `svaroopa`).
+- Separated script parsing, language naturalization (`AUTO`, `HINDI`, `GUJARATI`, `SANSKRIT`), vowel rendering, Plain/Hunterian folding, and presentation. A Devanagari string can use Gujarati pronunciation, so `ऋतु` is `ritu` in Hindi and `rutu` in Gujarati.
+- Expanded natural medial schwa contraction and Gujarati ending patterns, including `જેટલાં → jetla`, `બ્રહ્માંડમાં → brahmandma`, `વિષ્ણુપુરમાંથી → vishnupurmathi`, `સતયુગ → satyug`, and `શુકલપક્ષ → shuklapaksh`.
+- Added contextual `sv` / `śv` / `ṣv` / `dv` cluster spelling (`shwetdweep`, `swaroop`) while leaving `manvantar`, `vasant`, and `ravivar` unchanged.
+- Natural schwa between `p` and unaspirated `t` stays, so Hindi `राष्ट्रपति` is `rashtrapati`. Aspirated `થ` / `थ` still contracts (`શાપથી` → `shaapthi`). Legacy `गांधीनगर` stays `gaandheengar`; natural Hindi is `gandhinagar`.
+- Added optional presentation controls: `capitalizeSentenceStarts` and exact `readableWordOverrides`. Proper-name capitalization is supplied by the caller.
+- Plain-English defaults to doubled vowel length. Hunterian defaults to collapsed length when vowel length is omitted, so the same legacy Gujarati text is `brahmaand` in Plain and `brahmand` in Hunterian. With `NATURAL` + `SMART` on both calls, Gujarati Plain and Hunterian match. Gujarati, and modern `NATURAL` Hindi, do not apply Hunterian's blanket consonant-plus-`v` → `w` rule.
+- Named the Hunterian profile as simplified ASCII Hunterian, the map and signboard spelling. A long vowel is one letter (`जान` → `jan`) and consonant dots are removed. The 1954 macron form (`jān`) and the 19th-century acute accent (`ján`) are not emitted. Canonical IAST remains the precise spelling.
+- Canonical Brahmic → IAST, exact-source recovery, direct Devanagari ↔ Gujarati conversion, and the pre-1.2 `IastPlainEnglishOptions` constructor stay unchanged. New `BrahmicPlainEnglishOptions` fields are appended, so old positional constructors stay valid.
+- A call that leaves `readableStyle` at `LEGACY` keeps the 1.1 readable output. Each runtime's Brahmic plain-English suite locks that default path, the golden Gujarati paragraph, Sanskrit conservatism, and the `NATURAL` + `SMART` syllable cases.
+
+---
+
 ## 1.1.0
 
 **lipimala v1.1.0 — Brahmic transcription and Unicode 18 coverage**

@@ -14,7 +14,18 @@ import sys
 # regardless of which lipimala release is installed in the environment.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from lipimala import to_hunterian_from_gujarati, to_plain_english_from_gujarati
+from lipimala import (
+    BrahmicPlainEnglishOptions,
+    BrahmicReadableStyle,
+    BrahmicVowelLengthPolicy,
+    to_hunterian_from_gujarati,
+    to_plain_english_from_gujarati,
+)
+
+OPTIONS = BrahmicPlainEnglishOptions(
+    readable_style=BrahmicReadableStyle.NATURAL,
+    vowel_length=BrahmicVowelLengthPolicy.SMART,
+)
 
 LINES = [
     'પદ - ૧',
@@ -42,8 +53,8 @@ LINES = [
 def main() -> None:
     for line in LINES:
         print(f'GUJ : {line}')
-        print(f'PLAIN: {to_plain_english_from_gujarati(line)}')
-        print(f'HUNT : {to_hunterian_from_gujarati(line)}')
+        print(f'PLAIN: {to_plain_english_from_gujarati(line, OPTIONS)}')
+        print(f'HUNT : {to_hunterian_from_gujarati(line, OPTIONS)}')
         print()
 
 

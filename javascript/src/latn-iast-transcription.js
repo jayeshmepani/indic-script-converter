@@ -29,6 +29,8 @@ export const NyaPolicy = Object.freeze({
     nya: 'nya',
     gna: 'gna',
 });
+// HUNTERIAN is simplified ASCII Hunterian: one letter per long vowel and no
+// consonant dots. It is the map and signboard spelling, not the 1954 macron form.
 export const PlainEnglishRomanizationProfile = Object.freeze({
     STRICT_IAST: 'strictIast',
     EXTENDED_INDIC: 'extendedIndic',

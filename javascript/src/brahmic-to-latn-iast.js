@@ -124,7 +124,7 @@ function readVowelSign(chars, index, config) {
 }
 
 class BrahmicToIast {
-    static convert(inputText, config, options, inherentVowel = 'a') {
+    static convert(inputText, config, options, inherentVowel = 'a', readableOverrides = null) {
         const visible = stripExactSourceMetadata(String(inputText));
         const normalized = normalizeUnicode(visible, options.inputNormalization);
         const chars = Array.from(normalized);
@@ -136,7 +136,7 @@ class BrahmicToIast {
 
             const independent = config.independentVowels[ch];
             if (independent !== undefined) {
-                let latin = independent;
+                let latin = readableOverrides?.independentVowels?.[ch] ?? independent;
                 i += 1;
                 if (config.script === 'gujarati' && ['અ', 'ઇ'].includes(ch) && chars[i] === '૽') {
                     latin = `ʿ${latin}`;
@@ -171,7 +171,7 @@ class BrahmicToIast {
 
             const consonant = config.consonants[consonantKey];
             if (consonant !== undefined) {
-                let latin = consonant;
+                let latin = readableOverrides?.consonants?.[consonantKey] ?? consonant;
                 let cursor = i + consonantWidth;
                 let geminated = false;
                 let sukun = false;
@@ -753,6 +753,10 @@ export function toCanonicalIastFromGujarati(text, options = new ScriptToIastOpti
 export const to_canonical_iast_from_gujarati = toCanonicalIastFromGujarati;
 
 const INHERENT_SCHWA = '\uE100';
+// A medial inherent vowel that natural mode deletes. It stays inside the word
+// until vowel-length decisions, then it is removed. A virama cluster has no
+// boundary; a deleted schwa does. Final schwa deletion does not emit one.
+const SYLLABLE_BREAK = '\uE101';
 
 export const BrahmicLanguage = Object.freeze({
     AUTO: 'auto',
@@ -777,8 +781,17 @@ export const BrahmicSchwaDeletionPolicy = Object.freeze({
 export const BrahmicVowelLengthPolicy = Object.freeze({
     COLLAPSE: 'collapse',
     DOUBLE: 'double',
+    SMART: 'smart',
     collapse: 'collapse',
     double: 'double',
+    smart: 'smart',
+});
+
+export const BrahmicReadableStyle = Object.freeze({
+    LEGACY: 'legacy',
+    NATURAL: 'natural',
+    legacy: 'legacy',
+    natural: 'natural',
 });
 
 export const TerminalAnusvaraPolicy = Object.freeze({
@@ -814,6 +827,9 @@ export class BrahmicPlainEnglishOptions {
         this.vowelLength =
             values.vowelLength ?? values.vowel_length ?? BrahmicVowelLengthPolicy.DOUBLE;
         this.vowel_length = this.vowelLength;
+        this.readableStyle =
+            values.readableStyle ?? values.readable_style ?? BrahmicReadableStyle.LEGACY;
+        this.readable_style = this.readableStyle;
         this.terminalAnusvara =
             values.terminalAnusvara ?? values.terminal_anusvara ?? TerminalAnusvaraPolicy.N;
         this.terminal_anusvara = this.terminalAnusvara;
@@ -830,6 +846,16 @@ export class BrahmicPlainEnglishOptions {
             values.preserveVedicAccentMarks ?? values.preserve_vedic_accent_marks;
         this.useWForVAfterConsonants =
             values.useWForVAfterConsonants ?? values.use_w_for_v_after_consonants;
+        this.capitalizeSentenceStarts =
+            values.capitalizeSentenceStarts ?? values.capitalize_sentence_starts ?? false;
+        this.capitalize_sentence_starts = this.capitalizeSentenceStarts;
+        const readableWordOverrides =
+            values.readableWordOverrides ?? values.readable_word_overrides ?? {};
+        this.readableWordOverrides =
+            readableWordOverrides instanceof Map
+                ? Object.freeze(Object.fromEntries(readableWordOverrides))
+                : Object.freeze({ ...readableWordOverrides });
+        this.readable_word_overrides = this.readableWordOverrides;
         Object.freeze(this);
     }
 }
@@ -926,7 +952,7 @@ function restoreSourceLatin(text, spans) {
 }
 
 function isTranscriptionWordChar(ch) {
-    if (ch === INHERENT_SCHWA) return true;
+    if (ch === INHERENT_SCHWA || ch === SYLLABLE_BREAK) return true;
     const cp = ch.codePointAt(0);
     return (
         (cp >= 0x41 && cp <= 0x5a) ||
@@ -965,7 +991,7 @@ const IAST_VOWELS = new Set([
 const IAST_SIGNS = new Set(['ṃ', 'ṁ', 'ḥ']);
 const ASPIRATED = ['kh', 'gh', 'ch', 'jh', 'ṭh', 'ḍh', 'th', 'dh', 'ph', 'bh', 'ṛh'];
 
-function tokenizeAnnotatedWord(word) {
+function tokenizeAnnotatedWord(word, separateVocalicRh = false) {
     const chars = Array.from(word);
     const tokens = [];
     let i = 0;
@@ -976,10 +1002,27 @@ function tokenizeAnnotatedWord(word) {
             i += 1;
             continue;
         }
+        if (ch === SYLLABLE_BREAK) {
+            tokens.push({ type: 'boundary', text: '' });
+            i += 1;
+            continue;
+        }
         const pair = i + 1 < chars.length ? ch + chars[i + 1] : '';
         if (pair === 'ai' || pair === 'au') {
             tokens.push({ type: 'vowel', text: pair, implicit: false });
             i += 2;
+            continue;
+        }
+        // ढ़ is the consonant sequence ṛh. Vocalic ṛ + ह/હ is the same
+        // character sequence after a consonant (ગૃહ, गृह). Split that pair
+        // only in natural mode so legacy 1.1 tokenization stays put.
+        if (
+            separateVocalicRh &&
+            pair.toLowerCase() === 'ṛh' &&
+            tokens.at(-1)?.type === 'consonant'
+        ) {
+            tokens.push({ type: 'vowel', text: ch, implicit: false });
+            i += 1;
             continue;
         }
         if (ASPIRATED.includes(pair.toLowerCase())) {
@@ -1018,23 +1061,98 @@ function baseConsonant(token) {
     return s;
 }
 
-function allowsSchwaCluster(left, right, language) {
+function isAspiratedGha(token) {
+    // baseConsonant folds ઘ/घ to g, so an allow-list key of n+g also matches
+    // unaspirated નગર. The નારાયણઘાટે contraction is the aspirate only.
+    return token?.text?.toLowerCase().normalize('NFC') === 'gh';
+}
+
+function isAspiratedDental(token) {
+    // baseConsonant likewise folds થ/थ and ઠ/ठ to t. पति must keep its vowel;
+    // only the aspirate (શાપથી) syncopates.
+    const text = token?.text?.toLowerCase().normalize('NFC');
+    return text === 'th' || text === 'ṭh';
+}
+
+function allowsSchwaCluster(left, right, language, readableStyle = BrahmicReadableStyle.LEGACY) {
     const a = baseConsonant(left);
     const b = baseConsonant(right);
     if (!a || !b) return false;
 
     if (language === BrahmicLanguage.GUJARATI) {
-        // Gujarati medial deletion is productive in a few very common shapes,
-        // but applying the Hindi rule wholesale makes ordinary forms unnaturally
-        // compressed (oraḍe -> *orḍe, ādare -> *ādre). Keep this deliberately
-        // conservative and let final-schwa deletion do most of the work.
+        // 1.1-compatible conservative Gujarati syncope.
         if (b === 'v') return true; // naṭavara -> naṭvara, besavā -> besvā
         if (b === 'n') return true; // gulābanā -> gulābnā, hīranī -> hīrnī
-        return new Set(['b+t', 'r+m', 'ś+m', 'ṣ+m', 's+m', 'ṇ+l', 'n+l']).has(`${a}+${b}`);
+
+        const legacyClusters = new Set(['b+t', 'r+m', 'ś+m', 'ṣ+m', 's+m', 'ṇ+l', 'n+l']);
+        if (legacyClusters.has(`${a}+${b}`)) return true;
+
+        if (readableStyle !== BrahmicReadableStyle.NATURAL) return false;
+
+        // ઘ is gh. Matching on base g would also swallow નગર (gandhinagar).
+        if ((a === 'n' || a === 'ṇ') && isAspiratedGha(right)) return true;
+        if (a === 'p' && isAspiratedDental(right)) return true;
+
+        // Natural Gujarati prose permits additional productive contractions at
+        // inflection/compound boundaries. Keep this inventory explicit rather
+        // than applying the much broader Hindi rule wholesale.
+        return new Set([
+            't+l',
+            'ṭ+l', // jeṭalāṃ -> jeṭlāṃ
+            'ḍ+m', // brahmāṃḍamāṃ -> brahmāṃḍmāṃ
+            'd+m',
+            'm+m', // dhāmamāṃ -> dhāmmāṃ
+            'm+d', // amadāvāda -> amdāvāda, rāmadeva -> rāmdeva
+            't+d', // śvetadvīpa -> śvetdvīpa
+            't+y', // satayuga -> satyuga
+            'k+l', // śukalapakṣa -> śuklapakṣa
+            'k+r', // dīkaro -> dīkro
+            'j+k', // rājakōṭa -> rājkōṭa
+            'r+d', // akṣaradhāma -> akṣardhāma
+            'l+m',
+            'ḷ+m',
+            'ḻ+m', // kāḻamāṃ -> kāḻmāṃ
+            'l+j',
+            'ḷ+j',
+            'ḻ+j', // kāḻajī -> kāḻjī
+        ]).has(`${a}+${b}`);
     }
 
     // Hindi/Hindustani permits broader medial syncope. This is still guarded
     // by the V-Cə-CV environment and by a conservative cluster inventory.
+    // Natural mode additionally enables the same cross-script compound
+    // contractions used by modern readable Gujarati where the phonotactics
+    // are shared (for example śvetadvīpa -> śvetdvīpa).
+    if (
+        readableStyle === BrahmicReadableStyle.NATURAL &&
+        (a === 'n' || a === 'ṇ') &&
+        isAspiratedGha(right)
+    ) {
+        return true;
+    }
+    if (readableStyle === BrahmicReadableStyle.NATURAL && a === 'p' && isAspiratedDental(right)) {
+        return true;
+    }
+    if (
+        readableStyle === BrahmicReadableStyle.NATURAL &&
+        new Set([
+            't+d',
+            't+y',
+            't+n', // jitanā -> jitnā
+            'k+l',
+            'r+d',
+            'p+n', // apanā -> apnā
+            'd+n',
+            'd+m', // ādamī -> ādmī
+            'ḍ+n',
+            'ḍ+k', // laḍakā -> laḍkā
+            'h+l', // pahalā -> pahlā
+            'h+n', // kahanā -> kahnā
+            'c+n', // racanā -> racnā
+        ]).has(`${a}+${b}`)
+    ) {
+        return true;
+    }
     if (new Set(['r', 'y', 'v']).has(b)) return true;
     if (a === 'r' && /^(?:k|kh|g|gh|c|ch|j|jh|t|th|d|dh|n|p|ph|b|bh|m|s|sh|h)$/u.test(b)) {
         return true;
@@ -1075,6 +1193,56 @@ function allowsSchwaCluster(left, right, language) {
     ]).has(`${a}+${b}`);
 }
 
+function isImplicitNagarSchwa(bearing, next, following) {
+    // Hindi nasal+stop syncope turns गांधीनगर into gandhingar. Keep the schwa
+    // when the next vowel is itself only a schwa (नगर). Explicit vowels such
+    // as अनगिनत still syncopate.
+    if (bearing?.type !== 'consonant' || next?.type !== 'consonant') return false;
+    if (following?.implicit !== true || isAspiratedGha(next)) return false;
+    if (baseConsonant(next) !== 'g') return false;
+    const left = baseConsonant(bearing);
+    return left === 'm' || left === 'n' || left === 'ṇ';
+}
+
+function isHindiNaSuffix(bearing, next, following) {
+    // Hindi -ना deletes the stem-final schwa (देखना, बोलना, लिखना). A nasal
+    // stem before another nasal stays open so गणना does not collapse into गन्ना.
+    if (bearing?.type !== 'consonant' || next?.type !== 'consonant') return false;
+    if (following?.type !== 'vowel' || following.implicit) return false;
+    if (following.text.toLowerCase() !== 'ā') return false;
+    const right = baseConsonant(next);
+    if (right !== 'n' && right !== 'ṇ') return false;
+    const left = baseConsonant(bearing);
+    const nasal = new Set(['m', 'n', 'ṇ', 'ñ', 'ṅ']);
+    return !(nasal.has(left) && nasal.has(right));
+}
+
+function isGujaratiThiSuffix(next, following) {
+    if (next?.type !== 'consonant' || following?.type !== 'vowel') return false;
+    const consonant = next.text.toLowerCase();
+    const vowel = following.text.toLowerCase();
+    return (consonant === 'th' || consonant === 'ṭh') && (vowel === 'ī' || vowel === 'i');
+}
+
+function isGujaratiMamSuffix(next, following, tokens, vowelIndex) {
+    if (next?.type !== 'consonant' || following?.type !== 'vowel') return false;
+    if (baseConsonant(next) !== 'm') return false;
+    const vowel = following.text.toLowerCase();
+    if (vowel !== 'ā' && vowel !== 'a') return false;
+    let nasalIndex = vowelIndex + 1;
+    while (nasalIndex < tokens.length && tokens[nasalIndex].deleted) nasalIndex += 1;
+    const nasal = tokens[nasalIndex];
+    return nasal?.type === 'sign' && (nasal.text === 'ṃ' || nasal.text === 'ṁ');
+}
+
+function hasSchwaLeftVowel(tokens, beforeIndex, allowCodaSkip) {
+    const before = tokens[beforeIndex];
+    if (before?.type === 'vowel') return true;
+    if (!allowCodaSkip || before?.type !== 'consonant') return false;
+    if (!new Set(['r', 'y', 'l', 'v']).has(baseConsonant(before))) return false;
+    return tokens[beforeIndex - 1]?.type === 'vowel';
+}
+
 function shouldKeepFinalSchwa(tokens, lastIndex) {
     const bearing = tokens[lastIndex - 1];
     const previous = tokens[lastIndex - 2];
@@ -1083,8 +1251,13 @@ function shouldKeepFinalSchwa(tokens, lastIndex) {
     return new Set(['r+y', 'l+y', 'n+y', 'm+y', 'g+y', 'ś+ṇ', 'ṣ+ṇ', 's+ṇ']).has(pair);
 }
 
-function naturalizeAnnotatedWord(word, language, schwaPolicy) {
-    const tokens = tokenizeAnnotatedWord(word);
+function naturalizeAnnotatedWord(
+    word,
+    language,
+    schwaPolicy,
+    readableStyle = BrahmicReadableStyle.LEGACY,
+) {
+    const tokens = tokenizeAnnotatedWord(word, readableStyle === BrahmicReadableStyle.NATURAL);
     if (schwaPolicy === BrahmicSchwaDeletionPolicy.NONE || language === BrahmicLanguage.SANSKRIT) {
         return tokens.map((t) => t.text).join('');
     }
@@ -1106,29 +1279,83 @@ function naturalizeAnnotatedWord(word, language, schwaPolicy) {
             const schwa = tokens[i];
             if (!schwa.implicit || schwa.deleted) continue;
             const bearing = tokens[i - 1];
-            const before = tokens[i - 2];
+            let beforeIndex = i - 2;
+            if (
+                readableStyle === BrahmicReadableStyle.NATURAL &&
+                language !== BrahmicLanguage.SANSKRIT
+            ) {
+                while (beforeIndex >= 0 && tokens[beforeIndex]?.type === 'sign') beforeIndex -= 1;
+            }
             let nextIndex = i + 1;
             while (nextIndex < tokens.length && tokens[nextIndex].deleted) nextIndex += 1;
             let afterNext = nextIndex + 1;
             while (afterNext < tokens.length && tokens[afterNext].deleted) afterNext += 1;
             const next = tokens[nextIndex];
             const following = tokens[afterNext];
+            const naturalModern =
+                readableStyle === BrahmicReadableStyle.NATURAL &&
+                language !== BrahmicLanguage.SANSKRIT;
+            const mamSuffix =
+                naturalModern &&
+                language === BrahmicLanguage.GUJARATI &&
+                isGujaratiMamSuffix(next, following, tokens, afterNext);
+            const thiSuffix =
+                naturalModern &&
+                language === BrahmicLanguage.GUJARATI &&
+                isGujaratiThiSuffix(next, following);
+            const naSuffix =
+                naturalModern &&
+                language === BrahmicLanguage.HINDI &&
+                isHindiNaSuffix(bearing, next, following);
+            const keepNagarSchwa =
+                naturalModern &&
+                language === BrahmicLanguage.HINDI &&
+                isImplicitNagarSchwa(bearing, next, following);
+            let rightOnsetHasVowel = following?.type === 'vowel';
+            if (
+                !rightOnsetHasVowel &&
+                readableStyle === BrahmicReadableStyle.NATURAL &&
+                language !== BrahmicLanguage.SANSKRIT &&
+                following?.type === 'consonant' &&
+                new Set(['r', 'y', 'v', 'l']).has(baseConsonant(following))
+            ) {
+                let afterCluster = afterNext + 1;
+                while (afterCluster < tokens.length && tokens[afterCluster].deleted) {
+                    afterCluster += 1;
+                }
+                rightOnsetHasVowel = tokens[afterCluster]?.type === 'vowel';
+            }
             if (
                 bearing?.type === 'consonant' &&
-                before?.type === 'vowel' &&
+                hasSchwaLeftVowel(tokens, beforeIndex, mamSuffix || thiSuffix) &&
                 next?.type === 'consonant' &&
-                following?.type === 'vowel' &&
-                allowsSchwaCluster(bearing, next, language)
+                rightOnsetHasVowel &&
+                (thiSuffix ||
+                    naSuffix ||
+                    (!keepNagarSchwa && allowsSchwaCluster(bearing, next, language, readableStyle)))
             ) {
                 schwa.deleted = true;
+                // Only a medial deletion separates two syllables. The final
+                // schwa above is absence, not a boundary inside the word.
+                if (naturalModern) schwa.boundary = true;
             }
         }
     }
 
-    return tokens.map((t) => (t.deleted ? '' : t.text)).join('');
+    return tokens
+        .map((t) => {
+            if (!t.deleted) return t.text;
+            return t.boundary ? SYLLABLE_BREAK : '';
+        })
+        .join('');
 }
 
-function naturalizeAnnotatedIast(text, language, schwaPolicy) {
+function naturalizeAnnotatedIast(
+    text,
+    language,
+    schwaPolicy,
+    readableStyle = BrahmicReadableStyle.LEGACY,
+) {
     const chars = transcriptionChars(text);
     const out = [];
     let i = 0;
@@ -1141,14 +1368,158 @@ function naturalizeAnnotatedIast(text, language, schwaPolicy) {
         const start = i;
         i += 1;
         while (i < chars.length && isTranscriptionWordChar(chars[i])) i += 1;
-        out.push(naturalizeAnnotatedWord(chars.slice(start, i).join(''), language, schwaPolicy));
+        out.push(
+            naturalizeAnnotatedWord(
+                chars.slice(start, i).join(''),
+                language,
+                schwaPolicy,
+                readableStyle,
+            ),
+        );
     }
     return out.join('');
 }
 
-function applyReadableVowelLength(text, policy) {
-    if (policy !== BrahmicVowelLengthPolicy.DOUBLE) return text;
-    return text
+function mapTranscriptionWords(text, mapper) {
+    const chars = transcriptionChars(text);
+    const out = [];
+    let i = 0;
+    while (i < chars.length) {
+        if (!isTranscriptionWordChar(chars[i])) {
+            out.push(chars[i]);
+            i += 1;
+            continue;
+        }
+        const start = i;
+        i += 1;
+        while (i < chars.length && isTranscriptionWordChar(chars[i])) i += 1;
+        out.push(mapper(chars.slice(start, i).join('')));
+    }
+    return out.join('');
+}
+
+function applyNaturalClusterSpellings(word, language) {
+    if (language === BrahmicLanguage.SANSKRIT) return word;
+
+    // Common readable spellings in modern Indo-Aryan Roman text. Keep this
+    // deliberately cluster-scoped: a blanket v -> w rewrite would damage
+    // forms such as manvantar, vasant, and ravivar.
+    return word
+        .replaceAll('śv', 'św')
+        .replaceAll('Śv', 'Św')
+        .replaceAll('ṣv', 'ṣw')
+        .replaceAll('Ṣv', 'Ṣw')
+        .replaceAll('sv', 'sw')
+        .replaceAll('Sv', 'Sw')
+        .replaceAll('dv', 'dw')
+        .replaceAll('Dv', 'Dw');
+}
+
+function endsWithClosedResonant(word) {
+    const chars = Array.from(word);
+    if (chars.length < 2) return false;
+    const last = chars.at(-1).toLowerCase();
+    if (!'ryvw'.includes(last)) return false;
+    const prev = chars.at(-2).toLowerCase();
+    return !'aāiīuūeēoōṛṝḷḹăêĕĭôŏæœ'.includes(prev);
+}
+
+function applyBrahmicNaturalMorphology(text, language) {
+    return mapTranscriptionWords(text, (originalWord) => {
+        let word = originalWord;
+
+        if (language === BrahmicLanguage.GUJARATI) {
+            // Productive Gujarati endings. These are morphology-aware rather
+            // than generic "anusvara => n" replacements.
+            word = word.replace(/māṃthī$/u, 'mathī');
+            word = word.replace(/māṃ$/u, 'ma');
+            // Plural -ાં drops when another vowel is present (જેટલાં, પધાર્યાં).
+            // A lone āṃ is the locative ક્યાં/ત્યાં/જ્યાં and keeps its n.
+            if (/[aāiīuūeēoōṛṝḷḹăêĕĭôŏæœ].*āṃ$/u.test(word)) {
+                word = word.replace(/āṃ$/u, 'ā');
+            }
+            word = word.replace(/uṃ$/u, 'u');
+            // કંઈ is the nasalized diphthong ai, not kamī.
+            word = word.replace(/a[ṃṁ][īi]/gu, 'ai');
+        }
+
+        word = applyNaturalClusterSpellings(word, language);
+
+        // Hindi इए is the spoken -iye sequence (चाहिए, कहिए, किए) even when
+        // य is not written. Gujarati ઈએ stays "ie" (જોઈએ -> joie).
+        if (language === BrahmicLanguage.HINDI && /ie$/u.test(word)) {
+            word = `${word.slice(0, -2)}iye`;
+        } else if (language === BrahmicLanguage.HINDI && /IE$/u.test(word)) {
+            word = `${word.slice(0, -2)}IYE`;
+        }
+
+        // A bare consonant + resonant coda is the chaitra pattern generalized:
+        // mitr -> mitra, caitr -> caitra, śastr -> śastra, viśw -> viśwa.
+        // Closed codas such as dharm and dwar stay closed.
+        if (language !== BrahmicLanguage.SANSKRIT && endsWithClosedResonant(word)) {
+            word = `${word}a`;
+        }
+
+        return word;
+    });
+}
+
+function naturalReadableOverrides(config, language, readableStyle) {
+    if (readableStyle !== BrahmicReadableStyle.NATURAL) return null;
+
+    const consonants = {};
+    const independentVowels = {};
+
+    if (language !== BrahmicLanguage.SANSKRIT) {
+        // Hindi flaps are written as d/dh in readable Roman text. Keeping
+        // them on ṛ makes लड़का "laraka" and थोड़ा "thora".
+        if (config.script === 'devanagari') {
+            consonants['ड़'] = 'ḍ';
+            consonants['ढ़'] = 'ḍh';
+        } else if (config.script === 'gujarati') {
+            consonants['ડ઼'] = 'ḍ';
+            consonants['ઢ઼'] = 'ḍh';
+        }
+    }
+
+    if (config.script === 'gujarati') {
+        // Avoid the IAST ḷ ambiguity (vocalic l vs retroflex lateral) in the
+        // readable path irrespective of the selected language.
+        consonants['ળ'] = 'ḻ';
+        if (language === BrahmicLanguage.GUJARATI) independentVowels['ઋ'] = 'ru';
+    } else if (config.script === 'devanagari') {
+        // The same structural disambiguation applies to Devanagari ळ. When
+        // Gujarati language rules are explicitly selected for Devanagari text,
+        // keep the Gujarati independent-R pronunciation too.
+        consonants['ळ'] = 'ḻ';
+        if (language === BrahmicLanguage.GUJARATI) independentVowels['ऋ'] = 'ru';
+    }
+
+    return Object.keys(consonants).length || Object.keys(independentVowels).length
+        ? { consonants, independentVowels }
+        : null;
+}
+
+function collapseReadableVowelLength(text) {
+    return String(text)
+        .replaceAll('ā', 'a')
+        .replaceAll('Ā', 'A')
+        .replaceAll('ī', 'i')
+        .replaceAll('Ī', 'I')
+        .replaceAll('ū', 'u')
+        .replaceAll('Ū', 'U')
+        .replaceAll('ē', 'e')
+        .replaceAll('Ē', 'E')
+        .replaceAll('ō', 'o')
+        .replaceAll('Ō', 'O')
+        .replaceAll('ṝ', 'ri')
+        .replaceAll('Ṝ', 'Ri')
+        .replaceAll('ḹ', 'li')
+        .replaceAll('Ḹ', 'Li');
+}
+
+function doubleReadableVowelLength(text) {
+    return String(text)
         .replaceAll('āī', 'aai')
         .replaceAll('Āī', 'Aai')
         .replaceAll('aī', 'ai')
@@ -1169,6 +1540,291 @@ function applyReadableVowelLength(text, policy) {
         .replaceAll('Ḹ', 'Lee');
 }
 
+const LONG_VOWEL_COLLAPSE = new Map([
+    ['ā', 'a'],
+    ['Ā', 'A'],
+    ['ī', 'i'],
+    ['Ī', 'I'],
+    ['ū', 'u'],
+    ['Ū', 'U'],
+    ['ē', 'e'],
+    ['Ē', 'E'],
+    ['ō', 'o'],
+    ['Ō', 'O'],
+    ['ṝ', 'ri'],
+    ['Ṝ', 'Ri'],
+    ['ḹ', 'li'],
+    ['Ḹ', 'Li'],
+]);
+
+function collapseVowelToken(text) {
+    const chars = Array.from(text);
+    const short = LONG_VOWEL_COLLAPSE.get(chars[0]);
+    if (!short) return text;
+    return `${short}${chars.slice(1).join('')}`;
+}
+
+function isLongVowelToken(text) {
+    const base = Array.from(text)[0];
+    return LONG_VOWEL_COLLAPSE.has(base);
+}
+
+function isCentralLongVowel(text) {
+    const base = Array.from(text)[0];
+    return base === 'ā' || base === 'Ā';
+}
+
+function isPeripheralLongVowel(text) {
+    return isLongVowelToken(text) && !isCentralLongVowel(text);
+}
+
+function isNasalSign(token) {
+    return token?.type === 'sign' && (token.text === 'ṃ' || token.text === 'ṁ');
+}
+
+function codaWeight(tokens) {
+    let weight = 0;
+    for (const token of tokens) {
+        if (token.type === 'consonant' || token.type === 'sign') weight += 1;
+        else return null;
+    }
+    return weight;
+}
+
+// A liquid or glide on the far side of a deleted schwa joins the consonant
+// before that schwa (dīkaro). An obstruent there leaves the syllables apart
+// (kāḻajī, śāpathī).
+function isClusterFormingResonant(token) {
+    const base = baseConsonant(token);
+    return base === 'r' || base === 'y' || base === 'l' || base === 'v';
+}
+
+// A final open syllable that begins with a nasal is a clitic of its own
+// (karīne). Its onset does not close the vowel in front of it.
+function isNasalConsonant(token) {
+    const base = baseConsonant(token);
+    return base === 'm' || base === 'n' || base === 'ṇ' || base === 'ñ' || base === 'ṅ';
+}
+
+function isLightSyllableContact(contact) {
+    if (contact.length === 1 && contact[0].type === 'consonant') return true;
+    if (contact.filter((token) => token.type === 'boundary').length !== 1) return false;
+    const at = contact.findIndex((token) => token.type === 'boundary');
+    const left = contact.slice(0, at);
+    const right = contact.slice(at + 1);
+    if (codaWeight(left) !== 1 || codaWeight(right) !== 1) return false;
+    const rightConsonant = right.find((token) => token.type === 'consonant');
+    return Boolean(rightConsonant) && !isClusterFormingResonant(rightConsonant);
+}
+
+// हूँगा writes n+g between ū and the next vowel. The nasal is the coda of ū
+// and the stop is the next onset, so ū stays long. A stop+liquid pair is one
+// onset (રાત્રે), and a non-nasal coda such as mūrti does not qualify.
+function hasNasalCodaBeforeNext(tokens, vowelIndex, nextIndex) {
+    const between = tokens.slice(vowelIndex + 1, nextIndex);
+    if (between.some((token) => token.type !== 'consonant' && token.type !== 'sign')) return false;
+    const consonantAt = [];
+    between.forEach((token, index) => {
+        if (token.type === 'consonant') consonantAt.push(index);
+    });
+    if (consonantAt.length === 0) return false;
+    let onset = 1;
+    const lastAt = consonantAt.at(-1);
+    if (consonantAt.length >= 2) {
+        const prevAt = consonantAt.at(-2);
+        if (lastAt === prevAt + 1 && isClusterFormingResonant(between[lastAt])) onset = 2;
+    }
+    if (between.length <= onset) return false;
+    const coda = between.slice(0, between.length - onset);
+    if (codaWeight(coda) !== 1) return false;
+    return isNasalConsonant(coda[0]) || isNasalSign(coda[0]);
+}
+
+function vowelIndexesOf(tokens) {
+    const indexes = [];
+    tokens.forEach((token, index) => {
+        if (token.type === 'vowel') indexes.push(index);
+    });
+    return indexes;
+}
+
+// Where a final open syllable can leave the stem. A schwa boundary keeps the
+// consonant before the break on the stem (svarūp + thī); a single onset
+// consonant leaves with the ending (pāse + thī).
+function finalOpenSyllableSplit(tokens) {
+    const vowelIndexes = vowelIndexesOf(tokens);
+    if (vowelIndexes.length < 3) return null;
+    const last = vowelIndexes.at(-1);
+    const previous = vowelIndexes.at(-2);
+    if (codaWeight(tokens.slice(last + 1)) !== 0) return null;
+    const contact = tokens.slice(previous + 1, last);
+    if (!isLightSyllableContact(contact)) return null;
+    const boundaryAt = contact.findIndex((token) => token.type === 'boundary');
+    const start = boundaryAt >= 0 ? previous + 1 + boundaryAt : previous + 1;
+    return { start, finalIsLong: isLongVowelToken(tokens[last].text) };
+}
+
+// A short ending is peeled only when the stem then keeps a peripheral vowel
+// the full word would shorten (rūpama -> roopama). Saving only central ā
+// (cāhiye) is not a reason to peel.
+function peelSavesPeripheral(tokens, start) {
+    const full = smartLengthKeepIndexes(tokens);
+    const stem = smartLengthKeepIndexes(tokens.slice(0, start));
+    for (const index of stem) {
+        if (full.has(index)) continue;
+        if (isPeripheralLongVowel(tokens[index].text)) return true;
+    }
+    return false;
+}
+
+function smartLengthKeepIndexes(tokens) {
+    const keep = new Set();
+    if (tokens.length === 0) return keep;
+    // A word-initial long vowel has no consonant to carry it (āj, āvīne, ūpar).
+    if (tokens[0].type === 'vowel' && isLongVowelToken(tokens[0].text)) keep.add(0);
+
+    const vowelIndexes = vowelIndexesOf(tokens);
+    if (vowelIndexes.length === 0) return keep;
+
+    // A nasal coda before the next onset keeps a non-final peripheral vowel
+    // (hūngā -> hoonga). Central ā stays short (kāṃṭhe -> kanthe).
+    for (let n = 0; n < vowelIndexes.length - 1; n += 1) {
+        const index = vowelIndexes[n];
+        if (!isPeripheralLongVowel(tokens[index].text)) continue;
+        if (hasNasalCodaBeforeNext(tokens, index, vowelIndexes[n + 1])) keep.add(index);
+    }
+
+    if (vowelIndexes.length === 1) {
+        const index = vowelIndexes[0];
+        const coda = tokens.slice(index + 1);
+        // One coda keeps the vowel (cār, rūp, hūn, dūdh). An open syllable and
+        // a true cluster (mārg, weight 2 or more) both shorten.
+        if (
+            !coda.some((token) => token.type === 'boundary') &&
+            isLongVowelToken(tokens[index].text) &&
+            codaWeight(coda) === 1
+        ) {
+            keep.add(index);
+        }
+        return keep;
+    }
+
+    const last = vowelIndexes.at(-1);
+    const previous = vowelIndexes.at(-2);
+    const lastCoda = tokens.slice(last + 1);
+
+    if (vowelIndexes.length === 2 && isLongVowelToken(tokens[previous].text)) {
+        const contact = tokens.slice(previous + 1, last);
+        // Two nuclei, and the second syllable is open: māre, nīce, jā+nā,
+        // cār plus a following open syllable across a schwa boundary.
+        if (codaWeight(lastCoda) === 0 && isLightSyllableContact(contact)) keep.add(previous);
+    }
+
+    // The last syllable, closed by one consonant. ā shortens (gulāb).
+    // ī/ū/ē/ō stay (svarūp, the final syllable of śvetadvīp, cālīs).
+    if (
+        !lastCoda.some((token) => token.type === 'boundary') &&
+        codaWeight(lastCoda) === 1 &&
+        isLongVowelToken(tokens[last].text) &&
+        !isCentralLongVowel(tokens[last].text)
+    ) {
+        keep.add(last);
+    }
+
+    // A short vowel after one obstruent is a vocalic ending, so that obstruent
+    // closes the syllable in front of it (svarūpe). Three or more nuclei, so
+    // the disyllable rule above has not already decided.
+    if (
+        vowelIndexes.length > 2 &&
+        !isLongVowelToken(tokens[last].text) &&
+        codaWeight(lastCoda) === 0
+    ) {
+        const contact = tokens.slice(previous + 1, last);
+        if (
+            contact.length === 1 &&
+            contact[0].type === 'consonant' &&
+            !isClusterFormingResonant(contact[0]) &&
+            !isNasalConsonant(contact[0]) &&
+            isLongVowelToken(tokens[previous].text) &&
+            !isCentralLongVowel(tokens[previous].text)
+        ) {
+            keep.add(previous);
+        }
+    }
+    return keep;
+}
+
+function withoutSyllableBreaks(text) {
+    return String(text).replaceAll(SYLLABLE_BREAK, '');
+}
+
+function renderSmartLengthTokens(tokens) {
+    const keep = smartLengthKeepIndexes(tokens);
+    return tokens
+        .map((token, index) => {
+            if (token.type === 'boundary') return '';
+            if (token.type === 'vowel' && !keep.has(index)) return collapseVowelToken(token.text);
+            return token.text;
+        })
+        .join('');
+}
+
+function renderCollapsedEnding(tokens) {
+    return tokens
+        .map((token) => {
+            if (token.type === 'boundary') return '';
+            if (token.type === 'vowel') return collapseVowelToken(token.text);
+            return token.text;
+        })
+        .join('');
+}
+
+function smartReadableVowelLengthWord(originalWord, language) {
+    // Sanskrit vowel length is phonemic. SMART therefore remains conservative
+    // and exposes all encoded length instead of silently neutralising it.
+    if (language === BrahmicLanguage.SANSKRIT) {
+        return doubleReadableVowelLength(withoutSyllableBreaks(originalWord));
+    }
+
+    let stem = tokenizeAnnotatedWord(originalWord);
+    let ending = '';
+    // Long open endings stack (પાસેથીના). A short ending is removed only once,
+    // and only when that keeps a peripheral vowel on the stem (રૂપમાં).
+    while (stem.length > 0) {
+        const split = finalOpenSyllableSplit(stem);
+        if (!split) break;
+        const shortOk = !split.finalIsLong && peelSavesPeripheral(stem, split.start);
+        if (!split.finalIsLong && !shortOk) break;
+        ending = renderCollapsedEnding(stem.slice(split.start)) + ending;
+        stem = stem.slice(0, split.start);
+        if (shortOk) break;
+    }
+    return doubleReadableVowelLength(renderSmartLengthTokens(stem) + ending);
+}
+
+function applyReadableVowelLength(
+    text,
+    policy,
+    language = BrahmicLanguage.AUTO,
+    readableStyle = BrahmicReadableStyle.LEGACY,
+) {
+    // Preserve 1.1 behavior exactly outside the opt-in natural layer.
+    if (readableStyle !== BrahmicReadableStyle.NATURAL) {
+        return policy === BrahmicVowelLengthPolicy.DOUBLE ? doubleReadableVowelLength(text) : text;
+    }
+
+    if (policy === BrahmicVowelLengthPolicy.DOUBLE) {
+        return doubleReadableVowelLength(withoutSyllableBreaks(text));
+    }
+    if (policy === BrahmicVowelLengthPolicy.COLLAPSE) {
+        return collapseReadableVowelLength(withoutSyllableBreaks(text));
+    }
+    if (policy === BrahmicVowelLengthPolicy.SMART) {
+        return mapTranscriptionWords(text, (word) => smartReadableVowelLengthWord(word, language));
+    }
+    return withoutSyllableBreaks(text);
+}
+
 function applyTerminalAnusvara(text, policy) {
     const replacement =
         policy === TerminalAnusvaraPolicy.DROP
@@ -1176,7 +1832,8 @@ function applyTerminalAnusvara(text, policy) {
             : policy === TerminalAnusvaraPolicy.M
               ? 'm'
               : 'n';
-    return text.replace(/[ṃṁ](?=$|[^A-Za-z\u00C0-\u024F\u1E00-\u1EFF])/gu, replacement);
+    // U+E101 is a private syllable mark, still inside the word at this stage.
+    return text.replace(/[ṃṁ](?=$|[^A-Za-z\u00C0-\u024F\u1E00-\u1EFF\uE101])/gu, replacement);
 }
 
 function applyReadableCandrabindu(text, policy) {
@@ -1204,6 +1861,31 @@ function applyAynPolicy(text, policy) {
     return String(text).replaceAll('ʿ', policy === AynPolicy.DROP ? '' : "'");
 }
 
+function applyReadableWordOverrides(text, overrides) {
+    if (!overrides || Object.keys(overrides).length === 0) return text;
+    return mapTranscriptionWords(text, (word) =>
+        Object.hasOwn(overrides, word) ? String(overrides[word]) : word,
+    );
+}
+
+function capitalizeReadableSentenceStarts(text) {
+    let capitalizeNext = true;
+    const chars = transcriptionChars(text);
+    const out = [];
+
+    for (const ch of chars) {
+        if (capitalizeNext && /[a-z]/u.test(ch)) {
+            out.push(ch.toUpperCase());
+            capitalizeNext = false;
+            continue;
+        }
+        out.push(ch);
+        if (/[A-Za-z]/u.test(ch)) capitalizeNext = false;
+        if (/[.!?।॥]/u.test(ch) || ch === '\n' || ch === '\r') capitalizeNext = true;
+    }
+    return out.join('');
+}
+
 function protectSemanticOm(text) {
     return String(text).replace(/[ॐૐꣽ]/gu, SEMANTIC_OM);
 }
@@ -1227,21 +1909,32 @@ function toPlainEnglishFromBrahmic(text, config, scriptLanguage, options, forced
             preserveEncodedVedicMarks: resolved.preserveVedicAccentMarks === true,
         }),
         INHERENT_SCHWA,
+        naturalReadableOverrides(config, language, resolved.readableStyle),
     );
     let iast = stripDanglingBrahmicModifiers(
-        naturalizeAnnotatedIast(annotated, language, resolved.schwaDeletion),
+        naturalizeAnnotatedIast(
+            annotated,
+            language,
+            resolved.schwaDeletion,
+            resolved.readableStyle,
+        ),
     );
+    if (resolved.readableStyle === BrahmicReadableStyle.NATURAL) {
+        iast = applyBrahmicNaturalMorphology(iast, language);
+    }
     iast = applyReadableCandrabindu(iast, resolved.terminalAnusvara);
     iast = applyTerminalAnusvara(iast, resolved.terminalAnusvara);
-    iast = applyReadableVowelLength(iast, resolved.vowelLength);
+    iast = applyReadableVowelLength(iast, resolved.vowelLength, language, resolved.readableStyle);
 
     const profile = forcedProfile ?? PlainEnglishRomanizationProfile.EXTENDED_INDIC;
-    const suppressGujaratiHunterianAutoW =
+    const naturalBrahmic = resolved.readableStyle === BrahmicReadableStyle.NATURAL;
+    const naturalModernIndoAryan = naturalBrahmic && language !== BrahmicLanguage.SANSKRIT;
+    const suppressHunterianAutoW =
         profile === PlainEnglishRomanizationProfile.HUNTERIAN &&
-        language === BrahmicLanguage.GUJARATI &&
-        !resolved.useWForVAfterConsonants;
-    if (suppressGujaratiHunterianAutoW) iast = applyHunterianVisargaAbsorption(iast);
-    const engineProfile = suppressGujaratiHunterianAutoW
+        (naturalModernIndoAryan ||
+            (language === BrahmicLanguage.GUJARATI && !resolved.useWForVAfterConsonants));
+    if (suppressHunterianAutoW) iast = applyHunterianVisargaAbsorption(iast);
+    const engineProfile = suppressHunterianAutoW
         ? PlainEnglishRomanizationProfile.EXTENDED_INDIC
         : profile;
 
@@ -1258,12 +1951,16 @@ function toPlainEnglishFromBrahmic(text, config, scriptLanguage, options, forced
             removeAvagraha: resolved.removeAvagraha,
             collapseWhitespace: resolved.collapseWhitespace,
             preserveVedicAccentMarks: resolved.preserveVedicAccentMarks,
-            useWForVAfterConsonants: resolved.useWForVAfterConsonants,
+            useWForVAfterConsonants: naturalModernIndoAryan
+                ? false
+                : resolved.useWForVAfterConsonants,
             enableInternalSchwaSyncope: false,
         }),
     );
     result = applyAynPolicy(result, resolved.ayn);
     result = restoreSemanticOm(result);
+    result = applyReadableWordOverrides(result, resolved.readableWordOverrides);
+    if (resolved.capitalizeSentenceStarts) result = capitalizeReadableSentenceStarts(result);
     result = restoreSourceLatin(result, protectedLatin.spans);
 
     return result;

@@ -83,7 +83,13 @@ echo toPlainEnglishFromDevanagari('कानपुर'); // kaanpur
 | Devanagari | Gujarati |
 | Gujarati | Devanagari |
 
-Forward Latin conversion supports the `strictIast`, `iso15919Core`, and `extendedIndic` profiles. The default is `extendedIndic`. Canonical reverse conversion represents the visible script text; Plain-English and Hunterian are pronunciation-oriented renderings with configurable language and schwa rules.
+Forward Latin conversion supports the `strictIast`, `iso15919Core`, and `extendedIndic` profiles. The default is `extendedIndic`. Canonical reverse conversion represents the visible script text. Plain English and Hunterian are pronunciation-oriented renderings.
+
+Hunterian here is the simplified ASCII form used on maps and signs. A long vowel is one letter (`जान` → `jan`), and consonant dots are removed (`ट` and `त` are both `t`). It does not write 1954 macrons (`jān`) or the 19th-century acute accent (`ján`). Canonical IAST keeps that precise spelling. The rules are in the [API reference](https://jayeshmepani.github.io/indic-script-converter/#hunterian-form).
+
+## Natural readable Latin
+
+`1.2.0` adds an opt-in Devanagari and Gujarati reading. The default stays the 1.1 output. Examples for Dart, JavaScript, Python, and PHP are in the [API reference](https://jayeshmepani.github.io/indic-script-converter/#plain-examples).
 
 ## Script coverage
 
@@ -117,6 +123,7 @@ Canonical reverse functions always derive IAST from visible Brahmic text. Smart 
 
 ## Package documentation
 
+- [API reference](https://jayeshmepani.github.io/indic-script-converter/)
 - [Dart](./dart/README.md)
 - [JavaScript](./javascript/README.md)
 - [Python](./python/README.md)

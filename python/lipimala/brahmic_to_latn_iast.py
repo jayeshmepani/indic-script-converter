@@ -148,6 +148,7 @@ class _BrahmicToIast:
         config: _ScriptConfig,
         options: ScriptToIastOptions,
         inherent_vowel: str = 'a',
+        readable_overrides: Mapping[str, Mapping[str, str]] | None = None,
     ) -> str:
         visible = strip_exact_source_metadata(input_text)
         normalized = normalize_unicode(visible, options.input_normalization)
@@ -158,7 +159,11 @@ class _BrahmicToIast:
 
             independent = config.independent_vowels.get(ch)
             if independent is not None:
-                latin = independent
+                latin = (
+                    readable_overrides.get('independent_vowels', {}).get(ch, independent)
+                    if readable_overrides is not None
+                    else independent
+                )
                 i += 1
                 if (
                     config.script == 'gujarati'
@@ -191,7 +196,11 @@ class _BrahmicToIast:
 
             consonant = config.consonants.get(consonant_key)
             if consonant is not None:
-                latin = consonant
+                latin = (
+                    readable_overrides.get('consonants', {}).get(consonant_key, consonant)
+                    if readable_overrides is not None
+                    else consonant
+                )
                 cursor = i + consonant_width
                 geminated = False
                 sukun = False
@@ -744,6 +753,8 @@ def to_canonical_iast_from_gujarati(text: str, options: ScriptToIastOptions | No
 
 
 _INHERENT_SCHWA = '\ue100'
+# Medial schwa deleted by natural mode. Stays inside the word until vowel length.
+_SYLLABLE_BREAK = '\ue101'
 
 
 class BrahmicLanguage(str, Enum):
@@ -769,8 +780,17 @@ class BrahmicSchwaDeletionPolicy(str, Enum):
 class BrahmicVowelLengthPolicy(str, Enum):
     COLLAPSE = 'collapse'
     DOUBLE = 'double'
+    SMART = 'smart'
     collapse = COLLAPSE
     double = DOUBLE
+    smart = SMART
+
+
+class BrahmicReadableStyle(str, Enum):
+    LEGACY = 'legacy'
+    NATURAL = 'natural'
+    legacy = LEGACY
+    natural = NATURAL
 
 
 class TerminalAnusvaraPolicy(str, Enum):
@@ -807,6 +827,9 @@ class BrahmicPlainEnglishOptions:
     collapse_whitespace: bool = False
     preserve_vedic_accent_marks: bool = False
     use_w_for_v_after_consonants: bool | None = None
+    readable_style: BrahmicReadableStyle = BrahmicReadableStyle.LEGACY
+    capitalize_sentence_starts: bool = False
+    readable_word_overrides: Mapping[str, str] | None = None
 
     @property
     def schwaDeletion(self):
@@ -817,8 +840,20 @@ class BrahmicPlainEnglishOptions:
         return self.vowel_length
 
     @property
+    def readableStyle(self):
+        return self.readable_style
+
+    @property
     def terminalAnusvara(self):
         return self.terminal_anusvara
+
+    @property
+    def capitalizeSentenceStarts(self):
+        return self.capitalize_sentence_starts
+
+    @property
+    def readableWordOverrides(self):
+        return self.readable_word_overrides
 
 
 _IAST_VOWELS = {
@@ -927,7 +962,7 @@ def _restore_source_latin(text: str, spans: list[tuple[str, str]]) -> str:
 
 
 def _is_transcription_word_char(ch: str) -> bool:
-    if ch == _INHERENT_SCHWA:
+    if ch in (_INHERENT_SCHWA, _SYLLABLE_BREAK):
         return True
     cp = ord(ch)
     return (
@@ -940,7 +975,9 @@ def _is_transcription_word_char(ch: str) -> bool:
     )
 
 
-def _tokenize_annotated_word(word: str) -> list[dict[str, object]]:
+def _tokenize_annotated_word(
+    word: str, separate_vocalic_rh: bool = False
+) -> list[dict[str, object]]:
     chars = list(word)
     tokens: list[dict[str, object]] = []
     i = 0
@@ -950,10 +987,24 @@ def _tokenize_annotated_word(word: str) -> list[dict[str, object]]:
             tokens.append({'type': 'vowel', 'text': 'a', 'implicit': True, 'deleted': False})
             i += 1
             continue
+        if ch == _SYLLABLE_BREAK:
+            tokens.append({'type': 'boundary', 'text': '', 'implicit': False, 'deleted': False})
+            i += 1
+            continue
         pair = ch + chars[i + 1] if i + 1 < len(chars) else ''
         if pair in {'ai', 'au'}:
             tokens.append({'type': 'vowel', 'text': pair, 'implicit': False, 'deleted': False})
             i += 2
+            continue
+        previous = tokens[-1] if tokens else None
+        if (
+            separate_vocalic_rh
+            and pair.lower() == 'ṛh'
+            and previous is not None
+            and previous['type'] == 'consonant'
+        ):
+            tokens.append({'type': 'vowel', 'text': ch, 'implicit': False, 'deleted': False})
+            i += 1
             continue
         if pair.lower() in _ASPIRATED:
             tokens.append({'type': 'consonant', 'text': pair, 'implicit': False, 'deleted': False})
@@ -994,8 +1045,22 @@ def _base_consonant(token: dict[str, object]) -> str:
     return value
 
 
+def _is_aspirated_gha(token: dict[str, object]) -> bool:
+    return str(token['text']).lower() == 'gh'
+
+
+def _is_aspirated_dental(token: dict[str, object]) -> bool:
+    # base_consonant folds થ/थ and ઠ/ठ to t. पति keeps its vowel; only the
+    # aspirate (શાપથી) syncopates.
+    text = str(token['text']).lower()
+    return text == 'th' or text == 'ṭh'
+
+
 def _allows_schwa_cluster(
-    left: dict[str, object], right: dict[str, object], language: BrahmicLanguage
+    left: dict[str, object],
+    right: dict[str, object],
+    language: BrahmicLanguage,
+    readable_style: BrahmicReadableStyle = BrahmicReadableStyle.LEGACY,
 ) -> bool:
     a = _base_consonant(left)
     b = _base_consonant(right)
@@ -1007,8 +1072,61 @@ def _allows_schwa_cluster(
             return True
         if b == 'n':
             return True
-        return f'{a}+{b}' in {'b+t', 'r+m', 'ś+m', 'ṣ+m', 's+m', 'ṇ+l', 'n+l'}
+        pair = f'{a}+{b}'
+        if pair in {'b+t', 'r+m', 'ś+m', 'ṣ+m', 's+m', 'ṇ+l', 'n+l'}:
+            return True
+        if readable_style is not BrahmicReadableStyle.NATURAL:
+            return False
+        if a in {'n', 'ṇ'} and _is_aspirated_gha(right):
+            return True
+        if a == 'p' and _is_aspirated_dental(right):
+            return True
+        return pair in {
+            't+l',
+            'ṭ+l',
+            'ḍ+m',
+            'd+m',
+            'm+m',
+            'm+d',
+            't+d',
+            't+y',
+            'k+l',
+            'k+r',
+            'j+k',
+            'r+d',
+            'l+m',
+            'ḷ+m',
+            'ḻ+m',
+            'l+j',
+            'ḷ+j',
+            'ḻ+j',
+        }
 
+    pair = f'{a}+{b}'
+    if (
+        readable_style is BrahmicReadableStyle.NATURAL
+        and a in {'n', 'ṇ'}
+        and _is_aspirated_gha(right)
+    ):
+        return True
+    if readable_style is BrahmicReadableStyle.NATURAL and a == 'p' and _is_aspirated_dental(right):
+        return True
+    if readable_style is BrahmicReadableStyle.NATURAL and pair in {
+        't+d',
+        't+y',
+        't+n',
+        'k+l',
+        'r+d',
+        'p+n',
+        'd+n',
+        'd+m',
+        'ḍ+n',
+        'ḍ+k',
+        'h+l',
+        'h+n',
+        'c+n',
+    }:
+        return True
     if b in {'r', 'y', 'v'}:
         return True
     if a == 'r' and b in {
@@ -1071,6 +1189,97 @@ def _allows_schwa_cluster(
     }
 
 
+def _is_implicit_nagar_schwa(
+    bearing: dict[str, object] | None,
+    next_token: dict[str, object] | None,
+    following: dict[str, object] | None,
+) -> bool:
+    if bearing is None or next_token is None or following is None:
+        return False
+    if bearing['type'] != 'consonant' or next_token['type'] != 'consonant':
+        return False
+    if following.get('implicit') is not True or _is_aspirated_gha(next_token):
+        return False
+    if _base_consonant(next_token) != 'g':
+        return False
+    return _base_consonant(bearing) in {'m', 'n', 'ṇ'}
+
+
+def _is_hindi_na_suffix(
+    bearing: dict[str, object] | None,
+    next_token: dict[str, object] | None,
+    following: dict[str, object] | None,
+) -> bool:
+    if bearing is None or next_token is None or following is None:
+        return False
+    if bearing['type'] != 'consonant' or next_token['type'] != 'consonant':
+        return False
+    if following['type'] != 'vowel' or following.get('implicit'):
+        return False
+    if str(following['text']).lower() != 'ā':
+        return False
+    right = _base_consonant(next_token)
+    if right not in {'n', 'ṇ'}:
+        return False
+    left = _base_consonant(bearing)
+    nasal = {'m', 'n', 'ṇ', 'ñ', 'ṅ'}
+    return not (left in nasal and right in nasal)
+
+
+def _is_gujarati_thi_suffix(
+    next_token: dict[str, object] | None,
+    following: dict[str, object] | None,
+) -> bool:
+    if next_token is None or following is None:
+        return False
+    if next_token['type'] != 'consonant' or following['type'] != 'vowel':
+        return False
+    consonant = str(next_token['text']).lower()
+    vowel = str(following['text']).lower()
+    return consonant in {'th', 'ṭh'} and vowel in {'ī', 'i'}
+
+
+def _is_gujarati_mam_suffix(
+    next_token: dict[str, object] | None,
+    following: dict[str, object] | None,
+    tokens: list[dict[str, object]],
+    vowel_index: int,
+) -> bool:
+    if next_token is None or following is None:
+        return False
+    if next_token['type'] != 'consonant' or following['type'] != 'vowel':
+        return False
+    if _base_consonant(next_token) != 'm':
+        return False
+    vowel = str(following['text']).lower()
+    if vowel not in {'ā', 'a'}:
+        return False
+    nasal_index = vowel_index + 1
+    while nasal_index < len(tokens) and tokens[nasal_index]['deleted']:
+        nasal_index += 1
+    if nasal_index >= len(tokens):
+        return False
+    nasal = tokens[nasal_index]
+    return nasal['type'] == 'sign' and nasal['text'] in {'ṃ', 'ṁ'}
+
+
+def _has_schwa_left_vowel(
+    tokens: list[dict[str, object]],
+    before_index: int,
+    allow_coda_skip: bool,
+) -> bool:
+    if before_index < 0 or before_index >= len(tokens):
+        return False
+    before = tokens[before_index]
+    if before['type'] == 'vowel':
+        return True
+    if not allow_coda_skip or before['type'] != 'consonant':
+        return False
+    if _base_consonant(before) not in {'r', 'y', 'l', 'v'}:
+        return False
+    return before_index - 1 >= 0 and tokens[before_index - 1]['type'] == 'vowel'
+
+
 def _should_keep_final_schwa(tokens: list[dict[str, object]], last_index: int) -> bool:
     if last_index < 2:
         return False
@@ -1086,8 +1295,9 @@ def _naturalize_annotated_word(
     word: str,
     language: BrahmicLanguage,
     schwa_policy: BrahmicSchwaDeletionPolicy,
+    readable_style: BrahmicReadableStyle = BrahmicReadableStyle.LEGACY,
 ) -> str:
-    tokens = _tokenize_annotated_word(word)
+    tokens = _tokenize_annotated_word(word, readable_style is BrahmicReadableStyle.NATURAL)
     if schwa_policy is BrahmicSchwaDeletionPolicy.NONE or language is BrahmicLanguage.SANSKRIT:
         return ''.join(str(t['text']) for t in tokens)
 
@@ -1111,7 +1321,13 @@ def _naturalize_annotated_word(
             if not schwa['implicit'] or schwa['deleted']:
                 continue
             bearing = tokens[i - 1]
-            before = tokens[i - 2]
+            before_index = i - 2
+            if (
+                readable_style is BrahmicReadableStyle.NATURAL
+                and language is not BrahmicLanguage.SANSKRIT
+            ):
+                while before_index >= 0 and tokens[before_index]['type'] == 'sign':
+                    before_index -= 1
             next_index = i + 1
             while next_index < len(tokens) and tokens[next_index]['deleted']:
                 next_index += 1
@@ -1120,24 +1336,77 @@ def _naturalize_annotated_word(
                 after_next += 1
             next_token = tokens[next_index] if next_index < len(tokens) else None
             following = tokens[after_next] if after_next < len(tokens) else None
+            natural_modern = (
+                readable_style is BrahmicReadableStyle.NATURAL
+                and language is not BrahmicLanguage.SANSKRIT
+            )
+            mam_suffix = (
+                natural_modern
+                and language is BrahmicLanguage.GUJARATI
+                and _is_gujarati_mam_suffix(next_token, following, tokens, after_next)
+            )
+            thi_suffix = (
+                natural_modern
+                and language is BrahmicLanguage.GUJARATI
+                and _is_gujarati_thi_suffix(next_token, following)
+            )
+            na_suffix = (
+                natural_modern
+                and language is BrahmicLanguage.HINDI
+                and _is_hindi_na_suffix(bearing, next_token, following)
+            )
+            keep_nagar_schwa = (
+                natural_modern
+                and language is BrahmicLanguage.HINDI
+                and _is_implicit_nagar_schwa(bearing, next_token, following)
+            )
+            right_onset_has_vowel = following is not None and following['type'] == 'vowel'
+            if (
+                not right_onset_has_vowel
+                and readable_style is BrahmicReadableStyle.NATURAL
+                and language is not BrahmicLanguage.SANSKRIT
+                and following is not None
+                and following['type'] == 'consonant'
+                and _base_consonant(following) in {'r', 'y', 'v', 'l'}
+            ):
+                after_cluster = after_next + 1
+                while after_cluster < len(tokens) and tokens[after_cluster]['deleted']:
+                    after_cluster += 1
+                right_onset_has_vowel = (
+                    after_cluster < len(tokens) and tokens[after_cluster]['type'] == 'vowel'
+                )
             if (
                 bearing['type'] == 'consonant'
-                and before['type'] == 'vowel'
+                and _has_schwa_left_vowel(tokens, before_index, mam_suffix or thi_suffix)
                 and next_token is not None
                 and next_token['type'] == 'consonant'
-                and following is not None
-                and following['type'] == 'vowel'
-                and _allows_schwa_cluster(bearing, next_token, language)
+                and right_onset_has_vowel
+                and (
+                    thi_suffix
+                    or na_suffix
+                    or (
+                        not keep_nagar_schwa
+                        and _allows_schwa_cluster(bearing, next_token, language, readable_style)
+                    )
+                )
             ):
                 schwa['deleted'] = True
+                if natural_modern:
+                    schwa['boundary'] = True
 
-    return ''.join('' if t['deleted'] else str(t['text']) for t in tokens)
+    def render(token: dict[str, object]) -> str:
+        if not token['deleted']:
+            return str(token['text'])
+        return _SYLLABLE_BREAK if token.get('boundary') else ''
+
+    return ''.join(render(t) for t in tokens)
 
 
 def _naturalize_annotated_iast(
     text: str,
     language: BrahmicLanguage,
     schwa_policy: BrahmicSchwaDeletionPolicy,
+    readable_style: BrahmicReadableStyle = BrahmicReadableStyle.LEGACY,
 ) -> str:
     chars = list(text)
     out: list[str] = []
@@ -1151,14 +1420,148 @@ def _naturalize_annotated_iast(
         i += 1
         while i < len(chars) and _is_transcription_word_char(chars[i]):
             i += 1
-        out.append(_naturalize_annotated_word(''.join(chars[start:i]), language, schwa_policy))
+        out.append(
+            _naturalize_annotated_word(
+                ''.join(chars[start:i]),
+                language,
+                schwa_policy,
+                readable_style,
+            )
+        )
     return ''.join(out)
 
 
-def _apply_readable_vowel_length(text: str, policy: BrahmicVowelLengthPolicy) -> str:
-    if policy is not BrahmicVowelLengthPolicy.DOUBLE:
-        return text
-    replacements = (
+def _map_transcription_words(text: str, mapper) -> str:
+    chars = list(text)
+    out: list[str] = []
+    i = 0
+    while i < len(chars):
+        if not _is_transcription_word_char(chars[i]):
+            out.append(chars[i])
+            i += 1
+            continue
+        start = i
+        i += 1
+        while i < len(chars) and _is_transcription_word_char(chars[i]):
+            i += 1
+        out.append(mapper(''.join(chars[start:i])))
+    return ''.join(out)
+
+
+def _apply_natural_cluster_spellings(word: str, language: BrahmicLanguage) -> str:
+    if language is BrahmicLanguage.SANSKRIT:
+        return word
+    for source, target in (
+        ('śv', 'św'),
+        ('Śv', 'Św'),
+        ('ṣv', 'ṣw'),
+        ('Ṣv', 'Ṣw'),
+        ('sv', 'sw'),
+        ('Sv', 'Sw'),
+        ('dv', 'dw'),
+        ('Dv', 'Dw'),
+    ):
+        word = word.replace(source, target)
+    return word
+
+
+def _ends_with_closed_resonant(word: str) -> bool:
+    chars = list(word)
+    if len(chars) < 2:
+        return False
+    last = chars[-1].lower()
+    if last not in 'ryvw':
+        return False
+    prev = chars[-2].lower()
+    return prev not in set('aāiīuūeēoōṛṝḷḹăêĕĭôŏæœ')
+
+
+def _apply_brahmic_natural_morphology(text: str, language: BrahmicLanguage) -> str:
+    def naturalize_word(original_word: str) -> str:
+        word = original_word
+
+        if language is BrahmicLanguage.GUJARATI:
+            word = re.sub(r'māṃthī$', 'mathī', word)
+            word = re.sub(r'māṃ$', 'ma', word)
+            if re.search(r'[aāiīuūeēoōṛṝḷḹăêĕĭôŏæœ].*āṃ$', word):
+                word = re.sub(r'āṃ$', 'ā', word)
+            word = re.sub(r'uṃ$', 'u', word)
+            word = re.sub(r'a[ṃṁ][īi]', 'ai', word)
+
+        word = _apply_natural_cluster_spellings(word, language)
+
+        if language is BrahmicLanguage.HINDI and word.endswith('ie'):
+            word = word[:-2] + 'iye'
+        elif language is BrahmicLanguage.HINDI and word.endswith('IE'):
+            word = word[:-2] + 'IYE'
+
+        if language is not BrahmicLanguage.SANSKRIT and _ends_with_closed_resonant(word):
+            word += 'a'
+
+        return word
+
+    return _map_transcription_words(text, naturalize_word)
+
+
+def _natural_readable_overrides(
+    config: _ScriptConfig,
+    language: BrahmicLanguage,
+    readable_style: BrahmicReadableStyle,
+) -> Mapping[str, Mapping[str, str]] | None:
+    if readable_style is not BrahmicReadableStyle.NATURAL:
+        return None
+
+    independent_vowels: dict[str, str] = {}
+    consonants: dict[str, str] = {}
+
+    if language is not BrahmicLanguage.SANSKRIT:
+        if config.script == 'devanagari':
+            consonants['ड़'] = 'ḍ'
+            consonants['ढ़'] = 'ḍh'
+        elif config.script == 'gujarati':
+            consonants['ડ઼'] = 'ḍ'
+            consonants['ઢ઼'] = 'ḍh'
+
+    if config.script == 'gujarati':
+        consonants['ળ'] = 'ḻ'
+        if language is BrahmicLanguage.GUJARATI:
+            independent_vowels['ઋ'] = 'ru'
+    elif config.script == 'devanagari':
+        consonants['ळ'] = 'ḻ'
+        if language is BrahmicLanguage.GUJARATI:
+            independent_vowels['ऋ'] = 'ru'
+
+    if not independent_vowels and not consonants:
+        return None
+    return {
+        'independent_vowels': independent_vowels,
+        'consonants': consonants,
+    }
+
+
+def _collapse_readable_vowel_length(text: str) -> str:
+    for source, target in (
+        ('ā', 'a'),
+        ('Ā', 'A'),
+        ('ī', 'i'),
+        ('Ī', 'I'),
+        ('ū', 'u'),
+        ('Ū', 'U'),
+        ('ē', 'e'),
+        ('Ē', 'E'),
+        ('ō', 'o'),
+        ('Ō', 'O'),
+        ('ṝ', 'ri'),
+        ('Ṝ', 'Ri'),
+        ('ḹ', 'li'),
+        ('Ḹ', 'Li'),
+    ):
+        text = text.replace(source, target)
+    return text
+
+
+def _double_readable_vowel_length(text: str) -> str:
+    for source, target in (
         ('āī', 'aai'),
         ('Āī', 'Aai'),
         ('aī', 'ai'),
@@ -1177,10 +1580,307 @@ def _apply_readable_vowel_length(text: str, policy: BrahmicVowelLengthPolicy) ->
         ('Ṝ', 'Ree'),
         ('ḹ', 'lee'),
         ('Ḹ', 'Lee'),
-    )
-    for source, target in replacements:
+    ):
         text = text.replace(source, target)
     return text
+
+
+_LONG_VOWEL_COLLAPSE = {
+    'ā': 'a',
+    'Ā': 'A',
+    'ī': 'i',
+    'Ī': 'I',
+    'ū': 'u',
+    'Ū': 'U',
+    'ē': 'e',
+    'Ē': 'E',
+    'ō': 'o',
+    'Ō': 'O',
+    'ṝ': 'ri',
+    'Ṝ': 'Ri',
+    'ḹ': 'li',
+    'Ḹ': 'Li',
+}
+
+
+def _collapse_vowel_token(text: str) -> str:
+    chars = list(text)
+    if not chars:
+        return text
+    short = _LONG_VOWEL_COLLAPSE.get(chars[0])
+    if short is None:
+        return text
+    chars[0] = short
+    return ''.join(chars)
+
+
+def _is_long_vowel_token(text: str) -> bool:
+    chars = list(text)
+    return bool(chars) and chars[0] in _LONG_VOWEL_COLLAPSE
+
+
+def _is_central_long_vowel(text: str) -> bool:
+    chars = list(text)
+    return bool(chars) and chars[0] in {'ā', 'Ā'}
+
+
+def _is_peripheral_long_vowel(text: str) -> bool:
+    return _is_long_vowel_token(text) and not _is_central_long_vowel(text)
+
+
+def _is_nasal_sign(token: dict[str, object]) -> bool:
+    return token['type'] == 'sign' and str(token['text']) in {'ṃ', 'ṁ'}
+
+
+def _coda_weight(tokens: list[dict[str, object]]) -> int | None:
+    weight = 0
+    for token in tokens:
+        if token['type'] in {'consonant', 'sign'}:
+            weight += 1
+        else:
+            return None
+    return weight
+
+
+def _is_cluster_forming_resonant(token: dict[str, object]) -> bool:
+    # A liquid or glide across a deleted schwa joins the preceding consonant.
+    base = _base_consonant(token)
+    return base == 'r' or base == 'y' or base == 'l' or base == 'v'
+
+
+def _is_nasal_consonant(token: dict[str, object]) -> bool:
+    # A final open syllable that begins with a nasal is its own clitic.
+    base = _base_consonant(token)
+    return base == 'm' or base == 'n' or base == 'ṇ' or base == 'ñ' or base == 'ṅ'
+
+
+def _is_light_syllable_contact(contact: list[dict[str, object]]) -> bool:
+    if len(contact) == 1 and contact[0]['type'] == 'consonant':
+        return True
+    boundary_at = [index for index, token in enumerate(contact) if token['type'] == 'boundary']
+    if len(boundary_at) != 1:
+        return False
+    at = boundary_at[0]
+    left = contact[:at]
+    right = contact[at + 1 :]
+    if _coda_weight(left) != 1 or _coda_weight(right) != 1:
+        return False
+    right_consonant = next((token for token in right if token['type'] == 'consonant'), None)
+    return right_consonant is not None and not _is_cluster_forming_resonant(right_consonant)
+
+
+def _coda_has_boundary(tokens: list[dict[str, object]]) -> bool:
+    return any(token['type'] == 'boundary' for token in tokens)
+
+
+def _has_nasal_coda_before_next(
+    tokens: list[dict[str, object]],
+    vowel_index: int,
+    next_index: int,
+) -> bool:
+    # हूँगा writes n+g between ū and the next vowel. The nasal is the coda and
+    # the stop is the next onset. A stop+liquid pair is one onset (રાત્રે).
+    between = tokens[vowel_index + 1 : next_index]
+    consonant_at: list[int] = []
+    for index, token in enumerate(between):
+        if token['type'] not in {'consonant', 'sign'}:
+            return False
+        if token['type'] == 'consonant':
+            consonant_at.append(index)
+    if not consonant_at:
+        return False
+    onset = 1
+    last_at = consonant_at[-1]
+    if len(consonant_at) >= 2:
+        prev_at = consonant_at[-2]
+        if last_at == prev_at + 1 and _is_cluster_forming_resonant(between[last_at]):
+            onset = 2
+    if len(between) <= onset:
+        return False
+    coda = between[: len(between) - onset]
+    if _coda_weight(coda) != 1:
+        return False
+    return _is_nasal_consonant(coda[0]) or _is_nasal_sign(coda[0])
+
+
+def _smart_length_keep_indexes(tokens: list[dict[str, object]]) -> set[int]:
+    keep: set[int] = set()
+    if not tokens:
+        return keep
+    # A word-initial long vowel has no consonant to carry it (āj, āvīne, ūpar).
+    if tokens[0]['type'] == 'vowel' and _is_long_vowel_token(str(tokens[0]['text'])):
+        keep.add(0)
+
+    vowel_indexes = [index for index, token in enumerate(tokens) if token['type'] == 'vowel']
+    if not vowel_indexes:
+        return keep
+
+    # A nasal coda before the next onset keeps a non-final peripheral vowel
+    # (hūngā). Central ā stays short (kāṃṭhe).
+    for position in range(len(vowel_indexes) - 1):
+        index = vowel_indexes[position]
+        if not _is_peripheral_long_vowel(str(tokens[index]['text'])):
+            continue
+        if _has_nasal_coda_before_next(tokens, index, vowel_indexes[position + 1]):
+            keep.add(index)
+
+    if len(vowel_indexes) == 1:
+        index = vowel_indexes[0]
+        coda = tokens[index + 1 :]
+        # One coda keeps the vowel (cār, rūp, hūn, dūdh). An open syllable and a
+        # true cluster (mārg) both shorten.
+        text = str(tokens[index]['text'])
+        if not _coda_has_boundary(coda) and _is_long_vowel_token(text) and _coda_weight(coda) == 1:
+            keep.add(index)
+        return keep
+
+    last = vowel_indexes[-1]
+    previous = vowel_indexes[-2]
+    last_coda = tokens[last + 1 :]
+    if len(vowel_indexes) == 2 and _is_long_vowel_token(str(tokens[previous]['text'])):
+        contact = tokens[previous + 1 : last]
+        # Two nuclei and an open second syllable: māre, nīce, cār plus an open syllable.
+        if _coda_weight(last_coda) == 0 and _is_light_syllable_contact(contact):
+            keep.add(previous)
+
+    last_text = str(tokens[last]['text'])
+    # The last syllable, closed by one consonant. ā shortens. ī/ū/ē/ō stay.
+    if (
+        not _coda_has_boundary(last_coda)
+        and _coda_weight(last_coda) == 1
+        and _is_long_vowel_token(last_text)
+        and not _is_central_long_vowel(last_text)
+    ):
+        keep.add(last)
+
+    # A short vowel after one obstruent is a vocalic ending (svarūpe).
+    if (
+        len(vowel_indexes) > 2
+        and not _is_long_vowel_token(last_text)
+        and _coda_weight(last_coda) == 0
+    ):
+        contact = tokens[previous + 1 : last]
+        previous_text = str(tokens[previous]['text'])
+        if (
+            len(contact) == 1
+            and contact[0]['type'] == 'consonant'
+            and not _is_cluster_forming_resonant(contact[0])
+            and not _is_nasal_consonant(contact[0])
+            and _is_long_vowel_token(previous_text)
+            and not _is_central_long_vowel(previous_text)
+        ):
+            keep.add(previous)
+    return keep
+
+
+def _without_syllable_breaks(text: str) -> str:
+    return text.replace(_SYLLABLE_BREAK, '')
+
+
+def _final_open_syllable_split(tokens: list[dict[str, object]]) -> tuple[int, bool] | None:
+    # A schwa boundary keeps the consonant before the break on the stem
+    # (svarūp + thī). A single onset consonant leaves with the ending.
+    vowel_indexes = [index for index, token in enumerate(tokens) if token['type'] == 'vowel']
+    if len(vowel_indexes) < 3:
+        return None
+    last = vowel_indexes[-1]
+    previous = vowel_indexes[-2]
+    if _coda_weight(tokens[last + 1 :]) != 0:
+        return None
+    contact = tokens[previous + 1 : last]
+    if not _is_light_syllable_contact(contact):
+        return None
+    boundary_at = next(
+        (index for index, token in enumerate(contact) if token['type'] == 'boundary'),
+        None,
+    )
+    start = previous + 1 + boundary_at if boundary_at is not None else previous + 1
+    return start, _is_long_vowel_token(str(tokens[last]['text']))
+
+
+def _peel_saves_peripheral(tokens: list[dict[str, object]], start: int) -> bool:
+    # A short ending is peeled only when the stem then keeps a peripheral vowel
+    # the full word would shorten (rūpama). Saving only central ā is not enough.
+    full = _smart_length_keep_indexes(tokens)
+    stem = _smart_length_keep_indexes(tokens[:start])
+    for index in stem:
+        if index in full:
+            continue
+        if _is_peripheral_long_vowel(str(tokens[index]['text'])):
+            return True
+    return False
+
+
+def _render_smart_length_tokens(tokens: list[dict[str, object]]) -> str:
+    keep = _smart_length_keep_indexes(tokens)
+    parts: list[str] = []
+    for index, token in enumerate(tokens):
+        if token['type'] == 'boundary':
+            continue
+        text = str(token['text'])
+        if token['type'] == 'vowel' and index not in keep:
+            text = _collapse_vowel_token(text)
+        parts.append(text)
+    return ''.join(parts)
+
+
+def _render_collapsed_ending(tokens: list[dict[str, object]]) -> str:
+    parts: list[str] = []
+    for token in tokens:
+        if token['type'] == 'boundary':
+            continue
+        text = str(token['text'])
+        if token['type'] == 'vowel':
+            text = _collapse_vowel_token(text)
+        parts.append(text)
+    return ''.join(parts)
+
+
+def _smart_readable_vowel_length_word(word: str, language: BrahmicLanguage) -> str:
+    if language is BrahmicLanguage.SANSKRIT:
+        return _double_readable_vowel_length(_without_syllable_breaks(word))
+
+    stem = _tokenize_annotated_word(word)
+    ending = ''
+    # Long open endings stack (પાસેથીના). A short ending is removed only once,
+    # and only when that keeps a peripheral vowel on the stem (રૂપમાં).
+    while stem:
+        split = _final_open_syllable_split(stem)
+        if split is None:
+            break
+        start, final_is_long = split
+        short_ok = not final_is_long and _peel_saves_peripheral(stem, start)
+        if not final_is_long and not short_ok:
+            break
+        ending = _render_collapsed_ending(stem[start:]) + ending
+        stem = stem[:start]
+        if short_ok:
+            break
+    return _double_readable_vowel_length(_render_smart_length_tokens(stem) + ending)
+
+
+def _apply_readable_vowel_length(
+    text: str,
+    policy: BrahmicVowelLengthPolicy,
+    language: BrahmicLanguage = BrahmicLanguage.AUTO,
+    readable_style: BrahmicReadableStyle = BrahmicReadableStyle.LEGACY,
+) -> str:
+    if readable_style is not BrahmicReadableStyle.NATURAL:
+        return (
+            _double_readable_vowel_length(text)
+            if policy is BrahmicVowelLengthPolicy.DOUBLE
+            else text
+        )
+    if policy is BrahmicVowelLengthPolicy.DOUBLE:
+        return _double_readable_vowel_length(_without_syllable_breaks(text))
+    if policy is BrahmicVowelLengthPolicy.COLLAPSE:
+        return _collapse_readable_vowel_length(_without_syllable_breaks(text))
+    if policy is BrahmicVowelLengthPolicy.SMART:
+        return _map_transcription_words(
+            text,
+            lambda word: _smart_readable_vowel_length_word(word, language),
+        )
+    return _without_syllable_breaks(text)
 
 
 def _apply_terminal_anusvara(text: str, policy: TerminalAnusvaraPolicy) -> str:
@@ -1189,7 +1889,7 @@ def _apply_terminal_anusvara(text: str, policy: TerminalAnusvaraPolicy) -> str:
         if policy is TerminalAnusvaraPolicy.DROP
         else ('m' if policy is TerminalAnusvaraPolicy.M else 'n')
     )
-    return re.sub(r'[ṃṁ](?=$|[^A-Za-z\u00C0-\u024F\u1E00-\u1EFF])', replacement, text)
+    return re.sub(r'[ṃṁ](?=$|[^A-Za-z\u00C0-\u024F\u1E00-\u1EFF\uE101])', replacement, text)
 
 
 def _apply_readable_candrabindu(text: str, policy: TerminalAnusvaraPolicy) -> str:
@@ -1216,6 +1916,28 @@ def _apply_ayn_policy(text: str, policy: AynPolicy) -> str:
     return text.replace('ʿ', '' if policy is AynPolicy.DROP else "'")
 
 
+def _apply_readable_word_overrides(text: str, overrides: Mapping[str, str] | None) -> str:
+    if not overrides:
+        return text
+    return _map_transcription_words(text, lambda word: str(overrides.get(word, word)))
+
+
+def _capitalize_readable_sentence_starts(text: str) -> str:
+    capitalize_next = True
+    out: list[str] = []
+    for ch in text:
+        if capitalize_next and 'a' <= ch <= 'z':
+            out.append(ch.upper())
+            capitalize_next = False
+            continue
+        out.append(ch)
+        if ('A' <= ch <= 'Z') or ('a' <= ch <= 'z'):
+            capitalize_next = False
+        if ch in '.!?।॥\n\r':
+            capitalize_next = True
+    return ''.join(out)
+
+
 def _protect_semantic_om(text: str) -> str:
     return re.sub(r'[ॐૐꣽ]', _SEMANTIC_OM, text)
 
@@ -1239,30 +1961,41 @@ def _to_plain_english_from_brahmic(
         config,
         ScriptToIastOptions(preserve_encoded_vedic_marks=resolved.preserve_vedic_accent_marks),
         _INHERENT_SCHWA,
+        _natural_readable_overrides(config, language, resolved.readable_style),
     )
     iast = _strip_dangling_brahmic_modifiers(
-        _naturalize_annotated_iast(annotated, language, resolved.schwa_deletion)
+        _naturalize_annotated_iast(
+            annotated,
+            language,
+            resolved.schwa_deletion,
+            resolved.readable_style,
+        )
     )
+    natural_brahmic = resolved.readable_style is BrahmicReadableStyle.NATURAL
+    natural_modern_indo_aryan = natural_brahmic and language is not BrahmicLanguage.SANSKRIT
+    if natural_brahmic:
+        iast = _apply_brahmic_natural_morphology(iast, language)
     iast = _apply_readable_candrabindu(iast, resolved.terminal_anusvara)
     iast = _apply_terminal_anusvara(iast, resolved.terminal_anusvara)
-    iast = _apply_readable_vowel_length(iast, resolved.vowel_length)
+    iast = _apply_readable_vowel_length(
+        iast,
+        resolved.vowel_length,
+        language,
+        resolved.readable_style,
+    )
     profile = forced_profile or PlainEnglishRomanizationProfile.EXTENDED_INDIC
     use_w = (
         False
         if resolved.use_w_for_v_after_consonants is None
         else resolved.use_w_for_v_after_consonants
     )
-    suppress_gujarati_hunterian_auto_w = (
-        profile is PlainEnglishRomanizationProfile.HUNTERIAN
-        and language is BrahmicLanguage.GUJARATI
-        and not use_w
+    suppress_hunterian_auto_w = profile is PlainEnglishRomanizationProfile.HUNTERIAN and (
+        natural_modern_indo_aryan or (language is BrahmicLanguage.GUJARATI and not use_w)
     )
-    if suppress_gujarati_hunterian_auto_w:
+    if suppress_hunterian_auto_w:
         iast = _apply_hunterian_visarga_absorption(iast)
     engine_profile = (
-        PlainEnglishRomanizationProfile.EXTENDED_INDIC
-        if suppress_gujarati_hunterian_auto_w
-        else profile
+        PlainEnglishRomanizationProfile.EXTENDED_INDIC if suppress_hunterian_auto_w else profile
     )
     result = to_plain_english_from_iast(
         iast,
@@ -1277,12 +2010,15 @@ def _to_plain_english_from_brahmic(
             remove_avagraha=resolved.remove_avagraha,
             collapse_whitespace=resolved.collapse_whitespace,
             preserve_vedic_accent_marks=resolved.preserve_vedic_accent_marks,
-            use_w_for_v_after_consonants=use_w,
+            use_w_for_v_after_consonants=False if natural_modern_indo_aryan else use_w,
             enable_internal_schwa_syncope=False,
         ),
     )
     result = _apply_ayn_policy(result, resolved.ayn)
     result = _restore_semantic_om(result)
+    result = _apply_readable_word_overrides(result, resolved.readable_word_overrides)
+    if resolved.capitalize_sentence_starts:
+        result = _capitalize_readable_sentence_starts(result)
     return _restore_source_latin(result, protected_latin)
 
 
@@ -1366,6 +2102,7 @@ __all__ = [
     'AynPolicy',
     'BrahmicLanguage',
     'BrahmicPlainEnglishOptions',
+    'BrahmicReadableStyle',
     'BrahmicSchwaDeletionPolicy',
     'BrahmicVowelLengthPolicy',
     'ScriptToIastOptions',

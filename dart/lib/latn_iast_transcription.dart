@@ -89,9 +89,12 @@ enum PlainEnglishRomanizationProfile {
   /// regional forms that are not part of classical IAST.
   extendedIndic,
 
-  /// Standard Romanization system officially adopted by the Government of India.
-  /// Simplifies all Indic diacritics, dental/retroflex distinctions, and maps
-  /// conjuncts/vowels to their common Indian English spellings.
+  /// Simplified ASCII Hunterian used on maps and signs.
+  ///
+  /// A long vowel is one plain letter (`jān` becomes `jan`) and consonant
+  /// dots are removed (`ṭ` and `t` both become `t`). This is not the 1954
+  /// Government of India macron spelling (`jān`) and not the 19th-century
+  /// acute accent (`ján`).
   hunterian,
 }
 

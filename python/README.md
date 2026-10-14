@@ -31,13 +31,13 @@ print(to_plain_english_from_gujarati('આજ મારે'))  # aaj maare
 print(to_canonical_gujarati_from_devanagari('कृष्ण'))  # કૃષ્ણ
 ```
 
-Use `to_hunterian_from_devanagari()` and `to_hunterian_from_gujarati()` for Hunterian output. List helpers such as `to_devanagari_from_iast_list()` convert sequences of strings.
+Use `to_hunterian_from_devanagari()` and `to_hunterian_from_gujarati()` for simplified ASCII Hunterian: one letter per long vowel and no consonant dots. That is the map and signboard spelling, not the 1954 macron form (`jān`). See the [API reference](https://jayeshmepani.github.io/indic-script-converter/#hunterian-form). List helpers such as `to_devanagari_from_iast_list()` convert sequences of strings.
 
 ## Profiles and options
 
 Forward conversion accepts `strictIast`, `iso15919Core`, or `extendedIndic` profiles. The default is `extendedIndic`. Options control normalization, unknown input, digits, punctuation, Vedic accents, whitespace, and exact-source metadata.
 
-Direct Brahmic transcription accepts `BrahmicPlainEnglishOptions` for language selection, schwa deletion, vowel length, terminal anusvara, Gujarati ʿayn, and other pronunciation choices.
+Direct Devanagari and Gujarati reading accepts `BrahmicPlainEnglishOptions`. Defaults stay the 1.1 output. `1.2.0` adds an opt-in natural reading. Examples are in the [API reference](https://jayeshmepani.github.io/indic-script-converter/#plain-examples).
 
 ## Preserve the original input
 

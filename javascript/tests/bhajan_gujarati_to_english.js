@@ -5,7 +5,18 @@
  *     node javascript/tests/bhajan_gujarati_to_english.js
  */
 
-import { toHunterianFromGujarati, toPlainEnglishFromGujarati } from '../src/index.js';
+import {
+    BrahmicPlainEnglishOptions,
+    BrahmicReadableStyle,
+    BrahmicVowelLengthPolicy,
+    toHunterianFromGujarati,
+    toPlainEnglishFromGujarati,
+} from '../src/index.js';
+
+const OPTIONS = new BrahmicPlainEnglishOptions({
+    readableStyle: BrahmicReadableStyle.NATURAL,
+    vowelLength: BrahmicVowelLengthPolicy.SMART,
+});
 
 const LINES = [
     'પદ - ૧',
@@ -31,7 +42,7 @@ const LINES = [
 
 for (const line of LINES) {
     console.log(`GUJ : ${line}`);
-    console.log(`PLAIN: ${toPlainEnglishFromGujarati(line)}`);
-    console.log(`HUNT : ${toHunterianFromGujarati(line)}`);
+    console.log(`PLAIN: ${toPlainEnglishFromGujarati(line, OPTIONS)}`);
+    console.log(`HUNT : ${toHunterianFromGujarati(line, OPTIONS)}`);
     console.log();
 }

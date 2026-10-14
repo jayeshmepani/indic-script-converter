@@ -40,6 +40,13 @@ class NyaPolicy(str, Enum):
 
 
 class PlainEnglishRomanizationProfile(str, Enum):
+    """Readable-Latin profile.
+
+    HUNTERIAN is simplified ASCII Hunterian: one letter per long vowel and no
+    consonant dots. It is the map and signboard spelling, not the 1954 macron
+    standard.
+    """
+
     STRICT_IAST = 'strictIast'
     EXTENDED_INDIC = 'extendedIndic'
     HUNTERIAN = 'hunterian'

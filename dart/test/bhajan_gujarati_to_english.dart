@@ -4,6 +4,11 @@
 ///     cd dart && dart test/bhajan_gujarati_to_english.dart
 import 'package:lipimala/lipimala.dart';
 
+const options = BrahmicPlainEnglishOptions(
+  readableStyle: BrahmicReadableStyle.natural,
+  vowelLength: BrahmicVowelLengthPolicy.smart,
+);
+
 const lines = [
   'પદ - ૧',
   'આજ મારે ઓરડે રે, આવ્યા અવિનાશી અલબેલ;',
@@ -29,8 +34,8 @@ const lines = [
 void main() {
   for (final line in lines) {
     print('GUJ : $line');
-    print('PLAIN: ${toPlainEnglishFromGujarati(line)}');
-    print('HUNT : ${toHunterianFromGujarati(line)}');
+    print('PLAIN: ${toPlainEnglishFromGujarati(line, options: options)}');
+    print('HUNT : ${toHunterianFromGujarati(line, options: options)}');
     print('');
   }
 }
