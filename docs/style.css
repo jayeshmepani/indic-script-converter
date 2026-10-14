@@ -1379,7 +1379,14 @@
       font-size: var(--text-cp)
     }
 
+    & > :not(.callout-icon) {
+      grid-column: 2;
+      min-inline-size: 0
+    }
+
     .callout-icon {
+      grid-row: 1 / -1;
+      align-self: start;
       inline-size: 1.1rem;
       block-size: 1.1rem;
       margin-block-start: .18rem;
